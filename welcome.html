@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mine秋吉台ジオパーク｜ようこそ</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@600;700;800&family=Noto+Sans+JP:wght@400;700&family=Zen+Maru+Gothic:wght@500;700;900&display=swap">
+  <link rel="stylesheet" href="src/css/tokens.css">
+  <link rel="stylesheet" href="src/css/welcome.css">
+</head>
+<body>
+<main class="stage" id="stage" lang="ja">
+
+  <!-- carousel: 秋吉台 → 別府弁天池 → 景清洞 → カルスター → 長登祭り -->
+  <ul class="slides" aria-roledescription="carousel" aria-label="Mine秋吉台ジオパークの風景">
+    <li class="slide is-on"><img src="assets/img/p1-akiyoshidai.webp" alt="新緑の秋吉台。草原に白い石灰岩が点在する" data-en-alt="Green Akiyoshidai plateau dotted with white limestone"></li>
+    <li class="slide"><img src="assets/img/p2-benten.webp" alt="青く透き通った別府弁天池の湧水" data-en-alt="The clear blue spring water of Beppu Benten Pond" loading="lazy"></li>
+    <li class="slide"><img src="assets/img/p3-cave.webp" alt="景清洞の入口。石灰岩の天井と小川" data-en-alt="The entrance of Kagekiyo Cave with a limestone ceiling and a stream" loading="lazy"></li>
+    <li class="slide"><img src="assets/img/p4-karstar.webp" alt="カルスターの窓から秋吉台の草原をながめる" data-en-alt="Akiyoshidai seen through the windows of Karstar" loading="lazy"></li>
+    <li class="slide"><img src="assets/img/p5-smelting.webp" alt="長登祭りで、炉から火の粉が上がる銅の製錬" data-en-alt="Sparks rising from a copper-smelting furnace at the Naganobori Festival" loading="lazy"></li>
+  </ul>
+  <div class="shade"></div>
+
+  <!-- decoration (edges only) -->
+  <img class="wave" src="assets/img/wave-top.webp" alt="">
+  <img class="hills" src="assets/img/hills-bottom.webp" alt="">
+  <img class="chara chara--bino" src="assets/img/chara-binoculars.webp" alt="">
+  <img class="chara chara--point" src="assets/img/chara-point.webp" alt="">
+
+  <header class="top">
+    <div class="brand">
+      <img src="assets/img/logo-unesco.webp" alt="UNESCO Global Geopark">
+      <img class="logo-sq" src="assets/img/logo-color.webp" alt="Mine秋吉台ジオパーク">
+      <img src="assets/img/logo-ggn-apgn.webp" alt="Global Geoparks Network / Asia Pacific Geoparks Network">
+      <img src="assets/img/logo-jgn.webp" alt="日本ジオパーク Geoparks Japan">
+    </div>
+    <div class="lang" role="group" aria-label="言語 / Language">
+      <button type="button" id="lang-ja" aria-pressed="true" lang="ja">日本語</button>
+      <button type="button" id="lang-en" aria-pressed="false" lang="en">EN</button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1><span data-t="t1">3億年の大地を、</span><span data-t="t2">体験しよう。</span></h1>
+  </section>
+
+  <div class="cta">
+    <div class="bubble" aria-hidden="true" data-t="bubble">体験しましょう！</div>
+    <button class="go" id="go" type="button" aria-label="GO! 体験をはじめる">GO!</button>
+  </div>
+
+  <div class="bar">
+    <button class="pause" id="pause" type="button">
+      <svg id="pause-ico" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+      <span id="pause-txt">停止</span>
+    </button>
+  </div>
+
+  <div class="rise" aria-hidden="true"></div>
+</main>
+<script src="src/js/welcome.js"></script>
+</body>
+</html>

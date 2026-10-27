@@ -1,0 +1,509 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mine秋吉台ジオパーク｜お出かけスポット</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@600;700;800&family=Noto+Sans+JP:wght@400;700&family=Zen+Maru+Gothic:wght@500;700;900&display=swap">
+<style>
+/* Page ④ – Spot detail (one template for all お出かけスポット, ?id=). One self-contained file: tokens (copy of src/css/tokens.css) + page styles.
+   Information sits on flat white/cream surfaces; decoration (hills, 探検隊) on edges only. */
+:root {
+  --red: #8E1728; --red-deep: #5E0F1A;
+  --ink: #2F2C28; --ink-soft: #5C5850;
+  --paper: #FFFFFF; --cream: #F6F3EC; --cream-warm: #FBF7EE;
+  --grass: #BAD98A; --leaf: #E7F0E1; --leaf-menu: #DCEBD2;
+  --line: #D9D4CA; --focus: #FFD84D;
+  --tag: #F3E3A6;
+  --f-display: 'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', 'Noto Sans JP', sans-serif;
+  --f-body: 'Noto Sans JP', 'Hiragino Sans', sans-serif;
+  --f-latin: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+  --fs-body: 18px; --lh-body: 1.8;
+  --tap: 48px;
+  --r-card: 20px;
+  --shadow-soft: 0 4px 14px rgba(47, 44, 40, .12);
+  --hdr: 80px;
+  --pad: 32px;
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body {
+  margin: 0; background: var(--cream-warm); color: var(--ink);
+  font: var(--fs-body)/var(--lh-body) var(--f-body);
+  -webkit-tap-highlight-color: transparent;
+}
+img { max-width: 100%; display: block; }
+h1, h2, h3, p, ul { margin: 0; }
+ul { padding: 0; list-style: none; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 4px solid var(--focus); outline-offset: 3px; }
+rt { font-size: .45em; font-weight: 700; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 64px var(--pad); }
+
+/* ---------- header ---------- */
+.top {
+  position: sticky; top: 0; z-index: 10; height: var(--hdr);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 0 max(var(--pad), env(safe-area-inset-right, 0px)) 0 max(var(--pad), env(safe-area-inset-left, 0px));
+  background: var(--paper); box-shadow: 0 2px 12px rgba(47, 44, 40, .08);
+}
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand img { height: 48px; width: auto; }
+.brand .logo-sq { height: 64px; } /* square logo: taller so its text stays readable */
+.tools { display: flex; align-items: center; gap: 12px; }
+.lang { display: flex; padding: 4px; background: var(--paper); border: 1px solid var(--line); border-radius: 999px; }
+.lang button {
+  min-width: 64px; height: var(--tap); border: 0; border-radius: 999px;
+  background: transparent; cursor: pointer; font-weight: 700; font-size: 15px; white-space: nowrap;
+}
+.lang button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.lang button[lang="en"] { font-family: var(--f-latin); font-size: 16px; }
+.pill {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 56px; padding: 0 22px;
+  border: 2px solid var(--ink); border-radius: 999px; background: var(--paper);
+  font: 700 17px/1.2 var(--f-display); text-decoration: none; cursor: pointer; white-space: nowrap;
+}
+.pill svg { width: 22px; height: 22px; flex: none; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+
+.hills { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); width: max(130%, 1100px); max-width: none; pointer-events: none; }
+/* ---------- footer ---------- */
+.foot { position: relative; overflow-x: clip; background: var(--grass); } /* hills sit on the green 「あわせて楽しむ」 band */
+.foot .hills { bottom: 100%; }
+.foot .wrap { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; padding-top: 24px; padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px)); }
+.contact { display: flex; align-items: center; gap: 20px; background: var(--paper); border-radius: 16px; padding: 16px 24px; font-size: 15px; line-height: 1.7; }
+.contact > b { flex: none; padding-right: 20px; border-right: 1px solid var(--line); font: 700 16px var(--f-display); }
+.contact p b { font-family: var(--f-display); font-size: 16px; }
+.pill--dark { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+/* ---------- Spot detail (one template, 5 spots via ?id=) ---------- */
+body { padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)); } /* room for the fixed bottom bar */
+html { scroll-padding: var(--hdr) 0 96px; }
+.crumb { max-width: 1240px; margin: 0 auto; padding: 14px var(--pad); font-size: 15px; }
+.crumb ol { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 0; list-style: none; }
+.crumb li + li::before { content: "＞"; content: "＞" / ""; margin-right: 8px; color: var(--ink-soft); } /* not read aloud */
+.crumb a { display: inline-flex; align-items: center; justify-content: center; min-height: var(--tap); min-width: var(--tap); padding: 0 8px; font-weight: 700; }
+
+.hero {
+  position: relative; overflow: hidden; min-height: 520px; display: flex; align-items: flex-end;
+  padding: 40px var(--pad) calc(max(22.5vw, 190px) - 40px); background: var(--ink);
+}
+.hero .bg { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.title { position: relative; z-index: 1; width: 100%; max-width: 1240px; margin: 0 auto; display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.tags { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; list-style: none; }
+.tags li { display: inline-flex; align-items: center; gap: 6px; padding: 4px 14px; background: var(--paper); border-radius: 999px; font: 700 15px/1.5 var(--f-display); }
+.name { background: var(--paper); border-radius: 18px; padding: 8px 24px 12px; box-shadow: var(--shadow-soft); }
+.name small { display: block; font: 700 16px/1.5 var(--f-display); color: var(--ink-soft); letter-spacing: .1em; }
+.name h1 { font: 900 52px/1.2 var(--f-display); }
+.en { padding: 2px 12px; border-radius: 8px; background: var(--ink); color: var(--paper); font: 700 16px/1.6 var(--f-latin); }
+.hero .chara { position: absolute; z-index: 2; right: max(32px, 6%); bottom: 60px; height: 130px; width: auto; }
+.mark { width: 16px; height: 16px; flex: none; }
+.m-white { fill: var(--paper); stroke: var(--ink); }
+.m-red { fill: var(--red); }
+
+.page { max-width: 880px; margin: 0 auto; padding: 0 var(--pad); display: flex; flex-direction: column; }
+.body, .side { display: contents; } /* iPad/phone: one column 基本情報 → どんなところ → ジオ → アクセス */
+.access { order: 1; }
+.card { margin-top: 8px; padding: 24px 28px; background: var(--paper); border-radius: 24px; box-shadow: var(--shadow-soft); }
+.card h2 { font: 700 24px/1.4 var(--f-display); }
+.info { padding: 0; list-style: none; margin-top: 8px; }
+.info li { display: flex; gap: 14px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.info li:last-child { border-bottom: 0; }
+.ico { flex: none; width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; background: var(--cream); }
+.ico svg, .addr svg { width: 26px; height: 26px; fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.info b { display: block; font: 700 15px/1.5 var(--f-display); color: var(--ink-soft); }
+.h2bar { display: flex; align-items: center; gap: 12px; margin: 48px 0 16px; font: 700 26px/1.4 var(--f-display); }
+.h2bar::before { content: ""; flex: none; width: 8px; height: 28px; border-radius: 3px; background: var(--red); }
+.page p + p { margin-top: 12px; }
+.geo { position: relative; margin-top: 44px; padding: 32px 28px 24px; background: var(--paper); border: 2px solid var(--ink); border-radius: 24px; }
+.geo .label { position: absolute; top: -17px; left: 24px; padding: 2px 16px; background: var(--tag); border: 2px solid var(--ink); border-radius: 999px; font: 700 16px/1.6 var(--f-display); }
+.geo h3 { margin-bottom: 8px; font: 700 21px/1.6 var(--f-display); }
+.access { margin-top: 48px; }
+.access iframe { display: block; width: 100%; aspect-ratio: 16 / 10; margin-top: 16px; border: 0; border-radius: 16px; background: var(--cream); }
+.addr { display: flex; gap: 10px; align-items: flex-start; margin-top: 14px; }
+.addr svg { flex: none; margin-top: 4px; }
+.carry { display: flex; gap: 20px; align-items: center; margin-top: 16px; padding: 16px 20px; background: var(--cream); border-radius: 16px; }
+.carry img { width: 120px; height: 120px; flex: none; background: var(--paper); }
+.carry b { font: 700 18px/1.6 var(--f-display); }
+.nw { white-space: nowrap; }
+.tbd { color: var(--ink-soft); }
+.rel { margin-top: 56px; padding: 48px var(--pad); background: var(--leaf); }
+.rel > * { max-width: 1176px; margin-left: auto; margin-right: auto; }
+.rel h2 { font: 700 26px/1.4 var(--f-display); margin-bottom: 20px; }
+.rel ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; padding: 0; list-style: none; }
+.rel a { display: block; text-decoration: none; }
+.rel img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border: 6px solid var(--paper); border-radius: 16px; }
+.rel p { display: flex; align-items: center; gap: 10px; margin-top: 10px; font: 700 19px/1.4 var(--f-display); }
+.rel i { flex: none; padding: 2px 10px; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; font: 400 14px/1.6 var(--f-body); font-style: normal; }
+.rel { padding-bottom: calc(max(22.5vw, 190px) + 24px); }
+
+/* bottom bar (U4): もどる / はじめの画面へ / QR – 64px targets */
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 9; display: flex; justify-content: center; gap: 12px;
+  padding: 10px var(--pad) calc(10px + env(safe-area-inset-bottom, 0px));
+  background: var(--paper); box-shadow: 0 -2px 12px rgba(47, 44, 40, .1);
+}
+.bar .pill { min-height: 64px; }
+.primary { background: var(--red); color: var(--paper); border-color: var(--red); box-shadow: 0 5px 0 var(--red-deep); }
+.qdlg { width: min(440px, calc(100% - 32px)); border-radius: 24px; text-align: center; }
+.dlg-in { padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 16px; }
+.dlg-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; text-align: left; }
+.dlg-top h2 { font: 700 22px/1.45 var(--f-display); }
+.qdlg img { width: 220px; height: 220px; margin: 0 auto; }
+
+@media (min-width: 1024px) {
+  .page { max-width: 1240px; display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 48px; align-items: start; }
+  .body, .side { display: block; }
+  .body { grid-column: 1; grid-row: 1; }
+  .side { grid-column: 2; grid-row: 1; }
+  .body .h2bar { margin-top: 40px; }
+  .side .card { margin-top: 40px; }
+  .side .access { margin-top: 24px; }
+}
+@media (max-width: 600px) {
+  :root { --pad: 16px; --hdr: 64px; }
+  .brand img { height: 34px; }
+  .brand img:first-child { display: none; }
+  .brand .logo-sq { height: 52px; }
+  .lang button { min-width: 48px; padding: 0 8px; font-size: 14px; }
+  .contact { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .contact > b { border: 0; padding: 0; }
+  .hero { min-height: 420px; }
+  .name h1 { font-size: 36px; }
+  .hero .chara { height: 84px; bottom: 44px; }
+  .card { padding: 18px 16px; }
+  .rel ul { grid-template-columns: 1fr; }
+  .carry { flex-direction: column; align-items: flex-start; }
+  .bar { gap: 6px; }
+  .bar .pill { min-height: 56px; padding: 0 12px; font-size: 14px; }
+  .bar .pill svg { display: none; } /* phone: text only, still ≥48px */
+}
+/* ---------- popup menu (identical block in every page except Welcome) ---------- */
+.menu-btn {
+  flex: none; width: 64px; height: 64px; border: 0; border-radius: 16px; background: var(--ink); color: var(--paper);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer;
+  font: 700 11px/1 var(--f-latin); letter-spacing: .06em;
+}
+.menu-btn svg, .x svg, .arr svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+dialog { padding: 0; border: 0; color: var(--ink); background: var(--paper); }
+dialog::backdrop { background: rgba(47, 44, 40, .45); }
+.menu {
+  width: min(560px, calc(100% - 32px)); max-height: calc(100% - 16px); margin: 8px 16px auto auto;
+  border-radius: 24px; box-shadow: 0 16px 40px rgba(47, 44, 40, .25);
+}
+.menu-in { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+.menu-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.x {
+  flex: none; width: 72px; height: 72px; border: 0; border-radius: 18px; background: var(--ink); color: var(--paper);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer;
+  font: 700 13px/1 var(--f-display);
+}
+.themes { background: var(--leaf-menu); border-radius: 22px; padding: 16px 16px 18px; }
+.themes-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.themes-head h2 { font: 700 19px/1.4 var(--f-display); }
+.themes-head img { height: 52px; width: auto; }
+.themes ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.themes a {
+  min-height: 112px; height: 100%; padding: 12px 14px; border-radius: 16px; background: var(--paper);
+  display: flex; flex-direction: column; gap: 4px; text-decoration: none;
+}
+.ti { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
+.ti img { height: 44px; width: auto; }
+.arr { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--ink); display: grid; place-items: center; }
+.arr svg { width: 18px; height: 18px; }
+.themes b { font: 700 18px/1.4 var(--f-display); }
+.themes small { font-size: 14px; color: var(--ink-soft); }
+.settings { background: var(--cream); border-radius: 20px; padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; }
+.settings h2 { font: 700 16px/1.4 var(--f-display); }
+.set { display: flex; align-items: center; justify-content: space-between; gap: 12px; font: 700 16px/1.4 var(--f-display); }
+.set .lang button { min-width: 72px; font-size: 16px; }
+.set [data-fs="l"] { font-size: 20px; }
+.menu-qr { display: flex; align-items: center; gap: 16px; border-top: 1px solid var(--line); padding-top: 18px; }
+.menu-qr img { width: 96px; height: 96px; flex: none; }
+.menu-qr b { display: block; font: 700 17px/1.4 var(--f-display); }
+.menu-qr small { font-size: 14px; color: var(--ink-soft); }
+/* 文字の大きさ「大」: body 18 → ~22px, headings scale with it */
+@media (min-width: 768px) { html[data-fs="l"] body { zoom: 1.2; } }
+@media (max-width: 767px) { .set-fs { display: none; } } /* 大 needs room; phones pinch-zoom instead */ /* ponytail: zoom narrows the layout, so tablets/PC only; move sizes to rem if phones need 大 */
+@media (max-width: 600px) {
+  .menu { width: calc(100% - 16px); margin: 8px auto auto; }
+  .top .menu-btn { width: 56px; height: 52px; }
+  .menu-in { padding: 16px; gap: 16px; }
+  .themes { padding: 12px; }
+  .themes ul { gap: 8px; }
+  .themes a { padding: 10px; }
+  .themes b { font-size: 16px; }
+  .ti img { height: 36px; }
+}
+</style>
+</head>
+<body id="top">
+
+<header class="top">
+  <div class="brand">
+    <img src="assets/img/logo-unesco.webp" alt="UNESCO Global Geopark">
+    <img class="logo-sq" src="assets/img/logo-color.webp" alt="Mine秋吉台ジオパーク">
+  </div>
+  <div class="tools">
+    <div class="lang" role="group" aria-label="言語 / Language">
+      <button type="button" data-lang="ja" aria-pressed="true" lang="ja">日本語</button>
+      <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
+    </div>
+    <button class="menu-btn" type="button" id="menu-open" aria-haspopup="dialog">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>MENU
+    </button>
+  </div>
+</header>
+
+<nav class="crumb" aria-label="現在地">
+  <ol><li><a href="explore.html">TOP</a></li><li><a href="explore.html#spots">お出かけスポット</a></li><li aria-current="page" id="crumb-name"></li></ol>
+</nav>
+
+<main id="main"></main>
+
+<dialog class="qdlg" id="qr" aria-labelledby="qr-h">
+  <div class="dlg-in">
+    <div class="dlg-top">
+      <h2 id="qr-h">スマホで地図を見る</h2>
+      <button class="x" type="button" data-close autofocus><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>閉じる</button>
+    </div>
+    <img id="qr-img" alt="">
+    <p>スマホのカメラで読みとると、Googleマップでこの場所が開きます。</p>
+  </div>
+</dialog>
+
+<div class="bar">
+  <a class="pill" href="explore.html#spots"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>もどる</a>
+  <a class="pill" href="welcome.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7M5 10v10h14V10"/></svg>はじめの画面へ</a>
+  <button class="pill primary" type="button" data-open="qr"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 18h2v2h-2z"/></svg>QRでスマホに送る</button>
+</div>
+
+<footer class="foot">
+  <img class="hills" src="assets/img/hills-bottom.webp" alt="">
+  <div class="wrap">
+    <div class="contact">
+      <b>問い合わせ先</b>
+      <p><b>Mine秋吉台ジオパーク推進協議会</b><br>山口県美祢市秋芳町秋吉11237-862<br>TEL 0837-63-0055 ｜ FAX 0837-63-0089</p>
+    </div>
+    <a class="pill pill--dark" href="#top">ページの上へ<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></a>
+  </div>
+</footer>
+
+<dialog class="menu" id="menu" aria-label="メニュー">
+  <div class="menu-in">
+    <div class="menu-top">
+      <a class="pill" href="welcome.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7M5 10v10h14V10"/></svg>はじめの画面へ</a>
+      <button class="x" type="button" data-close autofocus><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>閉じる</button>
+    </div>
+    <nav class="themes" aria-labelledby="themes-h">
+      <div class="themes-head"><h2 id="themes-h">テーマから選ぶ</h2><img src="assets/img/chara-point.webp" alt=""></div>
+      <ul>
+        <li><a href="about.html"><span class="ti"><img src="assets/img/chara-sit.webp" alt=""><span class="arr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span><b>Mine秋吉台ってなに？</b><small>大地のなりたち</small></a></li>
+        <li><a href="explore.html#spots"><span class="ti"><img src="assets/img/chara-binoculars.webp" alt=""><span class="arr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span><b>お出かけスポット</b><small>見る・歩く</small></a></li>
+        <li><a href="explore.html#exp"><span class="ti"><img src="assets/img/chara-loupe.webp" alt=""><span class="arr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span><b>体験</b><small>つくる・あそぶ</small></a></li>
+        <li><a href="explore.html#tour"><span class="ti"><img src="assets/img/chara-point.webp" alt=""><span class="arr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span><b>ジオツアー</b><small>ガイドと歩く</small></a></li>
+      </ul>
+    </nav>
+    <section class="settings" aria-labelledby="set-h">
+      <h2 id="set-h">表示の設定</h2>
+      <div class="set"><span id="lang-l">言語 / Language</span>
+        <div class="lang" role="group" aria-labelledby="lang-l">
+          <button type="button" data-lang="ja" aria-pressed="true" lang="ja">日本語</button>
+          <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
+        </div>
+      </div>
+      <div class="set set-fs"><span id="fs-l">文字の大きさ</span>
+        <div class="lang" role="group" aria-labelledby="fs-l">
+          <button type="button" data-fs="n" aria-pressed="true">標準</button>
+          <button type="button" data-fs="l" aria-pressed="false">大</button>
+        </div>
+      </div>
+    </section>
+    <div class="menu-qr">
+      <img src="assets/img/qr-official.svg" alt="公式サイト（mine-geo.com）を開くQRコード">
+      <p><b>スマホで公式サイトを見る</b><small>Mine秋吉台ジオパーク推進協議会</small></p>
+    </div>
+  </div>
+</dialog>
+
+<script>
+// Spot detail: renders one spot from ?id=, language + text size (shared across pages), popup menu, QR dialog.
+(function () {
+  'use strict';
+
+  // ---------- spot data (source: docs/content/mine-geo-content.md, mine-geo-places.md) ----------
+  // Only fields with a real source are shown; 所要時間・バリアフリー・駐車場・トイレ are not published yet.
+  const R = (k, r) => '<ruby>' + k + '<rt>' + r + '</rt></ruby>';
+  const SPOTS = {
+    akiyoshidai: {
+      name: '秋吉台', kana: 'あきよしだい', en: 'Akiyoshidai Plateau', type: 'カルスト台地', color: 'white',
+      img: 'p1-akiyoshidai', alt: '草原に白い石灰岩が点在する秋吉台',
+      info: [['clock', '見学', 'いつでも見学できます（屋外）'], ['tel', '問い合わせ', 'カルスター<br>TEL: <span class="nw">0837-63-0040</span>']],
+      bf: '', parking: '', wc: '', // バリアフリー・駐車場・トイレ – fill in when confirmed (e.g. '有' / '無'); empty shows 確認中
+      about: ['日本最大級のカルスト' + R('台地', 'だいち') + 'です。草原のあちこちに、白い' + R('石灰岩', 'せっかいがん') + 'が顔を出しています。',
+        '羊の群れのように見える白い岩の表面には、雨にとけてできた' + R('溝', 'みぞ') + 'があります。この溝を「カレン」と呼びます。',
+        'いちばん高い山は' + R('龍護峰', 'りゅうごほう') + 'で、' + R('標高', 'ひょうこう') + 'は425.5mです。'],
+      q: 'なぜ草原に白い岩がならんでいるの？',
+      a: '石灰岩が雨水に少しずつとかされ、とけ残った部分が地面から顔を出しているからです。地面がすりばちのようにへこんだ「ドリーネ」も、同じしくみでできました。地下には、見つかっているだけで453か所の' + R('鍾乳洞', 'しょうにゅうどう') + 'があります。',
+      addr: '〒754-0511 山口県美祢市秋芳町秋吉11237-862（カルスト展望台・カルスター）', ll: '34.234894,131.3058647',
+      rel: [['spot.html?id=akiyoshido', 'spot-akiyoshido', 'お出かけスポット', '秋芳洞'], ['explore.html#tour', 'tour-2', 'ジオツアー', 'ジオガイドと歩く'], ['spot.html?id=benten', 'p2-benten', 'お出かけスポット', '別府弁天池']],
+    },
+    akiyoshido: {
+      name: '秋芳洞', kana: 'あきよしどう', en: 'Akiyoshido Cave', type: '洞窟', color: 'white',
+      img: 'spot-akiyoshido', alt: '秋芳洞の百枚皿',
+      info: [['clock', '営業時間', '8:30〜16:30（年中無休）'], ['yen', '料金', '高校生以上 1,300円／中学生 1,050円／小学生 700円／未就学児 無料'], ['tel', '問い合わせ', '秋吉台観光交流センター<br>TEL: <span class="nw">0837-62-0305</span>']],
+      bf: '', parking: '', wc: '', // バリアフリー・駐車場・トイレ – fill in when confirmed (e.g. '有' / '無'); empty shows 確認中
+      about: ['秋吉台の地下にある、とても大きな' + R('鍾乳洞', 'しょうにゅうどう') + 'です。長さは11km以上で日本で2番目、中の広さは国内でもトップクラスです。',
+        'いまも地下の川が流れ、' + R('鍾乳石', 'しょうにゅうせき') + 'がたくさんあります。洞窟だけにすむ小さな生き物もいて、5〜8月にはコウモリも見られます。',
+        '入口は「正面入口」と「' + R('黒谷', 'くろたに') + '入口」の2つです。'],
+      q: 'なぜ地下にこんなに大きな洞窟ができたの？',
+      a: '秋吉台にしみこんだ雨水が、石灰岩をとかしながら地下を流れてできました。秋芳洞は地下を流れる水の出口にあたる「生きている洞窟」で、洞窟の向きは' + R('断層', 'だんそう') + 'にそっています。',
+      addr: '〒754-0511 山口県美祢市秋芳町秋吉3449-1（正面入口）', ll: '34.2269667,131.3045194',
+      rel: [['spot.html?id=kagekiyo', 'p3-cave', 'お出かけスポット', '景清洞'], ['explore.html#exp', 'exp-cave', '体験', '洞窟見学・探検'], ['spot.html?id=akiyoshidai', 'p1-akiyoshidai', 'お出かけスポット', '秋吉台']],
+    },
+    benten: {
+      name: '別府弁天池', kana: 'べっぷべんてんいけ', en: 'Beppu Benten Pond', type: 'わき水', color: 'white',
+      img: 'p2-benten', alt: '青く透き通った別府弁天池の湧水',
+      info: [['clock', '見学', 'いつでも見学できます（屋外）'], ['tel', '問い合わせ', '秋吉台観光交流センター<br>TEL: <span class="nw">0837-62-0305</span>']],
+      bf: '', parking: '', wc: '', // バリアフリー・駐車場・トイレ – fill in when confirmed (e.g. '有' / '無'); empty shows 確認中
+      about: [R('厳島', 'いつくしま') + '神社の' + R('境内', 'けいだい') + 'にある池です。まわりは約40m、まん中の深さは約4mあります。',
+        'すきとおった青い水は、昔から飲み水や田畑の水として使われてきました。いまはマスの' + R('養殖', 'ようしょく') + 'にも使われています。'],
+      q: 'この青い水は、どこから来ているの？',
+      a: '北西の山のほうからしみこんだ地下水が、' + R('断層', 'だんそう') + 'にそってわき出していると考えられています。池の底が赤く見えるのは、「ベニマダラ」という' + R('藻', 'も') + 'のなかまです。',
+      addr: '〒754-0603 山口県美祢市秋芳町別府1578', ll: '34.2551327,131.2448656',
+      rel: [['explore.html#exp', 'exp-trout', '体験', 'ニジマス釣り体験'], ['spot.html?id=akiyoshidai', 'p1-akiyoshidai', 'お出かけスポット', '秋吉台'], ['spot.html?id=akiyoshido', 'spot-akiyoshido', 'お出かけスポット', '秋芳洞']],
+    },
+    kagekiyo: {
+      name: '景清洞', kana: 'かげきよどう', en: 'Kagekiyodo Cave', type: '洞窟', color: 'white',
+      img: 'p3-cave', alt: '景清洞の入口。石灰岩の天井と小川',
+      info: [['clock', '営業時間', '8:30〜17:15（最終入洞 16:30・年中無休）'], ['yen', '料金', '中学生以上 1,100円／小学生 600円／未就学児 無料。探検コースは＋300円（ヘルメット・長ぐつつき）'], ['tel', '問い合わせ', '景清洞案内所<br>TEL: <span class="nw">08396-2-2201</span>']],
+      bf: '', parking: '', wc: '', // バリアフリー・駐車場・トイレ – fill in when confirmed (e.g. '有' / '無'); empty shows 確認中
+      about: ['川が流れこむ、長さ約1.5kmの洞窟です（いまは通りぬけできません）。',
+        'かべには、水の流れがつくったもようや、サンゴ・ウミユリの' + R('化石', 'かせき') + 'が見られます。',
+        '見学コースの最後の400mは、ライトだけで進む「' + R('探検', 'たんけん') + 'コース」です。'],
+      q: '洞窟の中の' + R('鍾乳石', 'しょうにゅうせき') + 'が茶色いのはなぜ？',
+      a: '川が洞窟の中に流れこみ、通りぬけて、ふたたび地上に出ています。川が運んだ' + R('泥', 'どろ') + 'がまざるので、鍾乳石が茶色くなっています。',
+      addr: '〒754-0302 山口県美祢市美東町赤3108', ll: '34.2895927,131.3261693',
+      rel: [['explore.html#exp', 'exp-cave', '体験', '洞窟見学・探検'], ['spot.html?id=akiyoshido', 'spot-akiyoshido', 'お出かけスポット', '秋芳洞'], ['spot.html?id=akiyoshidai', 'p1-akiyoshidai', 'お出かけスポット', '秋吉台']],
+    },
+    naganobori: {
+      name: '長登銅山跡', kana: 'ながのぼりどうざんあと', en: 'Naganobori Copper Mine Ruins', type: '文化サイト', color: 'red',
+      img: 'p5-smelting', alt: '長登祭りで、炉から火の粉が上がる銅の製錬',
+      info: [['clock', '営業時間', '長登銅山文化交流館　9:00〜17:00（月曜休み）'], ['tel', '問い合わせ', '長登銅山文化交流館<br>TEL: <span class="nw">08396-2-0055</span>']],
+      bf: '', parking: '', wc: '', // バリアフリー・駐車場・トイレ – fill in when confirmed (e.g. '有' / '無'); empty shows 確認中
+      about: ['約1億年前、秋吉台の石灰岩とマグマが出会ってできた銅の' + R('鉱床', 'こうしょう') + 'です。古代から近代まで、くり返し銅がほり出されました。',
+        '調べてみると、奈良・' + R('東大寺', 'とうだいじ') + 'の大仏に使われた銅だとわかり、日本でいちばん古い国の銅山とされています。',
+        '出土品の一部は「長登銅山文化交流館（大仏ミュージアム）」で見られます。'],
+      q: 'なぜ石灰岩の土地に銅があるの？',
+      a: '地下から上がってきたマグマの熱で石灰岩が別の岩石に変わり、そのときに銅がたまりました。このような鉱床を「スカルン鉱床」と呼びます。',
+      addr: '〒754-0213 山口県美祢市美東町長登610（長登銅山文化交流館）', ll: '34.243833,131.3411245',
+      rel: [['explore.html#exp', 'exp-medal', '体験', 'メダル鋳造体験'], ['explore.html#exp', 'exp-mokkan', '体験', '木簡体験'], ['spot.html?id=akiyoshidai', 'p1-akiyoshidai', 'お出かけスポット', '秋吉台']],
+    },
+  };
+  const ICONS = {
+    wheel: '<circle cx="10" cy="4.5" r="1.8"/><path d="M10 7.5v6h5l3 5.5M10 10.5h5"/><path d="M7.5 11a5.5 5.5 0 1 0 7 7"/>',
+    park: '<rect x="4" y="4" width="16" height="16" rx="3"/><path d="M10 16V8h3a2.5 2.5 0 0 1 0 5h-3"/>',
+    wc: '<path d="M12 3v18"/><circle cx="7" cy="5.5" r="1.8"/><path d="M5 9h4v6H8v5H6v-5H5z"/><circle cx="17" cy="5.5" r="1.8"/><path d="M17 8.5l3 7.5h-6zM16 16v4M18 16v4"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    yen: '<path d="M6 4l6 8 6-8M12 12v8M7 13h10M7 17h10"/>',
+    tel: '<path d="M5 4h4l2 5-3 2a11 11 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',
+  };
+  const COLOR = {
+    white: '<svg class="mark" viewBox="0 0 18 18" aria-hidden="true"><circle class="m-white" cx="9" cy="9" r="7" stroke-width="2.5"/></svg>白｜石灰岩',
+    red: '<svg class="mark" viewBox="0 0 18 18" aria-hidden="true"><path class="m-red" d="M9 1l8 15H1z"/></svg>赤｜銅',
+  };
+
+  const id = new URLSearchParams(location.search).get('id');
+  const key = Object.prototype.hasOwnProperty.call(SPOTS, id) ? id : 'akiyoshidai';
+  if (key !== id) history.replaceState(null, '', '?id=' + key); // URL matches what is shown
+  const s = SPOTS[key];
+  document.title = 'Mine秋吉台ジオパーク｜' + s.name;
+  document.getElementById('crumb-name').textContent = s.name;
+  const qrImg = document.getElementById('qr-img');
+  qrImg.src = 'assets/img/qr-map-' + key + '.svg';
+  qrImg.alt = s.name + 'の場所をGoogleマップで開くQRコード';
+
+  // wireframe order: 営業時間・料金 → バリアフリー・駐車場・トイレ → 問い合わせ
+  const rows = [...s.info.filter((r) => r[0] !== 'tel'), ['wheel', 'バリアフリー', s.bf], ['park', '駐車場', s.parking], ['wc', 'トイレ', s.wc], ...s.info.filter((r) => r[0] === 'tel')];
+  document.getElementById('main').innerHTML = `
+    <section class="hero" aria-labelledby="spot-h">
+      <img class="bg" src="assets/img/${s.img}.webp" alt="${s.alt}">
+      <div class="title">
+        <ul class="tags"><li>お出かけスポット</li><li>${s.type}</li><li>${COLOR[s.color]}</li></ul>
+        <div class="name"><small>${s.kana}</small><h1 id="spot-h">${s.name}</h1></div>
+        <span class="en" lang="en">${s.en}</span>
+      </div>
+      <img class="chara" src="assets/img/chara-binoculars.webp" alt="">
+      <img class="hills" src="assets/img/hills-bottom.webp" alt="">
+    </section>
+    <div class="page">
+      <div class="side">
+      <section class="card" aria-labelledby="info-h">
+        <h2 id="info-h">基本情報</h2>
+        <ul class="info">${rows.map(([i, label, text]) => `<li><span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24">${ICONS[i]}</svg></span><span><b>${label}</b>${text || '<span class="tbd">確認中</span>'}</span></li>`).join('')}</ul>
+      </section>
+      <section class="card access" aria-labelledby="access-h">
+        <h2 id="access-h">アクセス</h2>
+        <iframe src="https://maps.google.com/maps?q=${s.ll}&z=14&hl=ja&output=embed" title="${s.name}の地図" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <p class="addr"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>${s.addr}</p>
+        <div class="carry"><img src="${qrImg.src}" alt="${qrImg.alt}"><p><b>スマホで読みとって、この場所を地図で開けます</b></p></div>
+      </section>
+      </div>
+      <div class="body">
+      <section aria-labelledby="about-h">
+        <h2 class="h2bar" id="about-h">どんなところ？</h2>
+        ${s.about.map((t) => `<p>${t}</p>`).join('')}
+      </section>
+      <section class="geo" aria-labelledby="geo-h">
+        <span class="label">ここがジオ！</span>
+        <h3 id="geo-h">${s.q}</h3>
+        <p>${s.a}</p>
+      </section>
+      </div>
+    </div>
+    <section class="rel" aria-labelledby="rel-h">
+      <h2 id="rel-h">あわせて楽しむ</h2>
+      <ul>${s.rel.map(([href, img, tag, name]) => `<li><a href="${href}"><img src="assets/img/${img}.webp" alt="" loading="lazy"><p><i>${tag}</i>${name}</p></a></li>`).join('')}</ul>
+    </section>`;
+
+  // QR dialog
+  document.querySelectorAll('[data-open]').forEach((b) => b.addEventListener('click', () => document.getElementById(b.dataset.open).showModal()));
+
+  // language – EN copy comes later; for now only the choice is kept across pages
+  const langBtns = document.querySelectorAll('[data-lang]');
+  function setLang(l) {
+    langBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === l)));
+    try { localStorage.setItem('lang', l); } catch (e) {}
+  }
+  langBtns.forEach((b) => b.addEventListener('click', () => setLang(b.dataset.lang)));
+  let saved = 'ja';
+  try { saved = localStorage.getItem('lang'); } catch (e) {}
+  setLang(saved === 'en' ? 'en' : 'ja');
+
+  // 文字の大きさ 標準 / 大 – kept across pages
+  const fsBtns = document.querySelectorAll('[data-fs]');
+  function setFs(v) {
+    document.documentElement.dataset.fs = v;
+    fsBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.fs === v)));
+    try { localStorage.setItem('fs', v); } catch (e) {}
+  }
+  fsBtns.forEach((b) => b.addEventListener('click', () => setFs(b.dataset.fs)));
+  let fs = 'n';
+  try { fs = localStorage.getItem('fs'); } catch (e) {}
+  setFs(fs === 'l' ? 'l' : 'n');
+
+  // popup menu; every dialog closes 3 ways: × (data-close), backdrop tap, Esc (native)
+  const menu = document.getElementById('menu');
+  document.getElementById('menu-open').addEventListener('click', () => menu.showModal());
+  document.querySelectorAll('dialog').forEach((d) => d.addEventListener('click', (e) => {
+    if (e.target === d || e.target.closest('[data-close], a')) d.close();
+  }));
+})();
+</script>
+</body>
+</html>

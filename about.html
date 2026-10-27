@@ -1,0 +1,602 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Mine秋吉台ジオパーク｜Mine秋吉台ってなに？</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@600;700;800&family=Noto+Sans+JP:wght@400;700&family=Zen+Maru+Gothic:wght@500;700;900&display=swap">
+<style>
+/* Page ⑤ – About「Mine秋吉台ってなに？」. One self-contained file: tokens (copy of src/css/tokens.css) + page styles.
+   Information sits on flat white/cream surfaces; decoration (hills, 探検隊) on edges only. */
+:root {
+  --red: #8E1728; --red-deep: #5E0F1A;
+  --ink: #2F2C28; --ink-soft: #5C5850;
+  --paper: #FFFFFF; --cream: #F6F3EC; --cream-warm: #FBF7EE;
+  --grass: #BAD98A; --leaf: #E7F0E1; --leaf-menu: #DCEBD2;
+  --line: #D9D4CA; --focus: #FFD84D;
+  --tag: #F3E3A6; --pink: #F6DDE0;
+  --f-display: 'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', 'Noto Sans JP', sans-serif;
+  --f-body: 'Noto Sans JP', 'Hiragino Sans', sans-serif;
+  --f-latin: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+  --fs-body: 18px; --lh-body: 1.8;
+  --tap: 48px;
+  --r-card: 20px;
+  --shadow-soft: 0 4px 14px rgba(47, 44, 40, .12);
+  --hdr: 80px;
+  --pad: 32px;
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+@media (prefers-reduced-motion: no-preference) {
+  html, .track { scroll-behavior: smooth; }
+  .tile { transition: transform .15s; }
+}
+body {
+  margin: 0; background: var(--cream-warm); color: var(--ink);
+  font: var(--fs-body)/var(--lh-body) var(--f-body);
+  -webkit-tap-highlight-color: transparent;
+}
+img { max-width: 100%; display: block; }
+h1, h2, h3, p, ul { margin: 0; }
+ul { padding: 0; list-style: none; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 4px solid var(--focus); outline-offset: 3px; }
+rt { font-size: .45em; font-weight: 700; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 64px var(--pad); }
+
+/* ---------- header ---------- */
+.top {
+  position: sticky; top: 0; z-index: 10; height: var(--hdr);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 0 max(var(--pad), env(safe-area-inset-right, 0px)) 0 max(var(--pad), env(safe-area-inset-left, 0px));
+  background: var(--paper); box-shadow: 0 2px 12px rgba(47, 44, 40, .08);
+}
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand img { height: 48px; width: auto; }
+.brand .logo-sq { height: 64px; } /* square logo: taller so its text stays readable */
+.tools { display: flex; align-items: center; gap: 12px; }
+.lang { display: flex; padding: 4px; background: var(--paper); border: 1px solid var(--line); border-radius: 999px; }
+.lang button {
+  min-width: 64px; height: var(--tap); border: 0; border-radius: 999px;
+  background: transparent; cursor: pointer; font-weight: 700; font-size: 15px; white-space: nowrap;
+}
+.lang button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.lang button[lang="en"] { font-family: var(--f-latin); font-size: 16px; }
+.pill {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 56px; padding: 0 22px;
+  border: 2px solid var(--ink); border-radius: 999px; background: var(--paper);
+  font: 700 17px/1.2 var(--f-display); text-decoration: none; cursor: pointer; white-space: nowrap;
+}
+.pill svg { width: 22px; height: 22px; flex: none; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+/* ---------- section heads ---------- */
+.kicker { display: block; font: 700 14px var(--f-latin); letter-spacing: .1em; color: var(--red); }
+.head { display: flex; flex-direction: column; gap: 6px; margin-bottom: 28px; }
+.head h2 { font: 700 32px/1.3 var(--f-display); }
+
+.hills { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); width: max(130%, 1100px); max-width: none; pointer-events: none; }
+/* ---------- footer ---------- */
+.foot { position: relative; overflow-x: clip; background: var(--grass); margin-top: max(22.5vw, 190px); } /* = hills height, so they never cover content */
+.foot .hills { bottom: 100%; }
+.foot .wrap { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; padding-top: 24px; padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px)); }
+.contact { display: flex; align-items: center; gap: 20px; background: var(--paper); border-radius: 16px; padding: 16px 24px; font-size: 15px; line-height: 1.7; }
+.contact > b { flex: none; padding-right: 20px; border-right: 1px solid var(--line); font: 700 16px var(--f-display); }
+.contact p b { font-family: var(--f-display); font-size: 16px; }
+.pill--dark { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+/* ---------- About ---------- */
+body { padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)); } /* room for the fixed bottom bar */
+html { scroll-padding: var(--hdr) 0 96px; } /* focused items never hide under the header or the bar */
+.crumb { max-width: 1240px; margin: 0 auto; padding: 14px var(--pad) 0; font-size: 15px; }
+.crumb ol { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 0; list-style: none; }
+.crumb li + li::before { content: "＞"; content: "＞" / ""; margin-right: 8px; color: var(--ink-soft); } /* not read aloud */
+.crumb a { display: inline-flex; align-items: center; justify-content: center; min-height: var(--tap); min-width: var(--tap); padding: 0 8px; font-weight: 700; }
+
+.hero { position: relative; overflow: hidden; padding: 40px var(--pad) calc(max(22.5vw, 190px) + 16px); text-align: center; background: var(--cream-warm); }
+.hero .kicker { letter-spacing: .14em; }
+.hero h1 { font: 900 44px/1.3 var(--f-display); margin: 10px 0 8px; }
+.hero p { font-size: 18px; color: var(--ink-soft); }
+.hero .chara { position: absolute; z-index: 1; right: max(32px, 8%); bottom: 70px; height: 120px; width: auto; } /* stands on the hills */
+
+.page { max-width: 1240px; margin: 0 auto; padding: 0 var(--pad); }
+.toc { padding: 32px 0 8px; }
+.toc h2 { font: 700 20px/1.4 var(--f-display); margin-bottom: 14px; }
+.toc ol { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; padding: 0; list-style: none; }
+.toc a {
+  display: flex; align-items: center; gap: 12px; min-height: 64px; padding: 10px 16px; height: 100%;
+  background: var(--paper); border: 2px solid var(--line); border-radius: 16px; text-decoration: none; font: 700 17px/1.4 var(--f-display);
+}
+.num { flex: none; width: 34px; height: 34px; border-radius: 50%; display: grid; place-items: center; background: var(--red); color: var(--paper); font: 700 16px var(--f-latin); }
+.part { padding: 56px 0 24px; border-bottom: 1px solid var(--line); }
+.part:last-of-type { border-bottom: 0; }
+.part .head { margin-bottom: 24px; }
+.part .head .kicker { display: flex; align-items: center; gap: 10px; }
+.part .head .num { width: 30px; height: 30px; font-size: 14px; }
+.part h3 { font: 700 22px/1.45 var(--f-display); margin: 36px 0 16px; }
+.part p + p { margin-top: 12px; }
+.totoc { display: flex; justify-content: flex-end; align-items: center; min-height: var(--tap); margin-top: 24px; font: 700 15px var(--f-display); }
+
+/* video: poster + big play button; the YouTube player loads only after a tap */
+.frame { position: relative; aspect-ratio: 16 / 9; border-radius: var(--r-card); overflow: hidden; background: var(--ink); }
+.frame img, .frame iframe { width: 100%; height: 100%; object-fit: cover; border: 0; display: block; }
+.frame img { opacity: .75; }
+.play {
+  position: absolute; inset: 0; margin: auto; width: 120px; height: 120px; border: 0; border-radius: 50%;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px;
+  background: var(--ink); color: var(--paper); cursor: pointer; box-shadow: 0 0 0 8px rgba(255, 255, 255, .7); /* not red: one red button per screen */
+  font: 700 14px/1.2 var(--f-display);
+}
+.play svg { width: 44px; height: 44px; fill: currentColor; }
+.vtags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; padding: 0; list-style: none; }
+.vtags li { padding: 4px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); font-size: 15px; }
+
+.cert { display: inline-block; margin: 28px 0 14px; padding: 4px 16px; border: 2px solid var(--ink); border-radius: 999px; background: var(--paper); font: 700 15px/1.6 var(--f-display); }
+.lead-b { font-weight: 700; }
+.colors { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 20px; padding: 0; list-style: none; }
+.colors li { background: var(--paper); border-radius: var(--r-card); overflow: hidden; box-shadow: var(--shadow-soft); }
+.colors .band { height: 14px; } /* own pattern per colour: never colour alone */
+.c-white .band { background: radial-gradient(var(--ink) 1.5px, transparent 2px) 0 0 / 10px 10px, var(--paper); border-bottom: 1px solid var(--line); }
+.c-black .band { background: repeating-linear-gradient(90deg, var(--ink) 0 6px, var(--ink-soft) 6px 9px); }
+.c-red .band { background: repeating-linear-gradient(45deg, var(--red) 0 6px, var(--red-deep) 6px 10px); }
+.colors div { padding: 16px 18px 20px; }
+.colors h3 { display: flex; align-items: center; gap: 12px; margin: 0 0 8px; font: 700 15px/1.4 var(--f-display); }
+.colors h3 i { flex: none; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; font: 900 22px var(--f-display); font-style: normal; }
+.c-white h3 i { background: var(--paper); border: 3px solid var(--ink); }
+.c-black h3 i { background: var(--ink); color: var(--paper); }
+.c-red h3 i { background: var(--red); color: var(--paper); }
+.colors h3 strong { display: block; font-size: 22px; }
+.colors p { font-size: 16px; line-height: 1.75; }
+
+.geo { display: grid; gap: 28px; }
+.layers { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 24px 16px; background: var(--paper); border-radius: var(--r-card); }
+.layers div { width: min(100%, 300px); padding: 10px 14px; border: 2px solid var(--ink); border-radius: 14px; text-align: center; font: 700 20px/1.4 var(--f-display); }
+.layers small { display: block; font: 400 14px/1.6 var(--f-body); color: var(--ink-soft); }
+.l-life { background: var(--tag); }
+.l-nature { background: var(--leaf-menu); }
+.l-earth { background: var(--line); }
+.layers .up { font: 700 18px/1 var(--f-latin); color: var(--ink-soft); }
+.layers p { margin-top: 8px; font-size: 15px; color: var(--ink-soft); }
+.can { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 0; list-style: none; }
+.can li { background: var(--paper); border-radius: var(--r-card); overflow: hidden; box-shadow: var(--shadow-soft); }
+.can img { width: 100%; aspect-ratio: 16 / 10; object-fit: contain; background: var(--paper); }
+.can div { padding: 14px 18px 18px; }
+.can h4 { display: flex; align-items: center; gap: 10px; margin: 0 0 6px; font: 700 18px/1.4 var(--f-display); }
+.can p { font-size: 16px; line-height: 1.75; }
+.unesco { display: flex; gap: 20px; align-items: flex-start; margin-top: 24px; padding: 22px 24px; background: var(--paper); border: 2px solid var(--ink); border-radius: var(--r-card); }
+.unesco img { width: 84px; height: auto; flex: none; }
+.unesco h3 { margin: 0 0 8px; }
+.src { margin-top: 12px; font-size: 14px; color: var(--ink-soft); }
+.part .pill { margin-top: 20px; }
+
+.pillars { display: grid; gap: 14px; padding: 0; list-style: none; margin-top: 20px; }
+.pillars li { display: flex; gap: 16px; align-items: flex-start; padding: 18px 20px; background: var(--paper); border-radius: var(--r-card); box-shadow: var(--shadow-soft); }
+.pillars h3 { margin: 0 0 4px; font: 700 22px/1.6 var(--f-display); }
+.pillars h3 small { font-size: 16px; color: var(--ink-soft); }
+.charter { display: flex; gap: 20px; align-items: center; margin-top: 24px; padding: 22px 24px; background: var(--paper); border: 2px solid var(--ink); border-radius: var(--r-card); }
+.charter img { width: 120px; height: 120px; flex: none; }
+.charter h3 { margin: 0 0 6px; }
+
+.theme { margin-top: 4px; padding: 20px 24px; background: var(--tag); border-radius: var(--r-card); }
+.theme span { display: block; font: 700 14px var(--f-display); color: var(--ink-soft); }
+.theme p { font: 700 22px/1.6 var(--f-display); }
+.stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 16px; padding: 0; list-style: none; }
+.stats li { padding: 16px 10px; background: var(--paper); border-radius: 16px; text-align: center; font-size: 14px; color: var(--ink-soft); }
+.stats b { display: block; font: 800 26px/1.3 var(--f-latin); color: var(--ink); }
+.stats b span { font-family: var(--f-display); font-size: 18px; }
+.steps { position: relative; display: grid; gap: 14px; padding: 0; list-style: none; }
+.steps::before { content: ""; position: absolute; left: 21px; top: 20px; bottom: 20px; width: 3px; background: var(--line); }
+.steps li { position: relative; display: flex; gap: 16px; align-items: flex-start; }
+.steps .num { width: 44px; height: 44px; font-size: 18px; }
+.steps div { flex: 1; padding: 14px 18px; background: var(--paper); border-radius: 16px; }
+.steps em { display: block; font: 700 15px/1.5 var(--f-display); font-style: normal; color: var(--red); }
+.others { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; padding: 0; list-style: none; }
+.others li { padding: 6px 14px; background: var(--paper); border: 1px solid var(--line); border-radius: 999px; font-size: 15px; }
+.watch { margin-top: 24px; }
+.watch svg { fill: currentColor; stroke: none; }
+
+.next { padding: 48px 0 8px; }
+.next h2 { font: 700 24px/1.4 var(--f-display); margin-bottom: 16px; }
+.next ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 14px; padding: 0; list-style: none; }
+.next svg { width: 24px; height: 24px; flex: none; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+.next a { display: flex; align-items: center; justify-content: space-between; gap: 10px; min-height: 72px; padding: 0 20px; background: var(--paper); border: 2px solid var(--ink); border-radius: 18px; text-decoration: none; font: 700 18px/1.4 var(--f-display); }
+
+/* bottom bar (U4): もどる / はじめの画面へ / QR – 64px targets */
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 9; display: flex; justify-content: center; gap: 12px;
+  padding: 10px var(--pad) calc(10px + env(safe-area-inset-bottom, 0px));
+  background: var(--paper); box-shadow: 0 -2px 12px rgba(47, 44, 40, .1);
+}
+.bar .pill { min-height: 64px; }
+.primary { background: var(--red); color: var(--paper); border-color: var(--red); box-shadow: 0 5px 0 var(--red-deep); }
+
+/* dialogs: anime video, QR */
+.vdlg { width: min(900px, calc(100% - 32px)); border-radius: 24px; }
+.qdlg { width: min(440px, calc(100% - 32px)); border-radius: 24px; text-align: center; }
+.dlg-in { padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 16px; }
+.dlg-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; text-align: left; }
+.dlg-top h2 { font: 700 22px/1.45 var(--f-display); }
+.dlg-top small { display: block; font: 400 15px var(--f-body); color: var(--ink-soft); }
+.vdlg .pill { align-self: center; }
+.qdlg img { width: 220px; height: 220px; margin: 0 auto; }
+
+@media (min-width: 1024px) {
+  .page { display: grid; grid-template-columns: 280px minmax(0, 760px); justify-content: center; gap: 56px; }
+  .toc { position: sticky; top: calc(var(--hdr) + 24px); align-self: start; }
+  .toc ol { grid-template-columns: 1fr; }
+  .totoc { display: none; }
+  .geo { grid-template-columns: 300px 1fr; align-items: start; }
+}
+@media (max-width: 600px) {
+  .hero h1 { font-size: 32px; }
+  .hero .chara { height: 84px; bottom: 44px; }
+  .toc ol, .can, .colors, .next ul { grid-template-columns: 1fr; }
+  .stats { grid-template-columns: 1fr; }
+  .unesco, .charter { flex-direction: column; }
+  .bar { gap: 6px; }
+  .bar .pill { min-height: 56px; padding: 0 12px; font-size: 14px; }
+  .bar .pill svg { display: none; } /* phone: text only, still ≥48px */
+  .play { width: 96px; height: 96px; }
+  :root { --pad: 16px; --hdr: 64px; }
+  .brand img { height: 34px; }
+  .brand .logo-sq { height: 52px; }
+  .brand img:first-child { display: none; }
+  .lang button { min-width: 48px; padding: 0 8px; font-size: 14px; }
+  .contact { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .contact > b { border: 0; padding: 0; }
+}
+/* ---------- popup menu (identical block in every page except Welcome) ---------- */
+.menu-btn {
+  flex: none; width: 64px; height: 64px; border: 0; border-radius: 16px; background: var(--ink); color: var(--paper);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer;
+  font: 700 11px/1 var(--f-latin); letter-spacing: .06em;
+}
+.menu-btn svg, .x svg, .arr svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+dialog { padding: 0; border: 0; color: var(--ink); background: var(--paper); }
+dialog::backdrop { background: rgba(47, 44, 40, .45); }
+.menu {
+  width: min(560px, calc(100% - 32px)); max-height: calc(100% - 16px); margin: 8px 16px auto auto;
+  border-radius: 24px; box-shadow: 0 16px 40px rgba(47, 44, 40, .25);
+}
+.menu-in { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+.menu-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.x {
+  flex: none; width: 72px; height: 72px; border: 0; border-radius: 18px; background: var(--ink); color: var(--paper);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer;
+  font: 700 13px/1 var(--f-display);
+}
+.themes { background: var(--leaf-menu); border-radius: 22px; padding: 16px 16px 18px; }
+.themes-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.themes-head h2 { font: 700 19px/1.4 var(--f-display); }
+.themes-head img { height: 52px; width: auto; }
+.themes ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.themes a {
+  min-height: 112px; height: 100%; padding: 12px 14px; border-radius: 16px; background: var(--paper);
+  display: flex; flex-direction: column; gap: 4px; text-decoration: none;
+}
+.ti { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
+.ti img { height: 44px; width: auto; }
+.arr { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--ink); display: grid; place-items: center; }
+.arr svg { width: 18px; height: 18px; }
+.themes b { font: 700 18px/1.4 var(--f-display); }
+.themes small { font-size: 14px; color: var(--ink-soft); }
+.settings { background: var(--cream); border-radius: 20px; padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; }
+.settings h2 { font: 700 16px/1.4 var(--f-display); }
+.set { display: flex; align-items: center; justify-content: space-between; gap: 12px; font: 700 16px/1.4 var(--f-display); }
+.set .lang button { min-width: 72px; font-size: 16px; }
+.set [data-fs="l"] { font-size: 20px; }
+.menu-qr { display: flex; align-items: center; gap: 16px; border-top: 1px solid var(--line); padding-top: 18px; }
+.menu-qr img { width: 96px; height: 96px; flex: none; }
+.menu-qr b { display: block; font: 700 17px/1.4 var(--f-display); }
+.menu-qr small { font-size: 14px; color: var(--ink-soft); }
+/* 文字の大きさ「大」: body 18 → ~22px, headings scale with it */
+@media (min-width: 768px) { html[data-fs="l"] body { zoom: 1.2; } }
+@media (max-width: 767px) { .set-fs { display: none; } } /* 大 needs room; phones pinch-zoom instead */ /* ponytail: zoom narrows the layout, so tablets/PC only; move sizes to rem if phones need 大 */
+@media (max-width: 600px) {
+  .menu { width: calc(100% - 16px); margin: 8px auto auto; }
+  .top .menu-btn { width: 56px; height: 52px; }
+  .menu-in { padding: 16px; gap: 16px; }
+  .themes { padding: 12px; }
+  .themes ul { gap: 8px; }
+  .themes a { padding: 10px; }
+  .themes b { font-size: 16px; }
+  .ti img { height: 36px; }
+}
+</style>
+</head>
+<body id="top">
+
+<header class="top">
+  <div class="brand">
+    <img src="assets/img/logo-unesco.webp" alt="UNESCO Global Geopark">
+    <img class="logo-sq" src="assets/img/logo-color.webp" alt="Mine秋吉台ジオパーク">
+  </div>
+  <div class="tools">
+    <div class="lang" role="group" aria-label="言語 / Language">
+      <button type="button" data-lang="ja" aria-pressed="true" lang="ja">日本語</button>
+      <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
+    </div>
+    <button class="menu-btn" type="button" id="menu-open" aria-haspopup="dialog">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>MENU
+    </button>
+  </div>
+</header>
+
+
+<nav class="crumb" aria-label="現在地">
+  <ol><li><a href="explore.html">TOP</a></li><li aria-current="page">Mine秋吉台ってなに？</li></ol>
+</nav>
+
+<main>
+  <section class="hero" aria-labelledby="about-h">
+    <span class="kicker">ABOUT MINE-AKIYOSHIDAI</span>
+    <h1 id="about-h">Mine秋吉台ってなに？</h1>
+    <p>大地の成り立ちと、人々のくらしの物語</p>
+    <img class="chara" src="assets/img/chara-loupe.webp" alt="">
+    <img class="hills" src="assets/img/hills-bottom.webp" alt="">
+  </section>
+
+  <div class="page">
+    <nav class="toc" id="toc" aria-labelledby="toc-h">
+      <h2 id="toc-h">このページでわかること</h2>
+      <ol>
+        <li><a href="#s1"><span class="num">1</span>Mine秋吉台ジオパークとは</a></li>
+        <li><a href="#s2"><span class="num">2</span>ジオパークってなんだろう？</a></li>
+        <li><a href="#s3"><span class="num">3</span>基本理念</a></li>
+        <li><a href="#s4"><span class="num">4</span>大地と人々の物語</a></li>
+      </ol>
+    </nav>
+
+    <div>
+      <!-- 1 -->
+      <section class="part" id="s1" aria-labelledby="s1-h">
+        <div class="head"><span class="kicker"><span class="num">1</span>ABOUT</span><h2 id="s1-h">Mine秋吉台ジオパークとは</h2></div>
+        <div class="frame" data-yt="DwgzzKt5dYA" data-title="Mine秋吉台ジオパーク 紹介動画">
+          <img src="assets/img/p1-akiyoshidai.webp" alt="">
+          <button class="play" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l12 7-12 7z"/></svg>再生</button>
+        </div>
+        <ul class="vtags"><li>紹介動画</li><li>字幕：オン</li><li>自動再生しません</li><li>音が出ます</li></ul>
+
+        <span class="cert">2026年4月23日 ユネスコ世界ジオパークとして認定</span>
+        <p class="lead-b">Mine秋吉台ジオパークは、日本最大級のカルスト<ruby>台地<rt>だいち</rt></ruby>「秋吉台」を中心とする、山口県美祢市のジオパークです。</p>
+        <p>美祢の大地の成り立ちは、<b>白・黒・赤</b>の3つの色で知ることができます。</p>
+        <ul class="colors">
+          <li class="c-white"><span class="band" aria-hidden="true"></span><div><h3><i aria-hidden="true">白</i><span>白い大地<strong><ruby>石灰岩<rt>せっかいがん</rt></ruby></strong></span></h3><p>サンゴ<ruby>礁<rt>しょう</rt></ruby>がもとになった白い石。秋吉台のカルスト<ruby>地形<rt>ちけい</rt></ruby>をつくりました。</p></div></li>
+          <li class="c-black"><span class="band" aria-hidden="true"></span><div><h3><i aria-hidden="true">黒</i><span>黒い大地<strong><ruby>無煙炭<rt>むえんたん</rt></ruby></strong></span></h3><p>大昔の植物が積み重なってできた石炭。<ruby>大嶺<rt>おおみね</rt></ruby><ruby>炭田<rt>たんでん</rt></ruby>で<ruby>掘<rt>ほ</rt></ruby>られました。</p></div></li>
+          <li class="c-red"><span class="band" aria-hidden="true"></span><div><h3><i aria-hidden="true">赤</i><span>赤い大地<strong><ruby>銅<rt>どう</rt></ruby></strong></span></h3><p>火山の活動でできた銅。<ruby>長登<rt>ながのぼり</rt></ruby>銅山の銅は奈良の大仏にも使われました。</p></div></li>
+        </ul>
+        <a class="totoc" href="#toc">▲ 目次へもどる</a>
+      </section>
+
+      <!-- 2 -->
+      <section class="part" id="s2" aria-labelledby="s2-h">
+        <div class="head"><span class="kicker"><span class="num">2</span>WHAT IS A GEOPARK</span><h2 id="s2-h">ジオパークってなんだろう？</h2></div>
+        <div class="geo">
+          <figure class="layers" role="img" aria-label="大地の上に自然があり、その上に人のくらしがある図">
+            <div class="l-life">くらし<small><ruby>湧水<rt>ゆうすい</rt></ruby>や<ruby>銅山<rt>どうざん</rt></ruby>の<ruby>歴史<rt>れきし</rt></ruby></small></div>
+            <span class="up" aria-hidden="true">↑</span>
+            <div class="l-nature"><ruby>自然<rt>しぜん</rt></ruby><small><ruby>洞窟<rt>どうくつ</rt></ruby>にすむ生き物</small></div>
+            <span class="up" aria-hidden="true">↑</span>
+            <div class="l-earth"><ruby>大地<rt>だいち</rt></ruby><small><ruby>石灰岩<rt>せっかいがん</rt></ruby>の<ruby>台地<rt>だいち</rt></ruby></small></div>
+            <p>大地・自然・くらしは つながっています</p>
+          </figure>
+          <div>
+            <p class="lead-b">足もとの<ruby>大地<rt>だいち</rt></ruby>から、地球の昔と未来を知る場所です。</p>
+            <p>ジオパークは、<ruby>大地<rt>だいち</rt></ruby>の成り立ちを知り、未来を考えて行動する場所です。「ジオ」は地球、「パーク」は公園という意味です。</p>
+            <p>山や川、<ruby>岩<rt>いわ</rt></ruby>のかたちは、何千万年もかけてできました。その大地の上で生き物が育ち、人のくらしや文化が生まれました。</p>
+            <p>ジオパークでは、<ruby>地域<rt>ちいき</rt></ruby>の人が中心になって、大地を守り、学び、生かしています。</p>
+          </div>
+        </div>
+
+        <h3>ジオパークでできること</h3>
+        <!-- illustrations: 日本ジオパークネットワーク – usage rights to be confirmed -->
+        <ul class="can">
+          <li><img src="assets/img/geopark-01.webp" alt="" loading="lazy"><div><h4><span class="num">1</span>大地の歴史を学ぶ</h4><p><ruby>岩<rt>いわ</rt></ruby>や<ruby>地形<rt>ちけい</rt></ruby>を見て、地球の長い歴史を知ることができます。</p></div></li>
+          <li><img src="assets/img/geopark-02.webp" alt="" loading="lazy"><div><h4><span class="num">2</span>ジオガイドと歩く</h4><p>「地球の<ruby>語<rt>かた</rt></ruby>り<ruby>部<rt>べ</rt></ruby>」であるジオガイドが、土地の物語を案内します。</p></div></li>
+          <li><img src="assets/img/geopark-03.webp" alt="" loading="lazy"><div><h4><span class="num">3</span>見方を変えて旅をする</h4><p>石や土に目を向けると、いつもの<ruby>景色<rt>けしき</rt></ruby>が「ここにしかない風景」に変わります。</p></div></li>
+          <li><img src="assets/img/geopark-04.webp" alt="" loading="lazy"><div><h4><span class="num">4</span>未来のために行動する</h4><p>大地や自然を守り、<ruby>災害<rt>さいがい</rt></ruby>にそなえるために、今できることを考えます。</p></div></li>
+        </ul>
+
+        <div class="unesco">
+          <img src="assets/img/logo-unesco.webp" alt="UNESCO Global Geopark">
+          <div>
+            <h3>ユネスコ世界ジオパークとは</h3>
+            <p>2015年からユネスコの正式なプログラムになり、世界共通の<ruby>基準<rt>きじゅん</rt></ruby>で<ruby>認定<rt>にんてい</rt></ruby>されます。Mine秋吉台ジオパークは、2026年4月23日に、日本で11番目のユネスコ世界ジオパークに認定されました。</p>
+          </div>
+        </div>
+        <p class="src">出典：日本ジオパークネットワーク「ジオパークとは」</p>
+        <a class="pill" href="explore.html#tour">ジオガイドと歩く ジオツアーを見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a>
+        <a class="totoc" href="#toc">▲ 目次へもどる</a>
+      </section>
+
+      <!-- 3 -->
+      <section class="part" id="s3" aria-labelledby="s3-h">
+        <div class="head"><span class="kicker"><span class="num">3</span>PHILOSOPHY</span><h2 id="s3-h">Mine秋吉台ジオパークの基本理念</h2></div>
+        <p>わたしたちは、3つのことを大切にして、<ruby>持続可能<rt>じぞくかのう</rt></ruby>な地域づくりをめざしています。</p>
+        <ul class="pillars">
+          <li><span class="num">1</span><div><h3><ruby>保全<rt>ほぜん</rt></ruby> <small>（まもる）</small></h3><p>大地と文化を守り、次の世代へ受けつぎます。</p></div></li>
+          <li><span class="num">2</span><div><h3><ruby>教育<rt>きょういく</rt></ruby> <small>（まなぶ）</small></h3><p>子どもたちに、大地と文化のたいせつさを伝えます。</p></div></li>
+          <li><span class="num">3</span><div><h3><ruby>地域振興<rt>ちいきしんこう</rt></ruby> <small>（いかす）</small></h3><p>大地と文化を生かして、地域を元気にします。</p></div></li>
+        </ul>
+        <div class="charter">
+          <img src="assets/img/qr-intro.svg" alt="公式サイトの「Mine秋吉台ジオパークとは」ページを開くQRコード">
+          <div>
+            <h3>Mine秋吉台ジオパーク<ruby>憲章<rt>けんしょう</rt></ruby></h3>
+            <p>憲章の全文は公式サイトに<ruby>掲載<rt>けいさい</rt></ruby>しています。スマホで読みとってご覧ください。</p>
+          </div>
+        </div>
+        <a class="totoc" href="#toc">▲ 目次へもどる</a>
+      </section>
+
+      <!-- 4 -->
+      <section class="part" id="s4" aria-labelledby="s4-h">
+        <div class="head"><span class="kicker"><span class="num">4</span>STORY</span><h2 id="s4-h">Mine秋吉台地域の大地と人々の物語</h2></div>
+        <div class="theme"><span>ジオパークのテーマ</span><p>カルスト台地に<ruby>息<rt>いき</rt></ruby>づく地球と生命の歴史<br>〜地球に寄り添い、人と支え合う〜</p></div>
+        <!-- stats from the wireframe – figures to be confirmed -->
+        <ul class="stats">
+          <li><b>約100<span>km²</span></b>秋吉台の広さ</li>
+          <li><b>約3億5千万<span>年前</span></b>サンゴ礁が生まれた</li>
+          <li><b><span>東台・西台</span></b>川をはさんで2つに</li>
+        </ul>
+        <h3>秋吉台ができるまで</h3>
+        <ol class="steps">
+          <li><span class="num">1</span><div><em>約3億5千万年前</em>海の火山島のまわりに、サンゴ<ruby>礁<rt>しょう</rt></ruby>ができる</div></li>
+          <li><span class="num">2</span><div><em>長い年月をかけて</em>海洋プレートに乗って運ばれ、大陸にくっつく（<ruby>付加<rt>ふか</rt></ruby>）</div></li>
+          <li><span class="num">3</span><div><em>数百万年</em>雨水や地下水が石灰岩をとかし、ドリーネや<ruby>鍾乳洞<rt>しょうにゅうどう</rt></ruby>ができる</div></li>
+          <li><span class="num">4</span><div><em>いま</em>東台の草原は守られ、西台では石灰石の<ruby>採掘<rt>さいくつ</rt></ruby>や<ruby>湧<rt>わ</rt></ruby>き水がくらしを支える</div></li>
+        </ol>
+        <h3>美祢の大地には、ほかにも</h3>
+        <ul class="others"><li>海洋プレートのかけら</li><li>石炭・植物の化石</li><li>銅・銀の<ruby>鉱床<rt>こうしょう</rt></ruby></li></ul>
+        <button class="pill watch" type="button" data-open="anime"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l12 7-12 7z"/></svg>秋吉台のでき方をアニメで見る</button>
+        <a class="totoc" href="#toc">▲ 目次へもどる</a>
+      </section>
+
+      <nav class="next" aria-labelledby="next-h">
+        <h2 id="next-h">つぎに見る</h2>
+        <ul>
+          <li><a href="explore.html#spots">お出かけスポット<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></li>
+          <li><a href="explore.html#exp">体験<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></li>
+          <li><a href="explore.html#tour">ジオツアー<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></a></li>
+        </ul>
+      </nav>
+    </div>
+  </div>
+</main>
+
+<dialog class="vdlg" id="anime" aria-labelledby="anime-h">
+  <div class="dlg-in">
+    <div class="dlg-top">
+      <h2 id="anime-h">秋吉台のでき方（アニメーション）<small>字幕あり・音が出ます・自動再生しません</small></h2>
+      <button class="x" type="button" data-close autofocus><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>閉じる</button>
+    </div>
+    <div class="frame" data-yt="YBmXJHxN1Fg" data-title="秋吉台のでき方（アニメーション）">
+      <img src="assets/img/p1-akiyoshidai.webp" alt="">
+      <button class="play" type="button"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5l12 7-12 7z"/></svg>再生</button>
+    </div>
+    <button class="pill" type="button" data-close><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>見おわったら もどる</button>
+  </div>
+</dialog>
+
+<dialog class="qdlg" id="qr" aria-labelledby="qr-h">
+  <div class="dlg-in">
+    <div class="dlg-top">
+      <h2 id="qr-h">スマホで続きを読む</h2>
+      <button class="x" type="button" data-close autofocus><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>閉じる</button>
+    </div>
+    <img src="assets/img/qr-intro.svg" alt="公式サイトの「Mine秋吉台ジオパークとは」ページを開くQRコード">
+    <p>スマホのカメラで読みとると、公式サイトの「Mine秋吉台ジオパークとは」が開きます。</p>
+  </div>
+</dialog>
+
+<div class="bar">
+  <a class="pill" href="explore.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>もどる</a>
+  <a class="pill" href="welcome.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7M5 10v10h14V10"/></svg>はじめの画面へ</a>
+  <button class="pill primary" type="button" data-open="qr"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 18h2v2h-2z"/></svg>QRでスマホに送る</button>
+</div>
+
+<footer class="foot">
+  <img class="hills" src="assets/img/hills-bottom.webp" alt="">
+  <div class="wrap">
+    <div class="contact">
+      <b>問い合わせ先</b>
+      <p><b>Mine秋吉台ジオパーク推進協議会</b><br>山口県美祢市秋芳町秋吉11237-862<br>TEL 0837-63-0055 ｜ FAX 0837-63-0089</p>
+    </div>
+    <a class="pill pill--dark" href="#top">ページの上へ<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></a>
+  </div>
+</footer>
+
+<dialog class="menu" id="menu" aria-label="メニュー">
+  <div class="menu-in">
+    <div class="menu-top">
+      <a class="pill" href="welcome.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7M5 10v10h14V10"/></svg>はじめの画面へ</a>
+      <button class="x" type="button" data-close autofocus><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>閉じる</button>
+    </div>
+    <nav class="themes" aria-labelledby="themes-h">
+      <div class="themes-head"><h2 id="themes-h">テーマから選ぶ</h2><img src="assets/img/chara-point.webp" alt=""></div>
+      <ul>
+        <li><a href="about.html"><span class="ti"><img src="assets/img/chara-sit.webp" alt=""><span class="arr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span><b>Mine秋吉台ってなに？</b><small>大地のなりたち</small></a></li>
+        <li><a href="explore.html#spots"><span class="ti"><img src="assets/img/chara-binoculars.webp" alt=""><span class="arr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span><b>お出かけスポット</b><small>見る・歩く</small></a></li>
+        <li><a href="explore.html#exp"><span class="ti"><img src="assets/img/chara-loupe.webp" alt=""><span class="arr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span><b>体験</b><small>つくる・あそぶ</small></a></li>
+        <li><a href="explore.html#tour"><span class="ti"><img src="assets/img/chara-point.webp" alt=""><span class="arr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span><b>ジオツアー</b><small>ガイドと歩く</small></a></li>
+      </ul>
+    </nav>
+    <section class="settings" aria-labelledby="set-h">
+      <h2 id="set-h">表示の設定</h2>
+      <div class="set"><span id="lang-l">言語 / Language</span>
+        <div class="lang" role="group" aria-labelledby="lang-l">
+          <button type="button" data-lang="ja" aria-pressed="true" lang="ja">日本語</button>
+          <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
+        </div>
+      </div>
+      <div class="set set-fs"><span id="fs-l">文字の大きさ</span>
+        <div class="lang" role="group" aria-labelledby="fs-l">
+          <button type="button" data-fs="n" aria-pressed="true">標準</button>
+          <button type="button" data-fs="l" aria-pressed="false">大</button>
+        </div>
+      </div>
+    </section>
+    <div class="menu-qr">
+      <img src="assets/img/qr-official.svg" alt="公式サイト（mine-geo.com）を開くQRコード">
+      <p><b>スマホで公式サイトを見る</b><small>Mine秋吉台ジオパーク推進協議会</small></p>
+    </div>
+  </div>
+</dialog>
+
+<script>
+// About: language + text size (shared across pages), popup menu, dialogs, video.
+(function () {
+  'use strict';
+
+  // language – EN copy comes later; for now only the choice is kept across pages
+  const langBtns = document.querySelectorAll('[data-lang]');
+  function setLang(l) {
+    langBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === l)));
+    try { localStorage.setItem('lang', l); } catch (e) {}
+  }
+  langBtns.forEach((b) => b.addEventListener('click', () => setLang(b.dataset.lang)));
+  let saved = 'ja';
+  try { saved = localStorage.getItem('lang'); } catch (e) {}
+  setLang(saved === 'en' ? 'en' : 'ja');
+
+  // 文字の大きさ 標準 / 大 – kept across pages
+  const fsBtns = document.querySelectorAll('[data-fs]');
+  function setFs(v) {
+    document.documentElement.dataset.fs = v;
+    fsBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.fs === v)));
+    try { localStorage.setItem('fs', v); } catch (e) {}
+  }
+  fsBtns.forEach((b) => b.addEventListener('click', () => setFs(b.dataset.fs)));
+  let fs = 'n';
+  try { fs = localStorage.getItem('fs'); } catch (e) {}
+  setFs(fs === 'l' ? 'l' : 'n');
+
+  // popup menu; every dialog closes 3 ways: × (data-close), backdrop tap, Esc (native)
+  const menu = document.getElementById('menu');
+  document.getElementById('menu-open').addEventListener('click', () => menu.showModal());
+  document.querySelectorAll('dialog').forEach((d) => d.addEventListener('click', (e) => {
+    if (e.target === d || e.target.closest('[data-close], a')) d.close();
+  }));
+
+  // other dialogs (anime video, QR)
+  document.querySelectorAll('[data-open]').forEach((b) => b.addEventListener('click', () => document.getElementById(b.dataset.open).showModal()));
+
+  // video: poster + play button; YouTube loads only after a tap (no autoplay on arrival, captions on)
+  const anime = document.getElementById('anime');
+  const animePoster = anime.querySelector('.frame').innerHTML;
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('.play');
+    if (!btn) return;
+    const f = btn.closest('.frame');
+    const src = 'https://www.youtube-nocookie.com/embed/' + f.dataset.yt + '?rel=0&cc_load_policy=1&cc_lang_pref=ja&hl=ja&playsinline=1&autoplay=1';
+    f.innerHTML = '<iframe src="' + src + '" title="' + f.dataset.title + '" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>';
+    f.tabIndex = -1; f.focus(); // keep focus in this document (not the iframe) so Esc still closes the dialog
+  });
+  // closing the anime dialog stops the video
+  anime.addEventListener('close', () => { anime.querySelector('.frame').innerHTML = animePoster; });
+})();
+</script>
+</body>
+</html>

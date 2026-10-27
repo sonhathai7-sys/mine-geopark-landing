@@ -1,0 +1,15 @@
+# Publish only what the site uses (public repo + GitHub Pages).
+# Everything else (raw sources, docs, archive, local settings) stays local.
+/*
+!/.gitignore
+!/.nojekyll
+!/index.html
+!/welcome.html
+!/explore.html
+!/about.html
+!/spot.html
+!/src/
+!/assets/
+/assets/*
+!/assets/img/
+.DS_Store

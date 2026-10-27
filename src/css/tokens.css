@@ -1,0 +1,37 @@
+/* Design tokens – Mine秋吉台ジオパークのiPad LP (namespace: minegeopark)
+   Rule: one red primary button per screen. Pop expression only on experience pages. No emoji. */
+:root {
+  /* color */
+  --red: #8E1728;        /* geopark red – primary action only */
+  --red-deep: #5E0F1A;   /* pressed / 3D edge of primary */
+  --ink: #2F2C28;        /* text, outlines */
+  --ink-soft: #5C5850;   /* secondary text */
+  --paper: #FFFFFF;      /* info surfaces (stickers, cards) */
+  --cream: #F6F3EC;      /* page background */
+  --cream-warm: #FBF7EE; /* Explore hub / about / partner band */
+  --grass: #BAD98A;      /* hills decoration */
+  --leaf: #E7F0E1;       /* 体験 section background */
+  --leaf-menu: #DCEBD2;  /* menu 「テーマから選ぶ」 panel */
+  --tag: #F3E3A6;        /* yellow tag / pop blob */
+  --pink: #F6DDE0;       /* 「ところ」 tag / pop blob */
+  --line: #D9D4CA;       /* dividers */
+  --focus: #FFD84D;      /* keyboard focus ring */
+
+  /* type */
+  --f-display: 'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', 'Noto Sans JP', sans-serif;
+  --f-body: 'Noto Sans JP', 'Hiragino Sans', sans-serif;
+  --f-latin: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+  --fs-body: 18px;       /* universal design: body >= 18px, line-height 1.8 */
+  --lh-body: 1.8;
+
+  /* touch */
+  --tap: 48px;           /* universal design: every touch target >= 48px */
+
+  /* shape */
+  --r-sticker: 18px;
+  --r-card: 20px;
+  --shadow-soft: 0 4px 14px rgba(47, 44, 40, .12);
+  --shadow-sticker: 0 6px 0 rgba(47, 44, 40, .14);
+
+  color-scheme: light;
+}
