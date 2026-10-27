@@ -111,7 +111,7 @@ button, a { font: inherit; color: inherit; }
 }
 @keyframes nudge { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 .go {
-  pointer-events: auto; width: var(--go); height: var(--go); border: 0; border-radius: 50%;
+  pointer-events: auto; width: var(--go); height: var(--go); padding: 0; border: 0; border-radius: 50%; /* padding 0: iOS Safari pads buttons by 1em, which pushed 「GO!」 off-centre */
   background: var(--red); color: var(--paper); cursor: pointer;
   font: 800 calc(var(--go) * .34)/1 var(--f-latin); letter-spacing: .02em;
   box-shadow: 0 10px 0 var(--red-deep), 0 0 0 9px rgba(255,255,255,.75);
