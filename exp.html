@@ -1,0 +1,687 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- iPad: opened from the Home Screen icon, runs full screen without the Safari URL bar -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Mine秋吉台">
+  <title>Mine秋吉台ジオパーク｜体験</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@600;700;800&family=Noto+Sans+JP:wght@400;700&family=Zen+Maru+Gothic:wght@500;700;900&display=swap">
+<style>
+/* 体験 detail (one template for all 体験, ?id=). Same frame as spot.html; pop decoration (blobs, tilted photos) is allowed here only.
+   One self-contained file: tokens (copy of src/css/tokens.css) + page styles. Information sits on flat white/cream surfaces. */
+:root {
+  --red: #8E1728; --red-deep: #5E0F1A;
+  --ink: #2F2C28; --ink-soft: #5C5850;
+  --paper: #FFFFFF; --cream: #F6F3EC; --cream-warm: #FBF7EE;
+  --grass: #BAD98A; --leaf: #E7F0E1; --leaf-menu: #DCEBD2;
+  --line: #D9D4CA; --focus: #FFD84D;
+  --tag: #F3E3A6; --pink: #F6DDE0;
+  --f-display: 'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', 'Noto Sans JP', sans-serif;
+  --f-body: 'Noto Sans JP', 'Hiragino Sans', sans-serif;
+  --f-latin: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
+  --fs-body: 18px; --lh-body: 1.8;
+  --tap: 48px;
+  --r-card: 20px;
+  --shadow-soft: 0 4px 14px rgba(47, 44, 40, .12);
+  --hdr: 80px;
+  --pad: 32px;
+  color-scheme: light;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+@media (prefers-reduced-motion: no-preference) { html { scroll-behavior: smooth; } }
+body {
+  margin: 0; background: var(--cream-warm); color: var(--ink);
+  font: var(--fs-body)/var(--lh-body) var(--f-body);
+  -webkit-tap-highlight-color: transparent;
+}
+img { max-width: 100%; display: block; }
+h1, h2, h3, p, ul, ol { margin: 0; }
+p { text-wrap: pretty; } /* no one-character last lines */
+ul { padding: 0; list-style: none; }
+a { color: inherit; }
+button { font: inherit; color: inherit; }
+:focus-visible { outline: 4px solid var(--focus); outline-offset: 3px; }
+rt { font-size: .45em; font-weight: 700; }
+.wrap { max-width: 1240px; margin: 0 auto; padding: 64px var(--pad); }
+
+/* ---------- header ---------- */
+.top {
+  position: sticky; top: 0; z-index: 10; height: var(--hdr);
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 0 max(var(--pad), env(safe-area-inset-right, 0px)) 0 max(var(--pad), env(safe-area-inset-left, 0px));
+  background: var(--paper); box-shadow: 0 2px 12px rgba(47, 44, 40, .08);
+}
+.brand { display: flex; align-items: center; gap: 14px; }
+.brand img { height: 48px; width: auto; }
+.brand .logo-sq { height: 64px; } /* square logo: taller so its text stays readable */
+.tools { display: flex; align-items: center; gap: 12px; }
+.lang { display: flex; padding: 4px; background: var(--paper); border: 1px solid var(--line); border-radius: 999px; }
+.lang button {
+  min-width: 64px; height: var(--tap); border: 0; border-radius: 999px;
+  background: transparent; cursor: pointer; font-weight: 700; font-size: 15px; white-space: nowrap;
+}
+.lang button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.lang button[lang="en"] { font-family: var(--f-latin); font-size: 16px; }
+.pill {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 56px; padding: 0 22px;
+  border: 2px solid var(--ink); border-radius: 999px; background: var(--paper);
+  font: 700 17px/1.2 var(--f-display); text-decoration: none; cursor: pointer; white-space: nowrap;
+}
+.pill svg { width: 22px; height: 22px; flex: none; fill: none; stroke: currentColor; stroke-width: 2.2; stroke-linecap: round; stroke-linejoin: round; }
+
+
+.hills { position: absolute; left: 50%; bottom: 0; transform: translateX(-50%); width: max(130%, 1100px); max-width: none; pointer-events: none; }
+/* ---------- footer ---------- */
+.foot { position: relative; overflow-x: clip; background: var(--grass); } /* hills sit on the green 「あわせて楽しむ」 band */
+.foot .hills { bottom: 100%; }
+.foot .wrap { display: flex; align-items: center; justify-content: space-between; gap: 20px; flex-wrap: wrap; padding-top: 24px; padding-bottom: calc(32px + env(safe-area-inset-bottom, 0px)); }
+.contact { display: flex; align-items: center; gap: 20px; background: var(--paper); border-radius: 16px; padding: 16px 24px; font-size: 15px; line-height: 1.7; }
+.contact > b { flex: none; padding-right: 20px; border-right: 1px solid var(--line); font: 700 16px var(--f-display); }
+.contact p b { font-family: var(--f-display); font-size: 16px; }
+.pill--dark { background: var(--ink); color: var(--paper); border-color: var(--ink); }
+
+/* ---------- 体験 detail (one template, 4 体験 via ?id=) ---------- */
+body { padding-bottom: calc(88px + env(safe-area-inset-bottom, 0px)); } /* room for the fixed bottom bar */
+html { scroll-padding: var(--hdr) 0 96px; }
+.crumb { max-width: 1240px; margin: 0 auto; padding: 14px var(--pad); font-size: 15px; }
+.crumb ol { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; padding: 0; list-style: none; }
+.crumb li + li::before { content: "＞"; content: "＞" / ""; margin-right: 8px; color: var(--ink-soft); } /* not read aloud */
+.crumb a { display: inline-flex; align-items: center; justify-content: center; min-height: var(--tap); min-width: var(--tap); padding: 0 8px; font-weight: 700; }
+
+.hero { position: relative; overflow: hidden; padding: 40px var(--pad) 56px; background: var(--cream-warm); }
+.hero::before, .hero::after { content: ""; position: absolute; border-radius: 50%; pointer-events: none; } /* pop blobs on the edges */
+.hero::before { width: 420px; height: 420px; left: -160px; top: -140px; background: var(--pink); }
+.hero::after { width: 340px; height: 340px; right: -120px; top: -60px; background: var(--leaf); }
+.hero-in { position: relative; z-index: 1; max-width: 1240px; margin: 0 auto; display: grid; gap: 28px; }
+.title { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; }
+.tags { display: flex; flex-wrap: wrap; gap: 8px; padding: 0; list-style: none; }
+.tags li { display: inline-flex; align-items: center; gap: 6px; padding: 4px 14px; background: var(--paper); border: 1px solid var(--line); border-radius: 999px; font: 700 15px/1.5 var(--f-display); }
+.name { background: var(--paper); border-radius: 18px; padding: 8px 24px 12px; box-shadow: var(--shadow-soft); }
+.name small { display: block; font: 700 16px/1.5 var(--f-display); color: var(--ink-soft); letter-spacing: .1em; }
+.name h1 { font: 900 52px/1.25 var(--f-display); }
+.en { padding: 2px 12px; border-radius: 8px; background: var(--ink); color: var(--paper); font: 700 16px/1.6 var(--f-latin); }
+.title .where { margin-top: 4px; font-size: 17px; font-weight: 700; }
+.title .chara { height: 110px; width: auto; margin-top: 4px; }
+.shots { position: relative; justify-self: end; width: min(100%, 620px); padding: 0 12% 48px 0; }
+.shots img { border: 8px solid var(--paper); border-radius: 16px; box-shadow: var(--shadow-soft); object-fit: cover; background: var(--cream); }
+.shots .main { width: 100%; aspect-ratio: 4 / 3; transform: rotate(1.5deg); }
+.shots .sub { position: absolute; right: 0; bottom: 0; width: 40%; aspect-ratio: 4 / 3; transform: rotate(-4deg); }
+.where { display: flex; align-items: center; gap: 10px; }
+.where i { flex: none; padding: 2px 12px; border-radius: 999px; background: var(--pink); color: var(--red); font: 700 14px/1.6 var(--f-display); font-style: normal; }
+.mark { width: 16px; height: 16px; flex: none; }
+.m-white { fill: var(--paper); stroke: var(--ink); }
+.m-red { fill: var(--red); }
+
+.page { max-width: 880px; margin: 0 auto; padding: 0 var(--pad); display: flex; flex-direction: column; }
+.body, .side { display: contents; } /* iPad/phone: one column 基本情報 → どんな体験 → 流れ → ジオ → 参加する前に → ギャラリー → 場所・予約 */
+.card { margin-top: 8px; padding: 24px 28px; background: var(--paper); border-radius: 24px; box-shadow: var(--shadow-soft); }
+.card h2 { font: 700 24px/1.4 var(--f-display); }
+.info { padding: 0; list-style: none; margin-top: 8px; }
+.info li { display: flex; gap: 14px; align-items: flex-start; padding: 14px 0; border-bottom: 1px solid var(--line); }
+.info li:last-child { border-bottom: 0; }
+.ico { flex: none; width: 48px; height: 48px; border-radius: 12px; display: grid; place-items: center; background: var(--cream); }
+.ico svg, .addr svg { width: 26px; height: 26px; fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.info b { display: block; font: 700 15px/1.5 var(--f-display); color: var(--ink-soft); }
+.h2bar { display: flex; align-items: center; gap: 12px; margin: 48px 0 16px; font: 700 26px/1.4 var(--f-display); }
+.h2bar::before { content: ""; flex: none; width: 8px; height: 28px; border-radius: 3px; background: var(--red); }
+.page p + p { margin-top: 12px; }
+.geo { position: relative; margin-top: 44px; padding: 32px 28px 24px; background: var(--paper); border: 2px solid var(--ink); border-radius: 24px; }
+.geo .label { position: absolute; top: -17px; left: 24px; padding: 2px 16px; background: var(--tag); border: 2px solid var(--ink); border-radius: 999px; font: 700 16px/1.6 var(--f-display); }
+.geo h3 { margin-bottom: 8px; font: 700 21px/1.6 var(--f-display); }
+.geo-in { display: flex; gap: 24px; align-items: flex-start; }
+.geo-in > img { flex: none; width: 120px; height: 120px; border-radius: 50%; object-fit: cover; }
+.geo .more { display: inline-flex; align-items: center; min-height: var(--tap); margin-top: 8px; font: 700 17px/1.4 var(--f-display); }
+.steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 0; list-style: none; counter-reset: step; }
+.steps li { position: relative; padding: 12px 12px 16px; background: var(--paper); border-radius: 20px; box-shadow: var(--shadow-soft); counter-increment: step; }
+.steps li::before { /* step number */
+  content: counter(step); position: absolute; z-index: 1; left: 4px; top: 4px; width: 44px; height: 44px; border-radius: 50%;
+  display: grid; place-items: center; background: var(--ink); color: var(--paper); font: 800 22px/1 var(--f-latin);
+}
+.steps img, .steps .ph { width: 100%; aspect-ratio: 16 / 10; object-fit: cover; border-radius: 12px; }
+.steps b { display: block; margin-top: 12px; font: 700 19px/1.5 var(--f-display); }
+.steps p { margin-top: 4px; font-size: 16px; line-height: 1.6; color: var(--ink-soft); }
+.ph { display: grid; place-content: center; justify-items: center; gap: 6px; background: var(--paper); border: 2px dashed var(--line); color: var(--ink-soft); font-size: 15px; }
+.ph svg { width: 32px; height: 32px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
+.before { margin-top: 44px; }
+.before ul { padding: 0; list-style: none; margin-top: 8px; }
+.before li { display: flex; gap: 14px; align-items: center; padding: 10px 0; }
+.access { order: 1; margin-top: 48px; } /* order: iPad/phone only (side is display: contents there) */
+.access iframe { display: block; width: 100%; aspect-ratio: 16 / 10; margin-top: 16px; border: 0; border-radius: 16px; background: var(--cream); }
+.addr { display: flex; gap: 10px; align-items: flex-start; margin-top: 14px; }
+.addr svg { flex: none; margin-top: 4px; }
+.carry { display: flex; gap: 20px; align-items: center; margin-top: 16px; padding: 16px 20px; background: var(--cream); border-radius: 16px; }
+.carry img { width: 120px; height: 120px; flex: none; background: var(--paper); }
+.carry b { font: 700 18px/1.6 var(--f-display); }
+.card > .where { margin-top: 12px; }
+.gal { display: flex; align-items: center; gap: 12px; }
+.gal ul { flex: 1; min-width: 0; display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 0 0 4px; list-style: none; }
+.gal ul::-webkit-scrollbar { display: none; }
+.gal li { flex: 0 0 calc((100% - 24px) / 3); scroll-snap-align: start; }
+.gal figure { margin: 0; }
+.gal img, .gal .ph { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 12px; }
+.gal figcaption { margin-top: 6px; font-size: 15px; line-height: 1.6; color: var(--ink-soft); }
+.arrow {
+  flex: none; width: 64px; height: 64px; border-radius: 18px; border: 2px solid var(--ink); background: var(--paper); cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font: 700 13px/1 var(--f-display);
+}
+.arrow svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.arrow:disabled { opacity: .35; cursor: default; }
+@media (prefers-reduced-motion: no-preference) { .gal ul { scroll-behavior: smooth; } }
+.nw { white-space: nowrap; }
+.tbd { color: var(--ink-soft); }
+.rel { margin-top: 56px; padding: 48px var(--pad) calc(max(22.5vw, 190px) + 24px); background: var(--leaf); } /* bottom = hills height */
+.rel > * { max-width: 1176px; margin-left: auto; margin-right: auto; }
+.rel h2 { font: 700 26px/1.4 var(--f-display); margin-bottom: 20px; }
+.rel ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; padding: 0; list-style: none; }
+.rel a { display: block; text-decoration: none; }
+.rel img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border: 6px solid var(--paper); border-radius: 16px; }
+.rel p { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 10px; font: 700 19px/1.4 var(--f-display); }
+.rel i { flex: none; padding: 2px 10px; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; font: 400 14px/1.6 var(--f-body); font-style: normal; }
+
+/* bottom bar (U4): もどる / はじめの画面へ / QR – 64px targets */
+.bar {
+  position: fixed; left: 0; right: 0; bottom: 0; z-index: 9; display: flex; justify-content: center; gap: 12px;
+  padding: 10px var(--pad) calc(10px + env(safe-area-inset-bottom, 0px));
+  background: var(--paper); box-shadow: 0 -2px 12px rgba(47, 44, 40, .1);
+}
+.bar .pill { min-height: 64px; }
+.primary { background: var(--red); color: var(--paper); border-color: var(--red); box-shadow: 0 5px 0 var(--red-deep); }
+.qdlg { width: min(440px, calc(100% - 32px)); border-radius: 24px; text-align: center; }
+.dlg-in { padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 16px; }
+.dlg-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; text-align: left; }
+.dlg-top h2 { font: 700 22px/1.45 var(--f-display); }
+.qdlg img { width: 220px; height: 220px; margin: 0 auto; }
+
+@media (min-width: 768px) and (max-width: 1023px) { /* iPad: 基本情報 in 2 columns like the board */
+  .info { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: 28px; }
+  .info li:nth-last-child(2) { border-bottom: 0; }
+}
+@media (min-width: 1024px) {
+  .hero { padding-top: 48px; }
+  .hero-in { grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr); align-items: center; gap: 48px; }
+  .page { max-width: 1240px; display: grid; grid-template-columns: minmax(0, 1fr) 400px; gap: 48px; align-items: start; }
+  .body, .side { display: block; }
+  .body { grid-column: 1; grid-row: 1; }
+  .side { grid-column: 2; grid-row: 1; }
+  .body .h2bar { margin-top: 40px; }
+  .side .card { margin-top: 40px; }
+  .side .access { margin-top: 24px; }
+}
+@media (max-width: 600px) {
+  :root { --pad: 16px; --hdr: 64px; }
+  .brand img { height: 34px; }
+  .brand img:first-child { display: none; }
+  .brand .logo-sq { height: 52px; }
+  .lang button { min-width: 48px; padding: 0 8px; font-size: 14px; }
+  .contact { flex-direction: column; align-items: flex-start; gap: 8px; }
+  .contact > b { border: 0; padding: 0; }
+  .hero { padding-top: 24px; padding-bottom: 40px; }
+  .hero::before { width: 260px; height: 260px; }
+  .hero::after { width: 200px; height: 200px; }
+  .name h1 { font-size: 34px; }
+  .title .chara { display: none; } /* phone: photos carry the hero */
+  .shots { padding-right: 16%; }
+  .card { padding: 18px 16px; }
+  .steps { gap: 10px; }
+  .steps li { padding: 8px 8px 12px; }
+  .steps b { font-size: 16px; }
+  .steps p { font-size: 14px; }
+  .steps li::before { width: 36px; height: 36px; font-size: 18px; }
+  .geo { padding: 28px 18px 20px; }
+  .geo-in > img { width: 72px; height: 72px; }
+  .rel ul { grid-template-columns: 1fr; }
+  .gal li { flex-basis: 80%; }
+  .arrow { width: 56px; height: 56px; }
+  .carry { flex-direction: column; align-items: flex-start; }
+  .bar { gap: 6px; }
+  .bar .pill { min-height: 56px; padding: 0 12px; font-size: 14px; }
+  .bar .pill svg { display: none; } /* phone: text only, still ≥48px */
+}
+/* ---------- kiosk idle reset (identical block in every page except Welcome) ---------- */
+.idle { width: min(460px, calc(100% - 32px)); border-radius: 24px; text-align: center; }
+.idle-in { padding: 28px 24px 32px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.idle h2 { font: 700 22px/1.45 var(--f-display); }
+.idle b { font: 800 28px/1 var(--f-latin); }
+.idle .primary { min-height: 64px; background: var(--red); color: var(--paper); border-color: var(--red); box-shadow: 0 5px 0 var(--red-deep); }
+/* ---------- press feedback (identical block in every page except Welcome): buttons and cards dip while pressed ---------- */
+:is(.pill, .arrow, .menu-btn, .x, .lang button, .play, .totoc, .more, .themes a, .tile, .spot, .ecard, .pcard, .rel a, .next a, .toc a) { -webkit-tap-highlight-color: transparent; }
+@media (prefers-reduced-motion: no-preference) {
+  :is(.pill, .arrow, .menu-btn, .x, .lang button, .play, .totoc, .themes a, .tile, .spot, .ecard, .pcard, .rel a, .next a, .toc a) { transition: transform .12s ease, box-shadow .12s ease; }
+}
+:is(.pill, .arrow, .menu-btn, .x, .lang button, .play, .totoc):not(:disabled):active { transform: scale(.95); }
+:is(.themes a, .tile, .spot, .ecard, .pcard, .rel a, .next a, .toc a):active { transform: scale(.97); } /* .spot/.pcard: the clipped card shrinks as a whole */
+.pill.primary:not(:disabled):active { transform: translateY(4px); box-shadow: 0 1px 0 var(--red-deep); } /* red button sinks into its shadow */
+/* ---------- popup menu (identical block in every page except Welcome) ---------- */
+.menu-btn {
+  flex: none; width: 64px; height: 64px; border: 0; border-radius: 16px; background: var(--ink); color: var(--paper);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; cursor: pointer;
+  font: 700 11px/1 var(--f-latin); letter-spacing: .06em;
+}
+.menu-btn svg, .x svg, .arr svg { width: 26px; height: 26px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+dialog { padding: 0; border: 0; color: var(--ink); background: var(--paper); }
+dialog::backdrop { background: rgba(47, 44, 40, .45); }
+.menu {
+  width: min(560px, calc(100% - 32px)); max-height: calc(100% - 16px); margin: 8px 16px auto auto;
+  border-radius: 24px; box-shadow: 0 16px 40px rgba(47, 44, 40, .25);
+}
+.menu-in { padding: 24px; display: flex; flex-direction: column; gap: 20px; }
+.menu-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+.x {
+  flex: none; width: 72px; height: 72px; border: 0; border-radius: 18px; background: var(--ink); color: var(--paper);
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; cursor: pointer;
+  font: 700 13px/1 var(--f-display);
+}
+.themes { background: var(--leaf-menu); border-radius: 22px; padding: 16px 16px 18px; }
+.themes-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 12px; }
+.themes-head h2 { font: 700 19px/1.4 var(--f-display); }
+.themes-head img { height: 52px; width: auto; }
+.themes ul { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+.themes a {
+  min-height: 112px; height: 100%; padding: 12px 14px; border-radius: 16px; background: var(--paper);
+  display: flex; flex-direction: column; gap: 4px; text-decoration: none;
+}
+.ti { display: flex; align-items: center; justify-content: space-between; margin-bottom: 2px; }
+.ti img { height: 44px; width: auto; }
+.arr { width: 36px; height: 36px; border-radius: 50%; border: 2px solid var(--ink); display: grid; place-items: center; }
+.arr svg { width: 18px; height: 18px; }
+.themes b { font: 700 18px/1.4 var(--f-display); }
+.themes small { font-size: 14px; color: var(--ink-soft); }
+.settings { background: var(--cream); border-radius: 20px; padding: 14px 18px; display: flex; flex-direction: column; gap: 10px; }
+.settings h2 { font: 700 16px/1.4 var(--f-display); }
+.set { display: flex; align-items: center; justify-content: space-between; gap: 12px; font: 700 16px/1.4 var(--f-display); }
+.set .lang button { min-width: 72px; font-size: 16px; }
+.set [data-fs="l"] { font-size: 20px; }
+.menu-qr { display: flex; align-items: center; gap: 16px; border-top: 1px solid var(--line); padding-top: 18px; }
+.menu-qr img { width: 96px; height: 96px; flex: none; }
+.menu-qr b { display: block; font: 700 17px/1.4 var(--f-display); }
+.menu-qr small { font-size: 14px; color: var(--ink-soft); }
+/* 文字の大きさ「大」: body 18 → ~22px, headings scale with it */
+@media (min-width: 768px) { html[data-fs="l"] body { zoom: 1.2; } }
+@media (max-width: 767px) { .set-fs { display: none; } } /* 大 needs room; phones pinch-zoom instead */ /* ponytail: zoom narrows the layout, so tablets/PC only; move sizes to rem if phones need 大 */
+@media (max-width: 600px) {
+  .menu { width: calc(100% - 16px); margin: 8px auto auto; }
+  .top .menu-btn { width: 56px; height: 52px; }
+  .menu-in { padding: 16px; gap: 16px; }
+  .themes { padding: 12px; }
+  .themes ul { gap: 8px; }
+  .themes a { padding: 10px; }
+  .themes b { font-size: 16px; }
+  .ti img { height: 36px; }
+}
+</style>
+</head>
+<body id="top">
+
+<header class="top">
+  <div class="brand">
+    <img src="assets/img/logo-unesco.webp" alt="UNESCO Global Geopark">
+    <img class="logo-sq" src="assets/img/logo-color.webp" alt="Mine秋吉台ジオパーク">
+  </div>
+  <div class="tools">
+    <div class="lang" role="group" aria-label="言語 / Language">
+      <button type="button" data-lang="ja" aria-pressed="true" lang="ja">日本語</button>
+      <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
+    </div>
+    <button class="menu-btn" type="button" id="menu-open" aria-haspopup="dialog">
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>MENU
+    </button>
+  </div>
+</header>
+
+<nav class="crumb" aria-label="現在地">
+  <ol><li><a href="explore.html">TOP</a></li><li><a href="explore.html#exp">体験</a></li><li aria-current="page" id="crumb-name"></li></ol>
+</nav>
+
+<main id="main"></main>
+
+<dialog class="qdlg" id="qr" aria-labelledby="qr-h">
+  <div class="dlg-in">
+    <div class="dlg-top">
+      <h2 id="qr-h">スマホで予約方法を見る</h2>
+      <button class="x" type="button" data-close autofocus><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>閉じる</button>
+    </div>
+    <img id="qr-img" alt="">
+    <p id="qr-text"></p>
+  </div>
+</dialog>
+
+<div class="bar">
+  <a class="pill" href="explore.html#exp"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M19 12H5M11 6l-6 6 6 6"/></svg>もどる</a>
+  <a class="pill" href="welcome.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7M5 10v10h14V10"/></svg>はじめの画面へ</a>
+  <button class="pill primary" type="button" data-open="qr"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h2v2h-2zM18 18h2v2h-2z"/></svg>QRでスマホに送る</button>
+</div>
+
+<footer class="foot">
+  <img class="hills" src="assets/img/hills-bottom.webp" alt="">
+  <div class="wrap">
+    <div class="contact">
+      <b>問い合わせ先</b>
+      <p><b>Mine秋吉台ジオパーク推進協議会</b><br>山口県美祢市秋芳町秋吉11237-862<br>TEL 0837-63-0055 ｜ FAX 0837-63-0089</p>
+    </div>
+    <a class="pill pill--dark" href="#top">ページの上へ<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 19V5M5 12l7-7 7 7"/></svg></a>
+  </div>
+</footer>
+
+<dialog class="idle" id="idle" aria-labelledby="idle-h">
+  <div class="idle-in">
+    <h2 id="idle-h">まもなく はじめの画面にもどります</h2>
+    <p>あと <b id="idle-n">20</b> 秒で、<br>つぎの人のために最初の画面にもどります。</p>
+    <button class="pill primary" type="button" data-close autofocus>このまま見る</button>
+  </div>
+</dialog>
+
+<dialog class="menu" id="menu" aria-label="メニュー">
+  <div class="menu-in">
+    <div class="menu-top">
+      <a class="pill" href="welcome.html"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M3 11l9-7 9 7M5 10v10h14V10"/></svg>はじめの画面へ</a>
+      <button class="x" type="button" data-close autofocus><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>閉じる</button>
+    </div>
+    <nav class="themes" aria-labelledby="themes-h">
+      <div class="themes-head"><h2 id="themes-h">テーマから選ぶ</h2><img src="assets/img/chara-point.webp" alt=""></div>
+      <ul>
+        <li><a href="about.html"><span class="ti"><img src="assets/img/chara-sit.webp" alt=""><span class="arr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span><b>Mine秋吉台ってなに？</b><small>大地のなりたち</small></a></li>
+        <li><a href="explore.html#spots"><span class="ti"><img src="assets/img/chara-binoculars.webp" alt=""><span class="arr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span><b>お出かけスポット</b><small>見る・歩く</small></a></li>
+        <li><a href="explore.html#exp"><span class="ti"><img src="assets/img/chara-loupe.webp" alt=""><span class="arr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span><b>体験</b><small>つくる・あそぶ</small></a></li>
+        <li><a href="explore.html#tour"><span class="ti"><img src="assets/img/chara-point.webp" alt=""><span class="arr" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span><b>ジオツアー</b><small>ガイドと歩く</small></a></li>
+      </ul>
+    </nav>
+    <section class="settings" aria-labelledby="set-h">
+      <h2 id="set-h">表示の設定</h2>
+      <div class="set"><span id="lang-l">言語 / Language</span>
+        <div class="lang" role="group" aria-labelledby="lang-l">
+          <button type="button" data-lang="ja" aria-pressed="true" lang="ja">日本語</button>
+          <button type="button" data-lang="en" aria-pressed="false" lang="en">EN</button>
+        </div>
+      </div>
+      <div class="set set-fs"><span id="fs-l">文字の大きさ</span>
+        <div class="lang" role="group" aria-labelledby="fs-l">
+          <button type="button" data-fs="n" aria-pressed="true">標準</button>
+          <button type="button" data-fs="l" aria-pressed="false">大</button>
+        </div>
+      </div>
+    </section>
+    <div class="menu-qr">
+      <img src="assets/img/qr-official.svg" alt="公式サイト（mine-geo.com）を開くQRコード">
+      <p><b>スマホで公式サイトを見る</b><small>Mine秋吉台ジオパーク推進協議会</small></p>
+    </div>
+  </div>
+</dialog>
+
+<script>
+// 体験 detail: renders one 体験 from ?id=, language + text size (shared across pages), popup menu, QR dialog.
+(function () {
+  'use strict';
+
+  document.addEventListener('touchstart', () => {}, { passive: true }); // iOS Safari shows :active press styles only with a touch listener
+
+  // ---------- 体験 data ----------
+  // Sources: description = 「修学旅行」チラシ（一般社団法人 美祢市観光協会, assets/source/修学旅行_認定.pdf）; cave info = mine-geo.com/tour/c001.html;
+  // places = docs/content/mine-geo-places.md. Empty strings show 確認中, empty steps/gallery show 準備中 – fill in when confirmed.
+  const R = (k, r) => '<ruby>' + k + '<rt>' + r + '</rt></ruby>';
+  const TBD = '<span class="tbd">確認中</span>';
+  const NAGANOBORI = { place: '長登銅山文化交流館', hours: '長登銅山文化交流館　9:00〜17:00（月曜休み）', tel: ['長登銅山文化交流館', '08396-2-0055'],
+    addr: '〒754-0213 山口県美祢市美東町長登610', ll: '34.243833,131.3411245', qr: 'exp-medal', qrText: 'スマホのカメラで読みとると、長登銅山文化交流館の案内ページが開きます。' };
+  const EXPS = {
+    medal: {
+      name: 'メダル鋳造体験', kana: 'めだる ちゅうぞう たいけん', en: 'Medal Casting', type: 'ものづくり', color: 'red',
+      img: 'exp-medal', alt: '型に金属を流しこむようす', img2: 'exp-medal-done', alt2: 'できあがった足あと形のメダル',
+      ...NAGANOBORI,
+      date: '', time: '', fee: '', target: '', booking: '', cap: '', // 開催日・所要時間・料金・対象・予約・定員 – fill in when confirmed
+      about: [R('錫', 'すず') + 'を' + R('溶', 'と') + 'かし、自分がデザインした型に流しこんで、オリジナルのメダルを作る体験です。'],
+      steps: [['', '型にデザインを描く', '自分だけのもようを考えます'], ['', R('錫', 'すず') + 'を溶かす', '熱い作業はスタッフが行います'],
+        ['exp-medal', '型に流しこむ', 'スタッフといっしょに注ぎます'], ['exp-medal-done', '冷まして みがいて完成', '持ち帰れます']],
+      before: [['shirt', 'よごれてもよい服で'], ['hair', '長い髪は結んでください'], ['warn', 'やけどに注意・スタッフの説明を聞いてください']],
+      q: '長登の銅は、奈良の大仏にも使われました。なぜ美祢で銅がとれたの？',
+      a: '地下から上がってきたマグマの熱で' + R('石灰岩', 'せっかいがん') + 'が別の岩石に変わり、そのときに銅がたまりました。このような' + R('鉱床', 'こうしょう') + 'を「スカルン鉱床」と呼びます。',
+      geoImg: 'p5-smelting',
+      gallery: [], // [['file-in-assets-img (no .webp)', 'short caption'], …]
+      rel: [['exp.html?id=mokkan', 'exp-mokkan', '体験', '木簡体験'], ['exp.html?id=cave', 'exp-cave', '体験', '洞窟見学・探検'], ['spot.html?id=naganobori', 'p5-smelting', 'お出かけスポット', '長登銅山跡']],
+    },
+    mokkan: {
+      name: '木簡体験', kana: 'もっかん たいけん', en: 'Mokkan Writing', type: 'れきし', color: 'red',
+      img: 'exp-mokkan', alt: '木の札に筆で文字を書くようす', img2: 'exp-mokkan-items', alt2: '文字を書いた木簡',
+      ...NAGANOBORI,
+      date: '', time: '', fee: '', target: '', booking: '', cap: '',
+      about: [R('木簡', 'もっかん') + 'に似せた木の板に、' + R('筆', 'ふで') + 'と' + R('墨', 'すみ') + 'で文字を書く体験です。昔の人がどのように記録をのこし、知らせを伝えていたのかを体験できます。'],
+      steps: [], // [['photo or empty', 'title', 'one line'], …] ×4
+      before: [],
+      q: '長登でつくられた銅は、どこへ運ばれたの？',
+      a: '長登の銅は、奈良・' + R('東大寺', 'とうだいじ') + 'の大仏にも使われました。長登銅山跡からは、銅づくりや運び出しの記録を書いた木簡が見つかっています。',
+      geoImg: 'p5-smelting',
+      gallery: [],
+      rel: [['exp.html?id=medal', 'exp-medal', '体験', 'メダル鋳造体験'], ['exp.html?id=trout', 'exp-trout', '体験', 'ニジマス釣り体験'], ['spot.html?id=naganobori', 'p5-smelting', 'お出かけスポット', '長登銅山跡']],
+    },
+    cave: {
+      name: '洞窟見学・探検', kana: 'どうくつ けんがく・たんけん', en: 'Cave Walk & Exploration', type: 'しぜん', color: 'white',
+      img: 'exp-cave', alt: 'ヘルメットをかぶって洞窟を探検する子どもたち', img2: 'spot-akiyoshido', alt2: '秋芳洞の百枚皿',
+      place: '秋芳洞・景清洞・大正洞', hours: '', tel: ['カルスター（ジオツアー受付）', '0837-63-0040'],
+      addr: '〒754-0511 山口県美祢市秋芳町秋吉3449-1（秋芳洞 正面入口）', ll: '34.2269667,131.3045194',
+      qr: 'exp-cave', qrText: 'スマホのカメラで読みとると、ジオツアー「秋芳洞のヒミツ」のページが開きます。',
+      // info = ジオツアー「秋芳洞のヒミツ」 (mine-geo.com/tour/c001.html)
+      date: '毎日 10:00・14:00（ジオツアー「秋芳洞のヒミツ」）', time: '1時間30分',
+      fee: '1人で参加 3,500円／2人以上 1人3,000円／小学生 1,500円／未就学児 無料（入洞料は別）', target: '',
+      booking: '予約なしで参加できます（事前予約がおすすめ）', cap: '10名',
+      about: [R('洞窟', 'どうくつ') + 'を歩き、地下の世界を体感します。見学から探検まで、レベルに合わせた体験ができます。',
+        '秋芳洞では、ジオガイドといっしょに歩くツアー「秋芳洞のヒミツ」に当日参加できます。',
+        '景清洞では、見学コースの最後の400mをライトだけで進む「探検コース」があります（入洞料＋300円）。'],
+      steps: [['', 'ジオガイドと出発', '認定ジオガイドがいっしょに歩きます'], ['spot-akiyoshido', '洞窟を歩く', '大きな空間と' + R('鍾乳石', 'しょうにゅうせき') + 'を見ます'],
+        ['', 'でき方を知る', '洞窟がどうやってできたかを学びます'], ['exp-cave', 'もっと探検', '景清洞の探検コースは、ライトだけで進みます']],
+      before: [['shoe', '歩きやすいくつで'], ['warn', 'ヘルメットと長ぐつは、景清洞の探検コースで借りられます']],
+      q: 'なぜ地下にこんなに大きな洞窟ができたの？',
+      a: '秋吉台にしみこんだ雨水が、' + R('石灰岩', 'せっかいがん') + 'をとかしながら地下を流れてできました。秋芳洞は地下を流れる水の出口にあたる「生きている洞窟」です。',
+      geoImg: 'p3-cave',
+      gallery: [],
+      rel: [['exp.html?id=medal', 'exp-medal', '体験', 'メダル鋳造体験'], ['exp.html?id=trout', 'exp-trout', '体験', 'ニジマス釣り体験'], ['spot.html?id=akiyoshido', 'spot-akiyoshido', 'お出かけスポット', '秋芳洞']],
+    },
+    trout: {
+      name: 'ニジマス釣り体験', kana: 'にじます つり たいけん', en: 'Rainbow Trout Fishing', type: 'しぜん', color: 'white',
+      img: 'exp-trout', alt: '別府弁天池の近くの釣り堀', img2: 'p2-benten', alt2: '青く透き通った別府弁天池',
+      place: '美祢市養鱒場 釣り堀', hours: '毎日 9:00〜16:30', tel: ['美祢市養鱒場', '0837-64-0203'],
+      addr: '〒754-0603 山口県美祢市秋芳町別府1591-2', ll: '34.2545988,131.246828',
+      qr: 'exp-trout', qrText: 'スマホのカメラで読みとると、Googleマップでこの場所が開きます。',
+      date: '', time: '', fee: '', target: '', booking: '', cap: '',
+      about: ['「別府弁天池」のとなりの釣り堀で、弁天池のわき水で育ったニジマスを釣ることができます。'],
+      steps: [],
+      before: [],
+      q: 'なぜ弁天池のそばでマスが育つの？',
+      a: '秋吉台にしみこんだ雨水が地下を通り、弁天池からわき出しています。このきれいなわき水が、マスの' + R('養殖', 'ようしょく') + 'に使われています。',
+      geoImg: 'p2-benten',
+      gallery: [],
+      rel: [['exp.html?id=cave', 'exp-cave', '体験', '洞窟見学・探検'], ['exp.html?id=medal', 'exp-medal', '体験', 'メダル鋳造体験'], ['spot.html?id=benten', 'p2-benten', 'お出かけスポット', '別府弁天池']],
+    },
+  };
+  const ICONS = {
+    cal: '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
+    clock: '<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>',
+    yen: '<path d="M6 4l6 8 6-8M12 12v8M7 13h10M7 17h10"/>',
+    person: '<circle cx="12" cy="7" r="3.5"/><path d="M5 21v-2a7 7 0 0 1 14 0v2"/>',
+    book: '<rect x="5" y="3" width="14" height="18" rx="2"/><path d="M9 8h6M9 12h6M9 16h3"/>',
+    group: '<circle cx="8" cy="8" r="3"/><circle cx="16" cy="8" r="3"/><path d="M2 20v-1a6 6 0 0 1 12 0v1M14 14.5a6 6 0 0 1 8 4.5v1"/>',
+    tel: '<path d="M5 4h4l2 5-3 2a11 11 0 0 0 5 5l2-3 5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/>',
+    pin: '<path d="M12 21s-7-6.5-7-12a7 7 0 0 1 14 0c0 5.5-7 12-7 12z"/><circle cx="12" cy="9" r="2.5"/>',
+    shirt: '<path d="M8 3L3 6l2 4 3-1v12h8V9l3 1 2-4-5-3a4 4 0 0 1-8 0z"/>',
+    hair: '<circle cx="12" cy="10" r="6"/><path d="M12 16v3M9 21h6"/>',
+    warn: '<path d="M12 3l10 18H2z"/><path d="M12 10v5M12 18v.01"/>',
+    shoe: '<path d="M3 17V8h5l2 4 8 2a3 3 0 0 1 3 3v0H3zM3 20h18"/>',
+    wheel: '<circle cx="10" cy="4.5" r="1.8"/><path d="M10 7.5v6h5l3 5.5M10 10.5h5"/><path d="M7.5 11a5.5 5.5 0 1 0 7 7"/>',
+  };
+  const ico = (i) => `<span class="ico" aria-hidden="true"><svg viewBox="0 0 24 24">${ICONS[i]}</svg></span>`;
+  const PH = '<span class="ph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>写真準備中</span>';
+  const COLOR = {
+    white: '<svg class="mark" viewBox="0 0 18 18" aria-hidden="true"><circle class="m-white" cx="9" cy="9" r="7" stroke-width="2.5"/></svg>白｜石灰岩',
+    red: '<svg class="mark" viewBox="0 0 18 18" aria-hidden="true"><path class="m-red" d="M9 1l8 15H1z"/></svg>赤｜銅',
+  };
+
+  const id = new URLSearchParams(location.search).get('id');
+  const key = Object.prototype.hasOwnProperty.call(EXPS, id) ? id : 'medal';
+  if (key !== id) history.replaceState(null, '', '?id=' + key); // URL matches what is shown
+  const s = EXPS[key];
+  document.title = 'Mine秋吉台ジオパーク｜' + s.name;
+  document.getElementById('crumb-name').textContent = s.name;
+  const qrImg = document.getElementById('qr-img');
+  qrImg.src = 'assets/img/qr-' + s.qr + '.svg';
+  qrImg.alt = s.name + 'の予約方法・場所を開くQRコード';
+  document.getElementById('qr-text').textContent = s.qrText;
+
+  const where = `<p class="where"><i>ところ</i>${s.place}</p>`;
+  const rows = [['cal', '開催日', s.date], ['clock', '所要時間', s.time], ['yen', '料金', s.fee], ['person', '対象', s.target], ['book', '予約', s.booking], ['group', '定員', s.cap]];
+  const before = [...s.before, ['wheel', '車いすでの参加は ' + TBD]]; // ponytail: 車いす always 確認中 until the venues answer; move into each 体験's before[] then
+  document.getElementById('main').innerHTML = `
+    <section class="hero" aria-labelledby="exp-h">
+      <div class="hero-in">
+        <div class="title">
+          <ul class="tags"><li>体験</li><li>${s.type}</li><li>${COLOR[s.color]}</li></ul>
+          <div class="name"><small>${s.kana}</small><h1 id="exp-h">${s.name}</h1></div>
+          <span class="en" lang="en">${s.en}</span>
+          ${where}
+          <img class="chara" src="assets/img/chara-loupe.webp" alt="">
+        </div>
+        <div class="shots">
+          <img class="main" src="assets/img/${s.img}.webp" alt="${s.alt}">
+          <img class="sub" src="assets/img/${s.img2}.webp" alt="${s.alt2}">
+        </div>
+      </div>
+    </section>
+    <div class="page">
+      <div class="side">
+      <section class="card" aria-labelledby="info-h">
+        <h2 id="info-h">体験の基本情報</h2>
+        <ul class="info">${rows.map(([i, label, text]) => `<li>${ico(i)}<span><b>${label}</b>${text || TBD}</span></li>`).join('')}</ul>
+        ${where}
+      </section>
+      <section class="card access" aria-labelledby="access-h">
+        <h2 id="access-h">体験の場所・予約</h2>
+        ${where}
+        <iframe src="https://maps.google.com/maps?q=${s.ll}&z=14&hl=ja&output=embed" title="${s.place}の地図" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+        <p class="addr"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS.pin}</svg>${s.addr}</p>
+        ${s.hours ? `<p class="addr"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS.clock}</svg>${s.hours}</p>` : ''}
+        <p class="addr"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS.tel}</svg><span>予約・問い合わせ：${s.tel[0]}<br>TEL: <span class="nw">${s.tel[1]}</span></span></p>
+        <div class="carry"><img src="${qrImg.src}" alt="${qrImg.alt}"><p><b>スマホで読みとって、予約方法や場所を見られます</b></p></div>
+      </section>
+      </div>
+      <div class="body">
+      <section aria-labelledby="about-h">
+        <h2 class="h2bar" id="about-h">どんな体験？</h2>
+        ${s.about.map((t) => `<p>${t}</p>`).join('')}
+      </section>
+      <section aria-labelledby="steps-h">
+        <h2 class="h2bar" id="steps-h">体験の流れ</h2>
+        <ol class="steps">${s.steps.length
+          ? s.steps.map(([img, t, d]) => `<li>${img ? `<img src="assets/img/${img}.webp" alt="" loading="lazy">` : PH}<b>${t}</b><p>${d}</p></li>`).join('')
+          : `<li>${PH}<b>準備中</b></li>`.repeat(4)}</ol>
+      </section>
+      <section class="geo" aria-labelledby="geo-h">
+        <span class="label">ここがジオ！</span>
+        <div class="geo-in">
+          <img src="assets/img/${s.geoImg}.webp" alt="" loading="lazy">
+          <div>
+            <h3 id="geo-h">${s.q}</h3>
+            <p>${s.a}</p>
+            <a class="more" href="about.html#s1">白・黒・赤の大地について読む →</a>
+          </div>
+        </div>
+      </section>
+      <section class="card before" aria-labelledby="before-h">
+        <h2 id="before-h">参加する前に</h2>
+        <ul>${before.map(([i, t]) => `<li>${ico(i)}<span>${t}</span></li>`).join('')}</ul>
+      </section>
+      <section aria-labelledby="gal-h">
+        <h2 class="h2bar" id="gal-h">フォトギャラリー</h2>
+        <div class="gal" role="region" aria-roledescription="carousel" aria-labelledby="gal-h">
+          ${s.gallery.length ? '<button class="arrow" type="button" id="g-prev"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>前へ</button>' : ''}
+          <ul id="g-track">${s.gallery.length
+            ? s.gallery.map(([img, cap]) => `<li><figure><img src="assets/img/${img}.webp" alt="${cap}" loading="lazy"><figcaption>${cap}</figcaption></figure></li>`).join('')
+            : `<li>${PH}</li>`.repeat(3)}</ul>
+          ${s.gallery.length ? '<button class="arrow" type="button" id="g-next"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>次へ</button>' : ''}
+        </div>
+      </section>
+      </div>
+    </div>
+    <section class="rel" aria-labelledby="rel-h">
+      <h2 id="rel-h">ほかの体験・あわせて行きたい</h2>
+      <ul>${s.rel.map(([href, img, tag, name]) => `<li><a href="${href}"><img src="assets/img/${img}.webp" alt="" loading="lazy"><p><i>${tag}</i>${name}</p></a></li>`).join('')}</ul>
+    </section>`;
+
+  // gallery: native scroll-snap, buttons move one view (only when there are photos)
+  const gTrack = document.getElementById('g-track');
+  const gPrev = document.getElementById('g-prev');
+  if (gPrev) {
+    const gNext = document.getElementById('g-next');
+    const gUpdate = () => {
+      gPrev.disabled = gTrack.scrollLeft <= 2;
+      gNext.disabled = gTrack.scrollLeft >= gTrack.scrollWidth - gTrack.clientWidth - 2;
+    };
+    gPrev.addEventListener('click', () => gTrack.scrollBy({ left: -gTrack.clientWidth }));
+    gNext.addEventListener('click', () => gTrack.scrollBy({ left: gTrack.clientWidth }));
+    gTrack.addEventListener('scroll', gUpdate, { passive: true });
+    new ResizeObserver(gUpdate).observe(gTrack);
+  }
+
+  // QR dialog
+  document.querySelectorAll('[data-open]').forEach((b) => b.addEventListener('click', () => document.getElementById(b.dataset.open).showModal()));
+
+  // language – EN copy comes later; for now only the choice is kept across pages
+  const langBtns = document.querySelectorAll('[data-lang]');
+  function setLang(l) {
+    langBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.lang === l)));
+    try { localStorage.setItem('lang', l); } catch (e) {}
+  }
+  langBtns.forEach((b) => b.addEventListener('click', () => setLang(b.dataset.lang)));
+  let saved = 'ja';
+  try { saved = localStorage.getItem('lang'); } catch (e) {}
+  setLang(saved === 'en' ? 'en' : 'ja');
+
+  // 文字の大きさ 標準 / 大 – kept across pages
+  const fsBtns = document.querySelectorAll('[data-fs]');
+  function setFs(v) {
+    document.documentElement.dataset.fs = v;
+    fsBtns.forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.fs === v)));
+    try { localStorage.setItem('fs', v); } catch (e) {}
+  }
+  fsBtns.forEach((b) => b.addEventListener('click', () => setFs(b.dataset.fs)));
+  let fs = 'n';
+  try { fs = localStorage.getItem('fs'); } catch (e) {}
+  setFs(fs === 'l' ? 'l' : 'n');
+
+  // popup menu; every dialog closes 3 ways: × (data-close), backdrop tap, Esc (native)
+  const menu = document.getElementById('menu');
+  document.getElementById('menu-open').addEventListener('click', () => menu.showModal());
+  document.querySelectorAll('dialog').forEach((d) => d.addEventListener('click', (e) => {
+    if (e.target === d || e.target.closest('[data-close], a')) d.close();
+  }));
+
+  // kiosk idle reset: no touch for 90 s → 20 s warning (can be extended) → Welcome, which resets 言語・文字の大きさ for the next visitor
+  const IDLE = 90, WARN = 20; // seconds
+  const idle = document.getElementById('idle');
+  const idleN = document.getElementById('idle-n');
+  let idleT, warnT, touched;
+  function wake() {
+    touched = Date.now();
+    clearTimeout(idleT); clearInterval(warnT);
+    if (idle.open) idle.close();
+    idleT = setTimeout(warn, IDLE * 1000);
+  }
+  function warn() {
+    // a video on screen keeps playing (taps inside YouTube never reach this page), but not past 10 min
+    const video = [...document.querySelectorAll('iframe[src*="youtube"]')].some((f) => { const r = f.getBoundingClientRect(); return r.height && r.bottom > 0 && r.top < innerHeight; });
+    if (video && Date.now() - touched < 600000) { idleT = setTimeout(warn, IDLE * 1000); return; }
+    let left = WARN;
+    idleN.textContent = left;
+    idle.showModal();
+    warnT = setInterval(() => {
+      if (--left > 0) idleN.textContent = left;
+      else location.href = 'welcome.html';
+    }, 1000);
+  }
+  ['pointerdown', 'keydown', 'wheel', 'touchmove'].forEach((t) => addEventListener(t, wake, { capture: true, passive: true }));
+  addEventListener('pageshow', wake); // first load and back/forward cache
+})();
+</script>
+</body>
+</html>

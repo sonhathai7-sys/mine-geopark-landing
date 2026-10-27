@@ -3,6 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- iPad: opened from the Home Screen icon, runs full screen without the Safari URL bar -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Mine秋吉台">
   <title>Mine秋吉台ジオパーク｜どこから見る？</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -32,7 +36,6 @@
 *, *::before, *::after { box-sizing: border-box; }
 @media (prefers-reduced-motion: no-preference) {
   html, .track { scroll-behavior: smooth; }
-  .tile { transition: transform .15s; }
 }
 body {
   margin: 0; background: var(--cream-warm); color: var(--ink);
@@ -96,7 +99,6 @@ section { scroll-margin-top: var(--hdr); }
   background: var(--paper); border-radius: 28px; box-shadow: 0 8px 24px rgba(47, 44, 40, .10);
   text-decoration: none; text-align: center;
 }
-.tile:active { transform: scale(.97); }
 .tile img { height: 120px; width: auto; }
 .tile b { font: 700 22px/1.35 var(--f-display); }
 .tile small { display: block; font-size: 15px; color: var(--ink-soft); font-weight: 400; }
@@ -174,14 +176,31 @@ section { scroll-margin-top: var(--hdr); }
 .track::-webkit-scrollbar { display: none; }
 .pcard {
   flex: 0 0 calc((100% - var(--gap) * (var(--per) - 1)) / var(--per)); scroll-snap-align: start;
-  display: flex; flex-direction: column; background: var(--paper); border-radius: var(--r-card); overflow: hidden;
+  background: var(--paper); border-radius: var(--r-card); overflow: hidden;
   box-shadow: 0 4px 14px rgba(47, 44, 40, .08);
 }
-.pcard figure { position: relative; margin: 0; aspect-ratio: 4 / 3; background: var(--cream); }
-.pcard figure img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
-.pcard div { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 16px; } /* roomy for easy reading */
-.pcard .cat { align-self: flex-start; padding: 2px 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; line-height: 1.6; }
+.pcard button { display: flex; flex-direction: column; width: 100%; height: 100%; padding: 0; border: 0; background: none; text-align: left; cursor: pointer; }
+.pcard button:focus-visible { outline-offset: -4px; } /* the card clips its outline */
+.pcard .fig { position: relative; display: block; width: 100%; aspect-ratio: 4 / 3; background: var(--cream); }
+.pcard .fig img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+.pcard .pbody { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 16px; } /* roomy for easy reading */
+.cat { align-self: flex-start; padding: 2px 10px; border: 1px solid var(--line); border-radius: 8px; font-size: 14px; line-height: 1.6; }
 .pcard b { font: 700 19px/1.4 var(--f-display); }
+.pcard .more-p { display: inline-flex; align-items: center; gap: 6px; margin-top: auto; font: 700 15px/1.4 var(--f-display); }
+.pcard .more-p svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
+/* partner popup */
+.pdlg { width: min(560px, calc(100% - 32px)); max-height: calc(100% - 32px); border-radius: 24px; }
+.dlg-in { padding: 20px 24px 24px; display: flex; flex-direction: column; gap: 14px; }
+.dlg-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.dlg-top h2 { font: 700 22px/1.45 var(--f-display); }
+.pd-photo { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; border-radius: 16px; background: var(--cream); }
+.pd-hours { display: flex; gap: 8px; font-size: 16px; }
+.pd-hours[hidden] { display: none; }
+.pd-hours svg { flex: none; width: 22px; height: 22px; margin-top: 4px; fill: none; stroke: var(--ink); stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.carry { display: flex; gap: 18px; align-items: center; padding: 14px 18px; background: var(--cream); border-radius: 16px; }
+.carry img { width: 112px; height: 112px; flex: none; background: var(--paper); }
+.carry b { display: block; font: 700 18px/1.5 var(--f-display); }
+.carry small { font-size: 14px; color: var(--ink-soft); }
 .count { text-align: center; font: 700 16px var(--f-latin); }
 
 /* ---------- 体験 (pop allowed) ---------- */
@@ -191,17 +210,20 @@ section { scroll-margin-top: var(--hdr); }
 }
 .exp::before { width: 220px; height: 220px; right: -80px; top: -60px; background: var(--tag); opacity: .7; }
 .exp::after { width: 160px; height: 160px; left: -70px; bottom: 40px; background: var(--pink); }
-.exp .wrap { position: relative; }
+.exp .wrap { position: relative; z-index: 1; } /* cards above the blobs */
 .exp .head h2 { font-weight: 900; }
 .exp-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 36px 24px; }
-.ecard { display: flex; flex-direction: column; align-items: center; gap: 12px; }
+.ecard { display: flex; flex-direction: column; align-items: center; gap: 12px; color: inherit; text-decoration: none; }
+.ename { display: flex; align-items: center; gap: 10px; }
+.ename .go { flex: none; width: 40px; height: 40px; border-radius: 50%; display: grid; place-items: center; background: var(--ink); color: var(--paper); }
 .ecard img {
   width: 100%; aspect-ratio: 3 / 2; object-fit: cover; border: 8px solid var(--paper); border-radius: 14px;
   box-shadow: var(--shadow-soft); transform: rotate(-1.5deg);
 }
-.ecard:nth-child(even) img { transform: rotate(1.5deg); }
+li:nth-child(even) > .ecard img { transform: rotate(1.5deg); }
 .ecard h3 { font: 700 20px/1.4 var(--f-display); text-align: center; }
 .where { display: flex; align-items: center; gap: 8px; font-size: 15px; line-height: 1.5; }
+.nw { white-space: nowrap; } /* break only between place names */
 .where i { flex: none; padding: 2px 10px; border-radius: 999px; background: var(--pink); color: var(--red); font: 700 13px/1.6 var(--f-display); font-style: normal; }
 
 /* ---------- ジオツアー ---------- */
@@ -280,6 +302,20 @@ section { scroll-margin-top: var(--hdr); }
   .contact > b { border: 0; padding: 0; }
 }
 
+/* ---------- kiosk idle reset (identical block in every page except Welcome) ---------- */
+.idle { width: min(460px, calc(100% - 32px)); border-radius: 24px; text-align: center; }
+.idle-in { padding: 28px 24px 32px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.idle h2 { font: 700 22px/1.45 var(--f-display); }
+.idle b { font: 800 28px/1 var(--f-latin); }
+.idle .primary { min-height: 64px; background: var(--red); color: var(--paper); border-color: var(--red); box-shadow: 0 5px 0 var(--red-deep); }
+/* ---------- press feedback (identical block in every page except Welcome): buttons and cards dip while pressed ---------- */
+:is(.pill, .arrow, .menu-btn, .x, .lang button, .play, .totoc, .more, .themes a, .tile, .spot, .ecard, .pcard, .rel a, .next a, .toc a) { -webkit-tap-highlight-color: transparent; }
+@media (prefers-reduced-motion: no-preference) {
+  :is(.pill, .arrow, .menu-btn, .x, .lang button, .play, .totoc, .themes a, .tile, .spot, .ecard, .pcard, .rel a, .next a, .toc a) { transition: transform .12s ease, box-shadow .12s ease; }
+}
+:is(.pill, .arrow, .menu-btn, .x, .lang button, .play, .totoc):not(:disabled):active { transform: scale(.95); }
+:is(.themes a, .tile, .spot, .ecard, .pcard, .rel a, .next a, .toc a):active { transform: scale(.97); } /* .spot/.pcard: the clipped card shrinks as a whole */
+.pill.primary:not(:disabled):active { transform: translateY(4px); box-shadow: 0 1px 0 var(--red-deep); } /* red button sinks into its shadow */
 /* ---------- popup menu (identical block in every page except Welcome) ---------- */
 .menu-btn {
   flex: none; width: 64px; height: 64px; border: 0; border-radius: 16px; background: var(--ink); color: var(--paper);
@@ -433,29 +469,29 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
           <button class="arrow" type="button" id="p-prev"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>前へ</button>
           <ul class="track" id="p-track">
             <!-- categories are the LP proposal, not an official classification -->
-            <li class="pcard"><figure><img src="assets/img/partners/001.webp" alt="" loading="lazy"></figure><div><span class="cat">体験する</span><b>桃ノ木ボタッ子クラブ</b><p class="where"><i>ところ</i>大嶺町</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/002.webp" alt="" loading="lazy"></figure><div><span class="cat">買う</span><b>阿川果樹園</b><p class="where"><i>ところ</i>伊佐町</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/003.webp" alt="" loading="lazy"></figure><div><span class="cat">食べる</span><b>堅田地区まちづくり協議会（ますバーガー）</b><p class="where"><i>ところ</i>秋芳町</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/004.webp" alt="" loading="lazy"></figure><div><span class="cat">食べる</span><b>Cafe Brass</b><p class="where"><i>ところ</i>美東町</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/005.webp" alt="" loading="lazy"></figure><div><span class="cat">温泉</span><b>於福温泉</b><p class="where"><i>ところ</i>於福町</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/006.webp" alt="" loading="lazy"></figure><div><span class="cat">買う</span><b>園田きこり農園</b><p class="where"><i>ところ</i>大嶺町</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/007.webp" alt="" loading="lazy"></figure><div><span class="cat">買う</span><b>美祢市林業経営研究会 あさぎり会</b><p class="where"><i>ところ</i>大嶺町</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/008.webp" alt="" loading="lazy"></figure><div><span class="cat">企業</span><b>太伸商事 有限会社</b><p class="where"><i>ところ</i>伊佐町</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/009.webp" alt="" loading="lazy"></figure><div><span class="cat">買う</span><b>Agri charm</b><p class="where"><i>ところ</i>秋芳町</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/010.webp" alt="" loading="lazy"></figure><div><span class="cat">団体</span><b>みね華の会</b><p class="where"><i>ところ</i>東厚保町</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/011.webp" alt="" loading="lazy"></figure><div><span class="cat">買う</span><b>農事組合法人 植柳ファーム</b><p class="where"><i>ところ</i>東厚保町</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/012.webp" alt="" loading="lazy"></figure><div><span class="cat">観光案内</span><b>一般社団法人 美祢市観光協会</b><p class="where"><i>ところ</i>秋芳町</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/013.webp" alt="" loading="lazy"></figure><div><span class="cat">団体</span><b>秋吉台地下水系を調べ守る会</b><p class="where"><i>ところ</i>秋芳町</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/014.webp" alt="" loading="lazy"></figure><div><span class="cat">体験する</span><b>梟舎Mine</b><p class="where"><i>ところ</i>カルスター（作品の販売）</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/015.webp" alt="" loading="lazy"></figure><div><span class="cat">企業</span><b>大洋パッキング株式会社</b><p class="where"><i>ところ</i>大嶺町</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/016.webp" alt="" loading="lazy"></figure><div><span class="cat">泊まる</span><b>美祢グランドホテル</b><p class="where"><i>ところ</i>大嶺町</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/017.webp" alt="" loading="lazy"></figure><div><span class="cat">企業</span><b>企業組合 ミネジユウクリエイト</b><p class="where"><i>ところ</i>秋芳町</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/018.webp" alt="" loading="lazy"></figure><div><span class="cat">泊まる</span><b>アオイロ。プランニング</b><p class="where"><i>ところ</i>秋芳町</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/019.webp" alt="" loading="lazy"></figure><div><span class="cat">買う</span><b>道の駅おふく</b><p class="where"><i>ところ</i>於福町</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/020.webp" alt="" loading="lazy"></figure><div><span class="cat">見る</span><b>北河内神楽舞保存会</b><p class="where"><i>ところ</i>美東町</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/021.webp" alt="" loading="lazy"></figure><div><span class="cat">買う</span><b>村上農園</b><p class="where"><i>ところ</i>美東町</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/022.webp" alt="" loading="lazy"></figure><div><span class="cat">買う</span><b>一般社団法人 ドリームレッド</b><p class="where"><i>ところ</i>美東町</p></div></li>
-            <li class="pcard"><figure><img src="assets/img/partners/023.webp" alt="" loading="lazy"></figure><div><span class="cat">食べる</span><b>秋吉台くるまえび（プロスペックAZ）</b><p class="where"><i>ところ</i>美東町</p></div></li>
+            <li class="pcard"><button type="button" data-p="001"><span class="fig"><img src="assets/img/partners/001.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">体験する</span><b>桃ノ木ボタッ子クラブ</b><span class="where"><i>ところ</i>大嶺町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="002"><span class="fig"><img src="assets/img/partners/002.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">買う</span><b>阿川果樹園</b><span class="where"><i>ところ</i>伊佐町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="003"><span class="fig"><img src="assets/img/partners/003.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">食べる</span><b>堅田地区まちづくり協議会（ますバーガー）</b><span class="where"><i>ところ</i>秋芳町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="004"><span class="fig"><img src="assets/img/partners/004.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">食べる</span><b>Cafe Brass</b><span class="where"><i>ところ</i>美東町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="005"><span class="fig"><img src="assets/img/partners/005.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">温泉</span><b>於福温泉</b><span class="where"><i>ところ</i>於福町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="006"><span class="fig"><img src="assets/img/partners/006.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">買う</span><b>園田きこり農園</b><span class="where"><i>ところ</i>大嶺町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="007"><span class="fig"><img src="assets/img/partners/007.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">買う</span><b>美祢市林業経営研究会 あさぎり会</b><span class="where"><i>ところ</i>大嶺町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="008"><span class="fig"><img src="assets/img/partners/008.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">企業</span><b>太伸商事 有限会社</b><span class="where"><i>ところ</i>伊佐町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="009"><span class="fig"><img src="assets/img/partners/009.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">買う</span><b>Agri charm</b><span class="where"><i>ところ</i>秋芳町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="010"><span class="fig"><img src="assets/img/partners/010.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">団体</span><b>みね華の会</b><span class="where"><i>ところ</i>東厚保町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="011"><span class="fig"><img src="assets/img/partners/011.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">買う</span><b>農事組合法人 植柳ファーム</b><span class="where"><i>ところ</i>東厚保町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="012"><span class="fig"><img src="assets/img/partners/012.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">観光案内</span><b>一般社団法人 美祢市観光協会</b><span class="where"><i>ところ</i>秋芳町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="013"><span class="fig"><img src="assets/img/partners/013.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">団体</span><b>秋吉台地下水系を調べ守る会</b><span class="where"><i>ところ</i>秋芳町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="014"><span class="fig"><img src="assets/img/partners/014.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">体験する</span><b>梟舎Mine</b><span class="where"><i>ところ</i>カルスター（作品の販売）</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="015"><span class="fig"><img src="assets/img/partners/015.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">企業</span><b>大洋パッキング株式会社</b><span class="where"><i>ところ</i>大嶺町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="016"><span class="fig"><img src="assets/img/partners/016.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">泊まる</span><b>美祢グランドホテル</b><span class="where"><i>ところ</i>大嶺町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="017"><span class="fig"><img src="assets/img/partners/017.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">企業</span><b>企業組合 ミネジユウクリエイト</b><span class="where"><i>ところ</i>秋芳町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="018"><span class="fig"><img src="assets/img/partners/018.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">泊まる</span><b>アオイロ。プランニング</b><span class="where"><i>ところ</i>秋芳町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="019"><span class="fig"><img src="assets/img/partners/019.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">買う</span><b>道の駅おふく</b><span class="where"><i>ところ</i>於福町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="020"><span class="fig"><img src="assets/img/partners/020.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">見る</span><b>北河内神楽舞保存会</b><span class="where"><i>ところ</i>美東町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="021"><span class="fig"><img src="assets/img/partners/021.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">買う</span><b>村上農園</b><span class="where"><i>ところ</i>美東町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="022"><span class="fig"><img src="assets/img/partners/022.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">買う</span><b>一般社団法人 ドリームレッド</b><span class="where"><i>ところ</i>美東町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
+            <li class="pcard"><button type="button" data-p="023"><span class="fig"><img src="assets/img/partners/023.webp" alt="" loading="lazy"></span><span class="pbody"><span class="cat">食べる</span><b>秋吉台くるまえび（プロスペックAZ）</b><span class="where"><i>ところ</i>美東町</span><span class="more-p">くわしく見る<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></span></button></li>
           </ul>
           <button class="arrow" type="button" id="p-next"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>次へ</button>
         </div>
@@ -469,13 +505,13 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
     <div class="wrap">
       <div class="head">
         <span class="kicker">EXPERIENCE</span>
-        <h2 id="exp-h">体験いろいろ！</h2>
+        <div class="head-row"><h2 id="exp-h">体験いろいろ！</h2><p class="hint"><i>タップ</i>カードをタップすると、くわしく見られます</p></div>
       </div>
       <ul class="exp-grid">
-        <li class="ecard"><img src="assets/img/exp-medal.webp" alt="型に金属を流しこむ子どもたち" loading="lazy"><h3>メダル<ruby>鋳造<rt>ちゅうぞう</rt></ruby>体験</h3><p class="where"><i>ところ</i>長登銅山文化交流館</p></li>
-        <li class="ecard"><img src="assets/img/exp-mokkan.webp" alt="木の札に文字を書く" loading="lazy"><h3><ruby>木簡<rt>もっかん</rt></ruby>体験</h3><p class="where"><i>ところ</i>長登銅山文化交流館</p></li>
-        <li class="ecard"><img src="assets/img/exp-cave.webp" alt="ヘルメットをかぶって洞窟を探検する子どもたち" loading="lazy"><h3><ruby>洞窟<rt>どうくつ</rt></ruby>見学・探検</h3><p class="where"><i>ところ</i>秋芳洞・景清洞・大正洞</p></li>
-        <li class="ecard"><img src="assets/img/exp-trout.webp" alt="別府弁天池の近くの釣り堀" loading="lazy"><h3>ニジマス<ruby>釣<rt>つ</rt></ruby>り体験</h3><p class="where"><i>ところ</i>美祢市養鱒場 釣り堀</p></li>
+        <li><a class="ecard" href="exp.html?id=medal"><img src="assets/img/exp-medal.webp" alt="型に金属を流しこむ子どもたち" loading="lazy"><div class="ename"><h3>メダル<ruby>鋳造<rt>ちゅうぞう</rt></ruby>体験</h3><span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div><p class="where"><i>ところ</i>長登銅山文化交流館</p></a></li>
+        <li><a class="ecard" href="exp.html?id=mokkan"><img src="assets/img/exp-mokkan.webp" alt="木の札に文字を書く" loading="lazy"><div class="ename"><h3><ruby>木簡<rt>もっかん</rt></ruby>体験</h3><span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div><p class="where"><i>ところ</i>長登銅山文化交流館</p></a></li>
+        <li><a class="ecard" href="exp.html?id=cave"><img src="assets/img/exp-cave.webp" alt="ヘルメットをかぶって洞窟を探検する子どもたち" loading="lazy"><div class="ename"><h3><ruby>洞窟<rt>どうくつ</rt></ruby>見学・探検</h3><span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div><p class="where"><i>ところ</i><span><span class="nw">秋芳洞・</span><span class="nw">景清洞・</span><span class="nw">大正洞</span></span></p></a></li>
+        <li><a class="ecard" href="exp.html?id=trout"><img src="assets/img/exp-trout.webp" alt="別府弁天池の近くの釣り堀" loading="lazy"><div class="ename"><h3>ニジマス<ruby>釣<rt>つ</rt></ruby>り体験</h3><span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div><p class="where"><i>ところ</i>美祢市養鱒場 釣り堀</p></a></li>
       </ul>
     </div>
   </section>
@@ -523,6 +559,29 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
   </div>
 </footer>
 
+<dialog class="pdlg" id="partner" aria-labelledby="pd-h">
+  <div class="dlg-in">
+    <div class="dlg-top">
+      <h2 id="pd-h"></h2>
+      <button class="x" type="button" data-close autofocus><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>閉じる</button>
+    </div>
+    <img class="pd-photo" alt="">
+    <span class="cat"></span>
+    <p id="pd-intro"></p>
+    <p class="where"><i>ところ</i><span id="pd-where"></span></p>
+    <p class="pd-hours" id="pd-hours"><svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg><span></span></p>
+    <div class="carry"><img alt=""><p><b>スマホでくわしく見る</b><small></small></p></div>
+  </div>
+</dialog>
+
+<dialog class="idle" id="idle" aria-labelledby="idle-h">
+  <div class="idle-in">
+    <h2 id="idle-h">まもなく はじめの画面にもどります</h2>
+    <p>あと <b id="idle-n">20</b> 秒で、<br>つぎの人のために最初の画面にもどります。</p>
+    <button class="pill primary" type="button" data-close autofocus>このまま見る</button>
+  </div>
+</dialog>
+
 <dialog class="menu" id="menu" aria-label="メニュー">
   <div class="menu-in">
     <div class="menu-top">
@@ -565,6 +624,8 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
 (function () {
   'use strict';
 
+  document.addEventListener('touchstart', () => {}, { passive: true }); // iOS Safari shows :active press styles only with a touch listener
+
   // language – EN copy comes later; for now only the choice is kept across pages
   const langBtns = document.querySelectorAll('[data-lang]');
   function setLang(l) {
@@ -595,6 +656,54 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
     if (e.target === d || e.target.closest('[data-close], a')) d.close();
   }));
 
+  // partner popup: text from docs/content/mine-geo-partners.md (紹介文 = rewritten summary, hours only where a source is clear).
+  // [紹介文, 営業時間, QR target: 'Instagram' | '公式サイト' | '' (= mine-geo.com partner page)] – same order as the cards (001–023)
+  const PARTNERS = [
+    ['大嶺炭田の名残である桃ノ木露天掘り跡を、石炭の歴史・地層・動植物を学べる場所として手入れしている団体です。四季の景色や森林浴も楽しめる場づくりに取り組んでいます。', '', ''],
+    ['秋吉台の麓、水はけのよい石灰岩の土地でブドウ・梨・栗などを50年以上育てている果樹園です。シーズン中は園内の直売所で買えるほか、ブドウ狩り・栗拾い（量り売り）も楽しめます。', '', 'Instagram'],
+    ['名水百選・別府弁天池の湧き水で育ったニジマスを使った「ますバーガー」を開発し、弁天池そばの直売所で販売している地域団体です。弁天池を訪れた人へのおもてなしや特産品づくりにも取り組んでいます。', '9:00〜17:00（3月中旬〜11月中旬の土・日・祝日のみ。冬は休み）', 'Instagram'],
+    ['秋吉台リフレッシュパークの中にある夫婦営業のカフェで、日替わりパスタやスパイスカレー、手作りスコーンが楽しめます。焚火の会や秋吉台ハイクなどのイベントも開いています。', '11:00〜16:00（金・土・日・祝日のみ）', 'Instagram'],
+    ['地下1,250mから湧く源泉を全浴槽かけ流しで使う日帰り温泉で、露天風呂やサウナ、無料の足湯があります。道の駅おふくに併設されているので、ドライブの休憩にも立ち寄れます。', '10:00〜21:00（受付は20:00まで）・第2水曜休み', '公式サイト'],
+    ['市内のコナラなどの原木で「秀ちゃん椎茸」を育て、木を伐って芽吹かせる萌芽更新で里山を再生している農園です。隣の「森の駅」では季節のしいたけ狩りやピザづくりなどの里山体験もできます。', '森の駅 9:00〜17:00・不定休', '公式サイト'],
+    ['森の素材を使ったクラフトやワークショップを行う女性林業グループです。手づくりの「柿の葉茶」は道の駅で買うことができます。', '', ''],
+    ['美祢市で70年以上、企業や官公庁に事務用品やOA機器を届けてきた地元の会社です。ジオパークパートナーとして地域を支えています。', '', '公式サイト'],
+    ['秋吉台の麓で、地下100mからくみ上げた水を使っていちごを育てる夫婦の農園です。かおりの・恋みのり・桃薫など複数の品種があり、併設の直売所や通販で買えます。', '', 'Instagram'],
+    ['美祢駅での展示や桜まつりでのおもてなしなど、まちを花やもてなしで彩る市民グループです。学校で石炭・石灰石・銅のジオ紙芝居や絵本の読み聞かせも行っています。', '', ''],
+    ['2004年に地元の農地を守るために設立された農事組合法人で、約21.6haで米や大豆、ハウス11棟でアスパラガスを育てています。秋吉台の地下水と有機質の肥料で土づくりをしており、アスパラは産直サイトなどで買えます。', '', '公式サイト'],
+    ['秋芳洞の入口近くにある秋吉台観光交流センターを拠点に、秋芳洞・秋吉台など美祢市の観光案内をしている団体です。レンタサイクルの貸し出しや、観光サイト「karusuto.com」での情報発信も行っています。', '', '公式サイト'],
+    ['秋吉台の地質構造や地下水の流れを調べて発表している市民団体です。地下水が汚れる原因を探り、守る方法の提案に取り組んでいます。', '', ''],
+    ['日本画家の佐伯千尋さんと柏村文路さんの美術工房「梟舎」が、「梟舎mine」として秋吉台と美祢市の魅力を絵で発信しています。秋吉台を描いた絵はがきやマグカップはジオパークセンター「カルスター」で買えます。', '教室は予約制', '公式サイト'],
+    ['医薬品・食品機械向けのシールパッキングやダイアフラムなど、ゴム・樹脂製品をつくる美祢市のメーカーです。地域活動に参加し、外国人技能実習生による文化の発信も予定しています。', '', '公式サイト'],
+    ['秋吉台・秋芳洞まで車で約15分の、観光にも仕事にも使いやすいホテルです。60室の客室と宴会場があり、館内でのジオパーク展示も予定されています。', 'チェックイン 16:00／チェックアウト 10:00', '公式サイト'],
+    ['商品やイベントの企画、空き家や移住の相談、新しい特産品づくりに取り組む地域の企業組合です。', '', ''],
+    ['築110年を超える古民家を改装し、大広間に張ったテントで天気を気にせず「お家キャンプ」ができる1日1組の宿です。宿泊がない日はヨガやワークショップなどに使えるレンタルスペースとして貸し出しています。', 'チェックイン 15:00〜22:00／チェックアウト 10:00', 'Instagram'],
+    ['14本の石柱が目印の、温泉を併設した道の駅です。美祢ブランド「ミネコレ」の商品や新鮮な野菜、地元の果物を使った約20種類の手作りシャーベットが人気です。', '直売所 9:00〜18:00・第2水曜休み', '公式サイト'],
+    ['約400年続くとされる厄払いの神楽舞を受け継ぐ保存会で、1960年代に保存会として発足しました。子ども神楽にも取り組み、地域の伝統を次の世代へつないでいます。', '', ''],
+    ['秋吉台のカルスト台地で代々続く農家で、BLOF理論にもとづく土づくりで美東ごぼうやいもを育てています。野菜は自社の通販サイトで買えます。', '問い合わせ 8:00〜17:00', '公式サイト'],
+    ['赤郷地区の地域づくり計画「赤郷夢プラン」を実現するために生まれた団体で、デマンドバス「あかまる号」の運行などで暮らしを支えています。GI登録の「美東ごぼう」を使ったごぼう茶やお菓子の開発にも取り組んでいます。', '', '公式サイト'],
+    ['2019年に閉校した旧赤郷小学校の教室に水槽を置き、海のない美祢市でクルマエビを陸上養殖している企業です。秋吉台の地下水を使い天然の飼料で育てた「美祢プレミアム 秋吉台クルマエビ」として、地元での販売会も始まっています。', '', ''],
+  ];
+
+  const pd = document.getElementById('partner'); // one popup, filled from the tapped card
+  document.getElementById('p-track').addEventListener('click', (e) => {
+    const b = e.target.closest('[data-p]');
+    if (!b) return;
+    const [intro, hours, src] = PARTNERS[Number(b.dataset.p) - 1];
+    const name = b.querySelector('b').textContent;
+    pd.querySelector('#pd-h').textContent = name;
+    pd.querySelector('.pd-photo').src = b.querySelector('img').src;
+    pd.querySelector('.cat').textContent = b.querySelector('.cat').textContent;
+    pd.querySelector('#pd-intro').textContent = intro;
+    pd.querySelector('#pd-where').textContent = b.querySelector('.where').lastChild.textContent;
+    pd.querySelector('#pd-hours').hidden = !hours;
+    pd.querySelector('#pd-hours span').textContent = hours;
+    const qr = pd.querySelector('.carry img');
+    qr.src = 'assets/img/qr-' + (src ? 'partner-' + b.dataset.p : 'partners') + '.svg';
+    qr.alt = name + 'の' + (src || 'パートナー紹介ページ') + 'を開くQRコード';
+    pd.querySelector('.carry small').textContent = src ? name + 'の' + src : 'Mine秋吉台ジオパーク公式サイトのパートナー紹介';
+    pd.showModal();
+  });
+
   // partner carousel: native scroll-snap, buttons move one view
   const track = document.getElementById('p-track');
   const prev = document.getElementById('p-prev');
@@ -622,6 +731,32 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
   next.addEventListener('click', () => go(1));
   track.addEventListener('scroll', update, { passive: true });
   new ResizeObserver(update).observe(track); // fires once now, then on resize and 文字の大きさ changes
+
+  // kiosk idle reset: no touch for 90 s → 20 s warning (can be extended) → Welcome, which resets 言語・文字の大きさ for the next visitor
+  const IDLE = 90, WARN = 20; // seconds
+  const idle = document.getElementById('idle');
+  const idleN = document.getElementById('idle-n');
+  let idleT, warnT, touched;
+  function wake() {
+    touched = Date.now();
+    clearTimeout(idleT); clearInterval(warnT);
+    if (idle.open) idle.close();
+    idleT = setTimeout(warn, IDLE * 1000);
+  }
+  function warn() {
+    // a video on screen keeps playing (taps inside YouTube never reach this page), but not past 10 min
+    const video = [...document.querySelectorAll('iframe[src*="youtube"]')].some((f) => { const r = f.getBoundingClientRect(); return r.height && r.bottom > 0 && r.top < innerHeight; });
+    if (video && Date.now() - touched < 600000) { idleT = setTimeout(warn, IDLE * 1000); return; }
+    let left = WARN;
+    idleN.textContent = left;
+    idle.showModal();
+    warnT = setInterval(() => {
+      if (--left > 0) idleN.textContent = left;
+      else location.href = 'welcome.html';
+    }, 1000);
+  }
+  ['pointerdown', 'keydown', 'wheel', 'touchmove'].forEach((t) => addEventListener(t, wake, { capture: true, passive: true }));
+  addEventListener('pageshow', wake); // first load and back/forward cache
 })();
 </script>
 </body>

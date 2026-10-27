@@ -2,6 +2,8 @@
 (function () {
   'use strict';
 
+  document.addEventListener('touchstart', () => {}, { passive: true }); // iOS Safari shows :active press styles only with a touch listener
+
   const DELAY = 5000; // ms per photo
 
   const T = {

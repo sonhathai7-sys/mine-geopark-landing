@@ -131,6 +131,9 @@ button, a { font: inherit; color: inherit; }
   font-weight: 700; font-size: 15px; box-shadow: 0 3px 10px rgba(47,44,40,.12);
 }
 .pause svg { width: 18px; height: 18px; fill: var(--ink); }
+/* press feedback, same feel as the other pages */
+.lang button, .pause { transition: transform .12s ease; }
+.lang button:active, .pause:active { transform: scale(.95); }
 
 /* ---------- GO! transition → explore.html ---------- */
 .rise {
@@ -170,6 +173,6 @@ button, a { font: inherit; color: inherit; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .slide, .rise { transition: none; }
+  .slide, .rise, .lang button, .pause { transition: none; }
   .slide.is-on img, .chara, .bubble { animation: none; }
 }

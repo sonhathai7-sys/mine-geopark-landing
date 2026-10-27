@@ -3,6 +3,10 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <!-- iPad: opened from the Home Screen icon, runs full screen without the Safari URL bar -->
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="Mine秋吉台">
   <title>Mine秋吉台ジオパーク｜お出かけスポット</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -154,7 +158,7 @@ html { scroll-padding: var(--hdr) 0 96px; }
 .rel ul { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 20px; padding: 0; list-style: none; }
 .rel a { display: block; text-decoration: none; }
 .rel img { width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border: 6px solid var(--paper); border-radius: 16px; }
-.rel p { display: flex; align-items: center; gap: 10px; margin-top: 10px; font: 700 19px/1.4 var(--f-display); }
+.rel p { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 10px; margin-top: 10px; font: 700 19px/1.4 var(--f-display); }
 .rel i { flex: none; padding: 2px 10px; background: var(--paper); border: 1px solid var(--line); border-radius: 8px; font: 400 14px/1.6 var(--f-body); font-style: normal; }
 .rel { padding-bottom: calc(max(22.5vw, 190px) + 24px); }
 
@@ -201,6 +205,20 @@ html { scroll-padding: var(--hdr) 0 96px; }
   .bar .pill { min-height: 56px; padding: 0 12px; font-size: 14px; }
   .bar .pill svg { display: none; } /* phone: text only, still ≥48px */
 }
+/* ---------- kiosk idle reset (identical block in every page except Welcome) ---------- */
+.idle { width: min(460px, calc(100% - 32px)); border-radius: 24px; text-align: center; }
+.idle-in { padding: 28px 24px 32px; display: flex; flex-direction: column; align-items: center; gap: 16px; }
+.idle h2 { font: 700 22px/1.45 var(--f-display); }
+.idle b { font: 800 28px/1 var(--f-latin); }
+.idle .primary { min-height: 64px; background: var(--red); color: var(--paper); border-color: var(--red); box-shadow: 0 5px 0 var(--red-deep); }
+/* ---------- press feedback (identical block in every page except Welcome): buttons and cards dip while pressed ---------- */
+:is(.pill, .arrow, .menu-btn, .x, .lang button, .play, .totoc, .more, .themes a, .tile, .spot, .ecard, .pcard, .rel a, .next a, .toc a) { -webkit-tap-highlight-color: transparent; }
+@media (prefers-reduced-motion: no-preference) {
+  :is(.pill, .arrow, .menu-btn, .x, .lang button, .play, .totoc, .themes a, .tile, .spot, .ecard, .pcard, .rel a, .next a, .toc a) { transition: transform .12s ease, box-shadow .12s ease; }
+}
+:is(.pill, .arrow, .menu-btn, .x, .lang button, .play, .totoc):not(:disabled):active { transform: scale(.95); }
+:is(.themes a, .tile, .spot, .ecard, .pcard, .rel a, .next a, .toc a):active { transform: scale(.97); } /* .spot/.pcard: the clipped card shrinks as a whole */
+.pill.primary:not(:disabled):active { transform: translateY(4px); box-shadow: 0 1px 0 var(--red-deep); } /* red button sinks into its shadow */
 /* ---------- popup menu (identical block in every page except Welcome) ---------- */
 .menu-btn {
   flex: none; width: 64px; height: 64px; border: 0; border-radius: 16px; background: var(--ink); color: var(--paper);
@@ -312,6 +330,14 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
   </div>
 </footer>
 
+<dialog class="idle" id="idle" aria-labelledby="idle-h">
+  <div class="idle-in">
+    <h2 id="idle-h">まもなく はじめの画面にもどります</h2>
+    <p>あと <b id="idle-n">20</b> 秒で、<br>つぎの人のために最初の画面にもどります。</p>
+    <button class="pill primary" type="button" data-close autofocus>このまま見る</button>
+  </div>
+</dialog>
+
 <dialog class="menu" id="menu" aria-label="メニュー">
   <div class="menu-in">
     <div class="menu-top">
@@ -354,6 +380,8 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
 (function () {
   'use strict';
 
+  document.addEventListener('touchstart', () => {}, { passive: true }); // iOS Safari shows :active press styles only with a touch listener
+
   // ---------- spot data (source: docs/content/mine-geo-content.md, mine-geo-places.md) ----------
   // Only fields with a real source are shown; 所要時間・バリアフリー・駐車場・トイレ are not published yet.
   const R = (k, r) => '<ruby>' + k + '<rt>' + r + '</rt></ruby>';
@@ -384,7 +412,7 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
       q: 'なぜ地下にこんなに大きな洞窟ができたの？',
       a: '秋吉台にしみこんだ雨水が、石灰岩をとかしながら地下を流れてできました。秋芳洞は地下を流れる水の出口にあたる「生きている洞窟」で、洞窟の向きは' + R('断層', 'だんそう') + 'にそっています。',
       addr: '〒754-0511 山口県美祢市秋芳町秋吉3449-1（正面入口）', ll: '34.2269667,131.3045194',
-      rel: [['spot.html?id=kagekiyo', 'p3-cave', 'お出かけスポット', '景清洞'], ['explore.html#exp', 'exp-cave', '体験', '洞窟見学・探検'], ['spot.html?id=akiyoshidai', 'p1-akiyoshidai', 'お出かけスポット', '秋吉台']],
+      rel: [['spot.html?id=kagekiyo', 'p3-cave', 'お出かけスポット', '景清洞'], ['exp.html?id=cave', 'exp-cave', '体験', '洞窟見学・探検'], ['spot.html?id=akiyoshidai', 'p1-akiyoshidai', 'お出かけスポット', '秋吉台']],
     },
     benten: {
       name: '別府弁天池', kana: 'べっぷべんてんいけ', en: 'Beppu Benten Pond', type: 'わき水', color: 'white',
@@ -397,7 +425,7 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
       q: 'この青い水は、どこから来ているの？',
       a: '北西の山のほうからしみこんだ地下水が、' + R('断層', 'だんそう') + 'にそってわき出していると考えられています。池の底が赤く見えるのは、「ベニマダラ」という' + R('藻', 'も') + 'のなかまです。',
       addr: '〒754-0603 山口県美祢市秋芳町別府1578', ll: '34.2551327,131.2448656',
-      rel: [['explore.html#exp', 'exp-trout', '体験', 'ニジマス釣り体験'], ['spot.html?id=akiyoshidai', 'p1-akiyoshidai', 'お出かけスポット', '秋吉台'], ['spot.html?id=akiyoshido', 'spot-akiyoshido', 'お出かけスポット', '秋芳洞']],
+      rel: [['exp.html?id=trout', 'exp-trout', '体験', 'ニジマス釣り体験'], ['spot.html?id=akiyoshidai', 'p1-akiyoshidai', 'お出かけスポット', '秋吉台'], ['spot.html?id=akiyoshido', 'spot-akiyoshido', 'お出かけスポット', '秋芳洞']],
     },
     kagekiyo: {
       name: '景清洞', kana: 'かげきよどう', en: 'Kagekiyodo Cave', type: '洞窟', color: 'white',
@@ -411,7 +439,7 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
       q: '洞窟の中の' + R('鍾乳石', 'しょうにゅうせき') + 'が茶色いのはなぜ？',
       a: '川が洞窟の中に流れこみ、通りぬけて、ふたたび地上に出ています。川が運んだ' + R('泥', 'どろ') + 'がまざるので、鍾乳石が茶色くなっています。',
       addr: '〒754-0302 山口県美祢市美東町赤3108', ll: '34.2895927,131.3261693',
-      rel: [['explore.html#exp', 'exp-cave', '体験', '洞窟見学・探検'], ['spot.html?id=akiyoshido', 'spot-akiyoshido', 'お出かけスポット', '秋芳洞'], ['spot.html?id=akiyoshidai', 'p1-akiyoshidai', 'お出かけスポット', '秋吉台']],
+      rel: [['exp.html?id=cave', 'exp-cave', '体験', '洞窟見学・探検'], ['spot.html?id=akiyoshido', 'spot-akiyoshido', 'お出かけスポット', '秋芳洞'], ['spot.html?id=akiyoshidai', 'p1-akiyoshidai', 'お出かけスポット', '秋吉台']],
     },
     naganobori: {
       name: '長登銅山跡', kana: 'ながのぼりどうざんあと', en: 'Naganobori Copper Mine Ruins', type: '文化サイト', color: 'red',
@@ -425,7 +453,7 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
       q: 'なぜ石灰岩の土地に銅があるの？',
       a: '地下から上がってきたマグマの熱で石灰岩が別の岩石に変わり、そのときに銅がたまりました。このような鉱床を「スカルン鉱床」と呼びます。',
       addr: '〒754-0213 山口県美祢市美東町長登610（長登銅山文化交流館）', ll: '34.243833,131.3411245',
-      rel: [['explore.html#exp', 'exp-medal', '体験', 'メダル鋳造体験'], ['explore.html#exp', 'exp-mokkan', '体験', '木簡体験'], ['spot.html?id=akiyoshidai', 'p1-akiyoshidai', 'お出かけスポット', '秋吉台']],
+      rel: [['exp.html?id=medal', 'exp-medal', '体験', 'メダル鋳造体験'], ['exp.html?id=mokkan', 'exp-mokkan', '体験', '木簡体験'], ['spot.html?id=akiyoshidai', 'p1-akiyoshidai', 'お出かけスポット', '秋吉台']],
     },
   };
   const ICONS = {
@@ -551,6 +579,32 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
   document.querySelectorAll('dialog').forEach((d) => d.addEventListener('click', (e) => {
     if (e.target === d || e.target.closest('[data-close], a')) d.close();
   }));
+
+  // kiosk idle reset: no touch for 90 s → 20 s warning (can be extended) → Welcome, which resets 言語・文字の大きさ for the next visitor
+  const IDLE = 90, WARN = 20; // seconds
+  const idle = document.getElementById('idle');
+  const idleN = document.getElementById('idle-n');
+  let idleT, warnT, touched;
+  function wake() {
+    touched = Date.now();
+    clearTimeout(idleT); clearInterval(warnT);
+    if (idle.open) idle.close();
+    idleT = setTimeout(warn, IDLE * 1000);
+  }
+  function warn() {
+    // a video on screen keeps playing (taps inside YouTube never reach this page), but not past 10 min
+    const video = [...document.querySelectorAll('iframe[src*="youtube"]')].some((f) => { const r = f.getBoundingClientRect(); return r.height && r.bottom > 0 && r.top < innerHeight; });
+    if (video && Date.now() - touched < 600000) { idleT = setTimeout(warn, IDLE * 1000); return; }
+    let left = WARN;
+    idleN.textContent = left;
+    idle.showModal();
+    warnT = setInterval(() => {
+      if (--left > 0) idleN.textContent = left;
+      else location.href = 'welcome.html';
+    }, 1000);
+  }
+  ['pointerdown', 'keydown', 'wheel', 'touchmove'].forEach((t) => addEventListener(t, wake, { capture: true, passive: true }));
+  addEventListener('pageshow', wake); // first load and back/forward cache
 })();
 </script>
 </body>
