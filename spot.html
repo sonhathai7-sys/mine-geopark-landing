@@ -130,6 +130,22 @@ html { scroll-padding: var(--hdr) 0 96px; }
 .carry { display: flex; gap: 20px; align-items: center; margin-top: 16px; padding: 16px 20px; background: var(--cream); border-radius: 16px; }
 .carry img { width: 120px; height: 120px; flex: none; background: var(--paper); }
 .carry b { font: 700 18px/1.6 var(--f-display); }
+.gal { display: flex; align-items: center; gap: 12px; }
+.gal ul { flex: 1; min-width: 0; display: flex; gap: 12px; overflow-x: auto; scroll-snap-type: x mandatory; scrollbar-width: none; padding: 0 0 4px; list-style: none; }
+.gal ul::-webkit-scrollbar { display: none; }
+.gal li { flex: 0 0 calc((100% - 24px) / 3); scroll-snap-align: start; }
+.gal figure { margin: 0; }
+.gal img, .gal .ph { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 12px; }
+.gal .ph { display: grid; place-content: center; justify-items: center; gap: 6px; background: var(--paper); border: 2px dashed var(--line); color: var(--ink-soft); font-size: 15px; }
+.gal .ph svg { width: 32px; height: 32px; fill: none; stroke: currentColor; stroke-width: 1.8; stroke-linejoin: round; }
+.gal figcaption { margin-top: 6px; font-size: 15px; line-height: 1.6; color: var(--ink-soft); }
+.arrow {
+  flex: none; width: 64px; height: 64px; border-radius: 18px; border: 2px solid var(--ink); background: var(--paper); cursor: pointer;
+  display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font: 700 13px/1 var(--f-display);
+}
+.arrow svg { width: 22px; height: 22px; fill: none; stroke: currentColor; stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+.arrow:disabled { opacity: .35; cursor: default; }
+@media (prefers-reduced-motion: no-preference) { .gal ul { scroll-behavior: smooth; } }
 .nw { white-space: nowrap; }
 .tbd { color: var(--ink-soft); }
 .rel { margin-top: 56px; padding: 48px var(--pad); background: var(--leaf); }
@@ -178,6 +194,8 @@ html { scroll-padding: var(--hdr) 0 96px; }
   .hero .chara { height: 84px; bottom: 44px; }
   .card { padding: 18px 16px; }
   .rel ul { grid-template-columns: 1fr; }
+  .gal li { flex-basis: 80%; }
+  .arrow { width: 56px; height: 56px; }
   .carry { flex-direction: column; align-items: flex-start; }
   .bar { gap: 6px; }
   .bar .pill { min-height: 56px; padding: 0 12px; font-size: 14px; }
@@ -345,6 +363,7 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
       img: 'p1-akiyoshidai', alt: '草原に白い石灰岩が点在する秋吉台',
       info: [['clock', '見学', 'いつでも見学できます（屋外）'], ['tel', '問い合わせ', 'カルスター<br>TEL: <span class="nw">0837-63-0040</span>']],
       bf: '', parking: '', wc: '', // バリアフリー・駐車場・トイレ – fill in when confirmed (e.g. '有' / '無'); empty shows 確認中
+      gallery: [], // photos coming later: [['file-in-assets-img (no .webp)', 'short caption'], …]; empty shows 写真準備中
       about: ['日本最大級のカルスト' + R('台地', 'だいち') + 'です。草原のあちこちに、白い' + R('石灰岩', 'せっかいがん') + 'が顔を出しています。',
         '羊の群れのように見える白い岩の表面には、雨にとけてできた' + R('溝', 'みぞ') + 'があります。この溝を「カレン」と呼びます。',
         'いちばん高い山は' + R('龍護峰', 'りゅうごほう') + 'で、' + R('標高', 'ひょうこう') + 'は425.5mです。'],
@@ -358,6 +377,7 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
       img: 'spot-akiyoshido', alt: '秋芳洞の百枚皿',
       info: [['clock', '営業時間', '8:30〜16:30（年中無休）'], ['yen', '料金', '高校生以上 1,300円／中学生 1,050円／小学生 700円／未就学児 無料'], ['tel', '問い合わせ', '秋吉台観光交流センター<br>TEL: <span class="nw">0837-62-0305</span>']],
       bf: '', parking: '', wc: '', // バリアフリー・駐車場・トイレ – fill in when confirmed (e.g. '有' / '無'); empty shows 確認中
+      gallery: [], // photos coming later: [['file-in-assets-img (no .webp)', 'short caption'], …]; empty shows 写真準備中
       about: ['秋吉台の地下にある、とても大きな' + R('鍾乳洞', 'しょうにゅうどう') + 'です。長さは11km以上で日本で2番目、中の広さは国内でもトップクラスです。',
         'いまも地下の川が流れ、' + R('鍾乳石', 'しょうにゅうせき') + 'がたくさんあります。洞窟だけにすむ小さな生き物もいて、5〜8月にはコウモリも見られます。',
         '入口は「正面入口」と「' + R('黒谷', 'くろたに') + '入口」の2つです。'],
@@ -371,6 +391,7 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
       img: 'p2-benten', alt: '青く透き通った別府弁天池の湧水',
       info: [['clock', '見学', 'いつでも見学できます（屋外）'], ['tel', '問い合わせ', '秋吉台観光交流センター<br>TEL: <span class="nw">0837-62-0305</span>']],
       bf: '', parking: '', wc: '', // バリアフリー・駐車場・トイレ – fill in when confirmed (e.g. '有' / '無'); empty shows 確認中
+      gallery: [], // photos coming later: [['file-in-assets-img (no .webp)', 'short caption'], …]; empty shows 写真準備中
       about: [R('厳島', 'いつくしま') + '神社の' + R('境内', 'けいだい') + 'にある池です。まわりは約40m、まん中の深さは約4mあります。',
         'すきとおった青い水は、昔から飲み水や田畑の水として使われてきました。いまはマスの' + R('養殖', 'ようしょく') + 'にも使われています。'],
       q: 'この青い水は、どこから来ているの？',
@@ -383,6 +404,7 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
       img: 'p3-cave', alt: '景清洞の入口。石灰岩の天井と小川',
       info: [['clock', '営業時間', '8:30〜17:15（最終入洞 16:30・年中無休）'], ['yen', '料金', '中学生以上 1,100円／小学生 600円／未就学児 無料。探検コースは＋300円（ヘルメット・長ぐつつき）'], ['tel', '問い合わせ', '景清洞案内所<br>TEL: <span class="nw">08396-2-2201</span>']],
       bf: '', parking: '', wc: '', // バリアフリー・駐車場・トイレ – fill in when confirmed (e.g. '有' / '無'); empty shows 確認中
+      gallery: [], // photos coming later: [['file-in-assets-img (no .webp)', 'short caption'], …]; empty shows 写真準備中
       about: ['川が流れこむ、長さ約1.5kmの洞窟です（いまは通りぬけできません）。',
         'かべには、水の流れがつくったもようや、サンゴ・ウミユリの' + R('化石', 'かせき') + 'が見られます。',
         '見学コースの最後の400mは、ライトだけで進む「' + R('探検', 'たんけん') + 'コース」です。'],
@@ -396,6 +418,7 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
       img: 'p5-smelting', alt: '長登祭りで、炉から火の粉が上がる銅の製錬',
       info: [['clock', '営業時間', '長登銅山文化交流館　9:00〜17:00（月曜休み）'], ['tel', '問い合わせ', '長登銅山文化交流館<br>TEL: <span class="nw">08396-2-0055</span>']],
       bf: '', parking: '', wc: '', // バリアフリー・駐車場・トイレ – fill in when confirmed (e.g. '有' / '無'); empty shows 確認中
+      gallery: [], // photos coming later: [['file-in-assets-img (no .webp)', 'short caption'], …]; empty shows 写真準備中
       about: ['約1億年前、秋吉台の石灰岩とマグマが出会ってできた銅の' + R('鉱床', 'こうしょう') + 'です。古代から近代まで、くり返し銅がほり出されました。',
         '調べてみると、奈良・' + R('東大寺', 'とうだいじ') + 'の大仏に使われた銅だとわかり、日本でいちばん古い国の銅山とされています。',
         '出土品の一部は「長登銅山文化交流館（大仏ミュージアム）」で見られます。'],
@@ -464,12 +487,37 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
         <h3 id="geo-h">${s.q}</h3>
         <p>${s.a}</p>
       </section>
+      <section aria-labelledby="gal-h">
+        <h2 class="h2bar" id="gal-h">フォトギャラリー</h2>
+        <div class="gal" role="region" aria-roledescription="carousel" aria-labelledby="gal-h">
+          ${s.gallery.length ? '<button class="arrow" type="button" id="g-prev"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>前へ</button>' : ''}
+          <ul id="g-track">${s.gallery.length
+            ? s.gallery.map(([img, cap]) => `<li><figure><img src="assets/img/${img}.webp" alt="${cap}" loading="lazy"><figcaption>${cap}</figcaption></figure></li>`).join('')
+            : '<li><span class="ph"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 8h3l2-3h6l2 3h3v11H4z"/><circle cx="12" cy="13" r="3.5"/></svg>写真準備中</span></li>'.repeat(3)}</ul>
+          ${s.gallery.length ? '<button class="arrow" type="button" id="g-next"><svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>次へ</button>' : ''}
+        </div>
+      </section>
       </div>
     </div>
     <section class="rel" aria-labelledby="rel-h">
       <h2 id="rel-h">あわせて楽しむ</h2>
       <ul>${s.rel.map(([href, img, tag, name]) => `<li><a href="${href}"><img src="assets/img/${img}.webp" alt="" loading="lazy"><p><i>${tag}</i>${name}</p></a></li>`).join('')}</ul>
     </section>`;
+
+  // gallery: native scroll-snap, buttons move one view (only when there are photos)
+  const gTrack = document.getElementById('g-track');
+  const gPrev = document.getElementById('g-prev');
+  if (gPrev) {
+    const gNext = document.getElementById('g-next');
+    const gUpdate = () => {
+      gPrev.disabled = gTrack.scrollLeft <= 2;
+      gNext.disabled = gTrack.scrollLeft >= gTrack.scrollWidth - gTrack.clientWidth - 2;
+    };
+    gPrev.addEventListener('click', () => gTrack.scrollBy({ left: -gTrack.clientWidth }));
+    gNext.addEventListener('click', () => gTrack.scrollBy({ left: gTrack.clientWidth }));
+    gTrack.addEventListener('scroll', gUpdate, { passive: true });
+    new ResizeObserver(gUpdate).observe(gTrack);
+  }
 
   // QR dialog
   document.querySelectorAll('[data-open]').forEach((b) => b.addEventListener('click', () => document.getElementById(b.dataset.open).showModal()));
