@@ -1,0 +1,9 @@
+{
+  "name": "Mine秋吉台ジオパーク",
+  "short_name": "Mine秋吉台",
+  "start_url": "welcome.html",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#FBF7EE",
+  "theme_color": "#FFFFFF"
+}

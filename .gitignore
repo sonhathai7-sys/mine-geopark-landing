@@ -4,6 +4,7 @@
 !/.gitignore
 !/.nojekyll
 !/index.html
+!/manifest.webmanifest
 !/welcome.html
 !/explore.html
 !/about.html
