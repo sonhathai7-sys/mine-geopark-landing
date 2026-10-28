@@ -116,9 +116,31 @@ section { scroll-margin-top: var(--hdr); }
 /* ---------- ABOUT ---------- */
 .about { background: var(--cream-warm); }
 .about .wrap { display: grid; gap: 28px; }
-.map { order: 1; background: var(--paper); border-radius: var(--r-card); padding: 16px; } /* iPad/phone: text first, map below */
+.map { order: 1; margin: 0; background: var(--paper); border-radius: var(--r-card); padding: 16px; } /* iPad/phone: text first, map below */
+.map-in { position: relative; }
 .map svg { width: 100%; height: auto; display: block; }
-.map text { font: 700 17px var(--f-display); fill: var(--ink); }
+.map svg text { font: 700 14px var(--f-latin); fill: var(--ink); }
+.m-shadow { fill: rgba(47, 44, 40, .08); }
+.m-karst { fill: var(--cream); stroke: var(--paper); stroke-width: 3; } /* 秋吉台 plateau (illustrative extent) */
+.m-rocks { fill: var(--paper); stroke: var(--line); stroke-width: 1; } /* limestone 「羊の群れ」 */
+.m-spot { fill: var(--paper); stroke: var(--ink); stroke-width: 3; }
+.m-north circle { fill: var(--paper); stroke: var(--line); stroke-width: 2; }
+.m-north path { fill: var(--red); }
+.m-scale path { fill: none; stroke: var(--ink); stroke-width: 2.5; }
+.m-inset rect { fill: var(--paper); stroke: var(--line); stroke-width: 2; }
+.m-pref { fill: var(--cream); stroke: var(--ink-soft); stroke-width: 1; }
+.lab { /* place names as white stickers (HTML, so the text stays readable when the map scales down) */
+  position: absolute; padding: 2px 10px; background: var(--paper); border: 2px solid var(--ink); border-radius: 10px;
+  font: 700 15px/1.5 var(--f-display); white-space: nowrap; box-shadow: var(--shadow-soft);
+}
+.lab--main { font-size: 17px; }
+.lab--minor { border-width: 1px; border-color: var(--ink-soft); font-size: 14px; }
+.lab--l { transform: translate(calc(-100% - 22px), -50%); }
+.lab--r { transform: translate(22px, -50%); }
+.lab--b { transform: translate(-50%, 18px); }
+.lab--t { transform: translate(-50%, calc(-100% - 12px)); }
+.lab-inset { position: absolute; transform: translate(-50%, 2px); font: 700 13px/1.4 var(--f-display); }
+.map figcaption { margin-top: 8px; font-size: 13px; line-height: 1.5; color: var(--ink-soft); text-align: right; }
 .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
 .chips li {
   display: inline-flex; align-items: center; gap: 10px; min-height: var(--tap); padding: 0 16px;
@@ -129,7 +151,7 @@ section { scroll-margin-top: var(--hdr); }
 .m-white { fill: var(--paper); stroke: var(--ink); }
 .m-black { fill: var(--ink); }
 .m-red { fill: var(--red); }
-.m-land { fill: var(--leaf); stroke: var(--grass); }
+.m-land { fill: var(--leaf); stroke: var(--grass); stroke-width: 4; stroke-linejoin: round; }
 
 /* ---------- spots ---------- */
 .spots { background: var(--paper); }
@@ -222,6 +244,8 @@ section { scroll-margin-top: var(--hdr); }
   box-shadow: var(--shadow-soft); transform: rotate(-1.5deg);
 }
 li:nth-child(even) > .ecard img { transform: rotate(1.5deg); }
+.tbd { color: var(--ink-soft); }
+.exp-grid > li:last-child:nth-child(odd) { grid-column: 1 / -1; justify-self: center; width: calc(50% - 12px); } /* 2 columns: the 5th card sits centred */
 .ecard h3 { font: 700 20px/1.4 var(--f-display); text-align: center; }
 .where { display: flex; align-items: center; gap: 8px; font-size: 15px; line-height: 1.5; }
 .nw { white-space: nowrap; } /* break only between place names */
@@ -266,8 +290,9 @@ li:nth-child(even) > .ecard img { transform: rotate(1.5deg); }
   .spot { grid-column: span 2; }
   .spot--main { grid-column: 1 / span 4; grid-row: span 2; height: auto; min-height: 500px; }
   .spot:nth-child(4), .spot:nth-child(5) { grid-column: span 3; }
-  .track { --per: 4; }
-  .exp-grid { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .track { --per: 3; }
+  .exp-grid { grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 36px 20px; }
+  .exp-grid > li:last-child:nth-child(odd) { grid-column: auto; justify-self: stretch; width: auto; }
   .tour-body { grid-template-columns: 1fr 1fr; align-items: center; gap: 48px; }
   .feats { justify-content: flex-start; }
 }
@@ -289,9 +314,15 @@ li:nth-child(even) > .ecard img { transform: rotate(1.5deg); }
   .cloud { display: none; }
   .head h2 { font-size: 26px; }
   .spot-grid, .exp-grid { grid-template-columns: 1fr; }
+  .exp-grid > li:last-child:nth-child(odd) { grid-column: auto; justify-self: stretch; width: auto; }
   .spot--main { height: 280px; }
   .spot--main h3 { font-size: 30px; }
   .partners { padding: 22px 14px; }
+  .m-minor, .lab--minor { display: none; } /* phone: only the 3 colour sites, so labels don't collide */
+  .lab { padding: 1px 6px; font-size: 13px; }
+  .lab--main { font-size: 14px; }
+  .lab--up { transform: translate(-50%, calc(-100% - 22px)); } /* phone: 長登 label above its pin, inside the map */
+  .map { padding: 10px; }
   .arrow { width: 56px; height: 56px; }
   .track { --per: 1; }
   .photos img + img { transform: rotate(2deg); }
@@ -418,16 +449,32 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
   <section class="about" id="about" aria-labelledby="about-h">
     <div class="wrap">
       <!-- stylised map: pins placed by real relative position, each with its own shape + label -->
-      <figure class="map" role="img" aria-label="美祢市の地図。秋吉台（白・石灰岩）、長登銅山跡（赤・銅）、大嶺炭田（黒・無煙炭）の位置">
-        <svg viewBox="0 0 600 380" aria-hidden="true">
-          <path d="M80 200C70 120 170 56 270 66c90-24 200-26 262 44 50 58 34 140-28 190-70 52-200 56-292 32C140 316 90 262 80 200z" class="m-land" stroke-width="3" stroke-dasharray="8 6"/>
-          <circle class="m-white" cx="368" cy="150" r="16" stroke-width="4"/>
-          <text x="368" y="116" text-anchor="middle">秋吉台</text>
-          <path class="m-red" d="M452 120l18 32h-36z"/>
-          <text x="462" y="186" text-anchor="middle">長登銅山跡</text>
-          <rect class="m-black" x="210" y="226" width="30" height="30" rx="4"/>
-          <text x="225" y="286" text-anchor="middle">大嶺炭田</text>
+      <figure class="map" role="img" aria-label="美祢市の地図。秋吉台（白・石灰岩）、長登銅山跡（赤・銅）、大嶺炭田（黒・無煙炭）と、別府弁天池・景清洞の位置。左上は山口県の中の美祢市">
+        <div class="map-in">
+        <svg viewBox="0 0 600 568" aria-hidden="true">
+          <path class="m-shadow" d="M102.4 541.0L102.5 544.1L99.6 543.6L96.1 541.5L96.2 539.2L93.8 539.4L91.1 531.6L84.8 531.1L85.6 521.0L82.0 520.2L70.6 508.8L71.3 504.2L75.2 499.6L74.5 494.5L76.2 490.3L74.0 489.1L73.6 486.1L68.9 483.9L68.6 479.8L65.9 479.6L64.4 476.3L58.4 474.7L53.8 469.9L53.1 464.5L55.9 459.9L52.1 460.0L50.1 456.5L39.6 456.5L32.8 450.4L30.9 445.9L27.2 444.1L26.4 437.0L24.7 436.1L27.2 432.8L28.8 423.0L25.0 419.3L24.3 410.7L26.6 411.8L37.2 397.8L37.0 388.9L35.1 384.5L36.0 375.2L39.3 370.6L43.2 372.9L48.9 371.4L52.0 380.8L54.1 378.1L57.6 378.7L61.0 383.9L59.1 387.9L61.6 389.4L72.2 390.3L82.1 385.0L83.2 383.1L78.9 368.9L74.6 364.9L73.8 359.7L67.1 355.4L66.8 346.5L62.1 345.2L63.5 341.5L60.3 343.7L60.7 339.5L54.3 335.0L51.5 328.6L53.6 322.1L56.2 319.7L59.0 320.1L62.4 311.8L68.9 307.1L69.5 300.9L67.0 298.2L65.6 292.0L70.0 287.2L76.8 286.6L77.3 282.5L79.6 280.8L83.7 279.6L85.3 281.6L85.1 278.4L90.1 276.6L88.7 271.0L91.5 270.6L93.5 267.0L95.3 267.4L102.2 260.8L105.1 262.1L107.3 258.1L115.2 257.3L116.1 253.4L121.1 250.7L129.1 251.3L131.7 240.8L135.9 237.6L143.0 235.4L147.5 236.6L150.0 240.4L154.9 239.6L158.7 233.1L154.7 225.3L156.1 217.7L162.7 213.2L167.7 198.1L172.3 194.4L175.4 188.3L174.3 176.6L176.1 171.7L182.1 167.7L183.8 160.1L187.1 157.7L187.8 149.3L192.5 143.9L192.8 137.6L197.8 134.0L206.1 134.0L211.6 130.1L216.2 131.2L224.3 128.0L232.2 130.5L238.5 138.7L246.5 132.8L250.7 132.8L253.0 137.1L261.2 130.3L267.1 128.9L268.5 124.1L276.0 115.5L276.8 110.6L280.6 110.8L289.6 103.7L292.4 99.1L295.8 98.1L299.0 84.8L297.4 82.6L304.2 72.4L308.7 70.6L308.9 65.6L318.1 67.3L321.3 62.2L320.7 58.3L329.0 49.5L327.7 44.7L332.1 41.7L337.0 45.1L343.4 38.5L348.6 36.2L349.3 30.4L357.0 25.0L364.0 24.3L369.4 28.4L370.6 34.2L379.6 40.3L389.1 64.4L395.9 74.5L400.6 77.8L410.6 71.3L410.7 61.9L416.9 59.7L417.0 51.9L428.9 53.5L437.0 48.6L442.1 55.2L446.4 57.4L449.8 55.8L461.9 61.2L462.2 63.4L455.5 74.3L452.5 76.0L451.9 79.7L456.4 84.0L465.0 86.9L472.2 95.0L479.9 90.5L486.7 93.5L494.7 85.0L502.7 84.5L505.7 77.8L512.9 79.8L518.3 95.9L528.3 106.5L526.3 110.4L528.6 113.5L526.6 125.0L528.3 131.3L526.4 133.1L528.2 138.8L531.9 142.5L536.2 143.5L536.3 149.4L538.1 150.8L537.4 157.3L540.3 157.0L541.6 162.0L548.2 169.3L551.9 164.7L556.8 165.4L562.4 163.0L563.9 173.8L567.8 179.5L568.7 183.9L559.5 199.4L563.9 208.0L565.9 219.2L562.9 223.3L563.9 225.5L561.9 230.1L559.4 230.8L558.6 237.4L561.2 241.3L559.0 248.5L560.9 252.2L558.0 254.9L558.7 258.7L554.9 267.3L573.4 277.3L576.0 280.4L568.1 283.3L568.2 296.7L564.7 297.4L561.3 301.5L566.9 305.1L569.0 308.8L566.6 313.2L561.8 315.6L561.8 320.2L556.9 325.3L557.2 333.5L561.8 341.8L560.2 342.9L556.0 339.0L551.6 342.4L547.7 341.7L544.0 344.5L543.9 353.7L541.6 357.8L532.7 363.6L526.9 370.7L523.9 371.3L525.9 379.4L524.4 389.7L519.0 396.7L514.6 399.2L509.0 399.4L508.5 406.0L512.5 404.2L517.4 406.4L521.8 415.4L515.3 419.0L511.6 428.6L502.8 431.3L496.9 424.3L492.7 429.1L487.0 425.4L481.5 427.3L479.8 425.9L477.4 429.0L471.2 431.0L467.9 427.1L461.4 425.7L459.0 416.6L455.9 413.7L449.4 412.5L440.6 404.3L435.6 404.8L433.6 401.5L428.7 400.8L421.6 403.8L420.7 401.4L433.6 383.1L423.3 375.3L421.9 370.6L417.1 371.1L419.9 375.0L418.7 377.7L409.2 382.2L406.5 379.4L401.3 378.4L397.2 373.2L388.3 374.4L380.5 370.9L375.4 374.9L372.6 381.2L365.9 382.2L363.9 380.8L360.1 395.3L352.9 404.9L353.7 414.8L348.5 421.9L337.2 422.2L328.3 425.3L315.8 415.2L302.9 420.9L300.3 426.0L292.2 423.0L287.8 431.6L285.8 432.2L285.7 451.9L279.7 452.7L273.9 459.5L267.9 461.8L261.4 460.7L254.9 467.4L247.3 466.1L244.9 475.5L239.7 479.9L236.0 474.6L206.7 471.7L205.7 467.4L196.5 467.2L190.3 469.8L186.8 477.9L177.7 483.8L178.5 488.7L173.0 494.9L167.5 516.3L164.1 517.4L162.5 522.2L154.7 520.9L153.3 526.4L148.8 528.5L143.4 524.4L133.4 524.7L131.7 532.8L123.0 530.5L113.4 535.2L105.0 536.4L102.4 541.0Z" transform="translate(6 8)"/>
+          <path class="m-land" d="M102.4 541.0L102.5 544.1L99.6 543.6L96.1 541.5L96.2 539.2L93.8 539.4L91.1 531.6L84.8 531.1L85.6 521.0L82.0 520.2L70.6 508.8L71.3 504.2L75.2 499.6L74.5 494.5L76.2 490.3L74.0 489.1L73.6 486.1L68.9 483.9L68.6 479.8L65.9 479.6L64.4 476.3L58.4 474.7L53.8 469.9L53.1 464.5L55.9 459.9L52.1 460.0L50.1 456.5L39.6 456.5L32.8 450.4L30.9 445.9L27.2 444.1L26.4 437.0L24.7 436.1L27.2 432.8L28.8 423.0L25.0 419.3L24.3 410.7L26.6 411.8L37.2 397.8L37.0 388.9L35.1 384.5L36.0 375.2L39.3 370.6L43.2 372.9L48.9 371.4L52.0 380.8L54.1 378.1L57.6 378.7L61.0 383.9L59.1 387.9L61.6 389.4L72.2 390.3L82.1 385.0L83.2 383.1L78.9 368.9L74.6 364.9L73.8 359.7L67.1 355.4L66.8 346.5L62.1 345.2L63.5 341.5L60.3 343.7L60.7 339.5L54.3 335.0L51.5 328.6L53.6 322.1L56.2 319.7L59.0 320.1L62.4 311.8L68.9 307.1L69.5 300.9L67.0 298.2L65.6 292.0L70.0 287.2L76.8 286.6L77.3 282.5L79.6 280.8L83.7 279.6L85.3 281.6L85.1 278.4L90.1 276.6L88.7 271.0L91.5 270.6L93.5 267.0L95.3 267.4L102.2 260.8L105.1 262.1L107.3 258.1L115.2 257.3L116.1 253.4L121.1 250.7L129.1 251.3L131.7 240.8L135.9 237.6L143.0 235.4L147.5 236.6L150.0 240.4L154.9 239.6L158.7 233.1L154.7 225.3L156.1 217.7L162.7 213.2L167.7 198.1L172.3 194.4L175.4 188.3L174.3 176.6L176.1 171.7L182.1 167.7L183.8 160.1L187.1 157.7L187.8 149.3L192.5 143.9L192.8 137.6L197.8 134.0L206.1 134.0L211.6 130.1L216.2 131.2L224.3 128.0L232.2 130.5L238.5 138.7L246.5 132.8L250.7 132.8L253.0 137.1L261.2 130.3L267.1 128.9L268.5 124.1L276.0 115.5L276.8 110.6L280.6 110.8L289.6 103.7L292.4 99.1L295.8 98.1L299.0 84.8L297.4 82.6L304.2 72.4L308.7 70.6L308.9 65.6L318.1 67.3L321.3 62.2L320.7 58.3L329.0 49.5L327.7 44.7L332.1 41.7L337.0 45.1L343.4 38.5L348.6 36.2L349.3 30.4L357.0 25.0L364.0 24.3L369.4 28.4L370.6 34.2L379.6 40.3L389.1 64.4L395.9 74.5L400.6 77.8L410.6 71.3L410.7 61.9L416.9 59.7L417.0 51.9L428.9 53.5L437.0 48.6L442.1 55.2L446.4 57.4L449.8 55.8L461.9 61.2L462.2 63.4L455.5 74.3L452.5 76.0L451.9 79.7L456.4 84.0L465.0 86.9L472.2 95.0L479.9 90.5L486.7 93.5L494.7 85.0L502.7 84.5L505.7 77.8L512.9 79.8L518.3 95.9L528.3 106.5L526.3 110.4L528.6 113.5L526.6 125.0L528.3 131.3L526.4 133.1L528.2 138.8L531.9 142.5L536.2 143.5L536.3 149.4L538.1 150.8L537.4 157.3L540.3 157.0L541.6 162.0L548.2 169.3L551.9 164.7L556.8 165.4L562.4 163.0L563.9 173.8L567.8 179.5L568.7 183.9L559.5 199.4L563.9 208.0L565.9 219.2L562.9 223.3L563.9 225.5L561.9 230.1L559.4 230.8L558.6 237.4L561.2 241.3L559.0 248.5L560.9 252.2L558.0 254.9L558.7 258.7L554.9 267.3L573.4 277.3L576.0 280.4L568.1 283.3L568.2 296.7L564.7 297.4L561.3 301.5L566.9 305.1L569.0 308.8L566.6 313.2L561.8 315.6L561.8 320.2L556.9 325.3L557.2 333.5L561.8 341.8L560.2 342.9L556.0 339.0L551.6 342.4L547.7 341.7L544.0 344.5L543.9 353.7L541.6 357.8L532.7 363.6L526.9 370.7L523.9 371.3L525.9 379.4L524.4 389.7L519.0 396.7L514.6 399.2L509.0 399.4L508.5 406.0L512.5 404.2L517.4 406.4L521.8 415.4L515.3 419.0L511.6 428.6L502.8 431.3L496.9 424.3L492.7 429.1L487.0 425.4L481.5 427.3L479.8 425.9L477.4 429.0L471.2 431.0L467.9 427.1L461.4 425.7L459.0 416.6L455.9 413.7L449.4 412.5L440.6 404.3L435.6 404.8L433.6 401.5L428.7 400.8L421.6 403.8L420.7 401.4L433.6 383.1L423.3 375.3L421.9 370.6L417.1 371.1L419.9 375.0L418.7 377.7L409.2 382.2L406.5 379.4L401.3 378.4L397.2 373.2L388.3 374.4L380.5 370.9L375.4 374.9L372.6 381.2L365.9 382.2L363.9 380.8L360.1 395.3L352.9 404.9L353.7 414.8L348.5 421.9L337.2 422.2L328.3 425.3L315.8 415.2L302.9 420.9L300.3 426.0L292.2 423.0L287.8 431.6L285.8 432.2L285.7 451.9L279.7 452.7L273.9 459.5L267.9 461.8L261.4 460.7L254.9 467.4L247.3 466.1L244.9 475.5L239.7 479.9L236.0 474.6L206.7 471.7L205.7 467.4L196.5 467.2L190.3 469.8L186.8 477.9L177.7 483.8L178.5 488.7L173.0 494.9L167.5 516.3L164.1 517.4L162.5 522.2L154.7 520.9L153.3 526.4L148.8 528.5L143.4 524.4L133.4 524.7L131.7 532.8L123.0 530.5L113.4 535.2L105.0 536.4L102.4 541.0Z"/>
+          <ellipse class="m-karst" cx="393.0" cy="225.8" rx="86" ry="54" transform="rotate(-24 393.0 225.8)"/>
+          <g class="m-rocks"><circle cx="361" cy="209" r="3"/><circle cx="379" cy="197" r="2.5"/><circle cx="397" cy="205" r="3.5"/><circle cx="419" cy="191" r="2.5"/><circle cx="349" cy="235" r="2.5"/><circle cx="371" cy="247" r="3"/><circle cx="425" cy="243" r="2.5"/><circle cx="441" cy="215" r="3"/><circle cx="409" cy="257" r="2.5"/><circle cx="387" cy="261" r="3"/></g>
+          <g class="m-minor">
+            <circle class="m-spot" cx="298.0" cy="190.5" r="7"/>
+            <circle class="m-spot" cx="435.2" cy="120.2" r="7"/>
+          </g>
+          <circle class="m-white" cx="401.0" cy="231.8" r="15" stroke-width="5"/>
+          <path class="m-red" d="M446.5 192.0l17 30h-34z"/>
+          <rect class="m-black" x="117.0" y="311.0" width="28" height="28" rx="4"/>
+          <g class="m-north" transform="translate(566 34)"><circle r="22"/><path d="M0 -14l7 16h-14z"/><text y="16" text-anchor="middle">N</text></g>
+          <g class="m-scale" transform="translate(478 550)"><path d="M0 -6v6h91.6v-6"/><text x="45.8" y="-10" text-anchor="middle">5km</text></g>
+          <g class="m-inset" transform="translate(12 12)"><rect width="166" height="115" rx="12"/><g transform="translate(8 8)"><path class="m-pref" d="M77.2 4.0L76.6 5.4L78.0 7.5L77.5 10.4L79.6 11.3L80.3 15.0L79.0 16.6L78.2 16.3L78.5 19.9L75.2 22.9L76.5 25.6L78.0 26.0L77.8 30.2L81.4 30.9L82.9 29.7L86.3 30.1L85.4 34.0L83.7 35.9L84.8 41.1L89.5 44.4L89.8 43.4L93.9 43.7L94.6 41.7L95.6 42.6L97.3 40.6L100.8 43.9L102.3 40.1L105.6 37.0L103.6 32.4L104.2 31.0L105.7 30.0L106.6 27.3L110.3 26.7L111.6 29.5L110.5 32.3L111.2 35.2L110.6 38.6L112.9 39.3L113.9 41.6L115.7 41.1L115.5 45.5L116.8 46.2L116.2 47.7L117.3 49.1L117.2 51.4L118.3 52.2L119.4 51.7L119.5 52.6L122.5 52.2L121.7 54.8L126.1 54.1L124.8 56.8L126.4 58.5L126.2 60.8L125.0 63.1L124.0 62.7L122.1 63.8L122.8 70.0L123.9 71.4L123.2 76.3L120.7 80.7L114.8 81.8L115.9 88.9L117.4 89.9L118.3 93.1L117.2 94.4L114.8 94.5L115.0 89.9L111.3 88.0L110.8 86.7L108.4 86.3L109.6 84.7L106.6 87.1L102.9 84.2L101.8 85.5L101.2 82.6L98.8 82.2L98.3 80.7L97.8 81.6L97.2 80.0L93.4 77.6L92.4 77.8L92.4 75.9L89.7 75.4L88.5 77.2L86.3 78.0L88.7 79.1L87.7 80.1L86.5 79.1L83.4 79.3L83.2 78.4L85.5 78.1L85.3 77.2L89.2 73.5L87.2 72.0L85.3 73.4L86.8 71.4L86.2 71.2L86.6 70.2L81.8 71.4L81.4 70.8L83.1 69.7L82.7 69.1L78.8 70.2L77.8 71.6L76.2 70.8L76.0 72.0L73.2 72.6L72.3 71.6L70.1 74.3L68.8 72.0L65.8 75.8L64.7 76.5L63.8 75.8L63.9 76.9L62.4 75.8L61.2 76.2L61.6 74.7L58.2 72.6L57.4 73.9L58.6 75.4L57.0 76.2L56.0 75.6L56.9 77.9L56.0 77.1L54.8 78.5L53.7 77.8L54.4 75.9L53.2 75.0L51.2 78.3L51.0 76.9L53.0 74.2L51.2 73.9L51.9 72.1L50.2 71.4L50.3 73.2L48.9 73.6L50.0 74.2L49.6 75.8L47.0 78.6L47.5 80.3L43.3 82.0L39.8 84.8L38.3 84.3L38.6 83.3L36.8 84.4L38.1 82.8L37.4 81.8L35.9 83.7L34.8 82.6L32.0 83.9L30.2 81.6L31.2 80.5L30.7 79.8L31.7 79.3L30.6 79.4L31.3 77.0L30.2 77.8L29.3 77.2L29.6 76.3L28.1 76.3L28.2 77.5L24.4 72.6L20.5 72.1L19.6 70.5L17.4 73.7L18.2 74.5L17.5 75.4L16.5 74.8L16.8 76.3L15.6 78.0L9.8 82.3L9.5 85.7L7.9 85.8L8.4 84.5L7.4 85.0L6.9 83.1L5.2 82.1L5.6 81.4L6.9 82.6L8.5 81.5L8.7 82.9L9.1 82.3L8.0 81.5L9.0 78.8L8.2 77.4L8.8 74.2L7.8 73.9L8.5 70.3L7.4 69.2L6.4 69.5L4.0 64.9L4.5 62.1L5.8 61.5L6.9 62.2L7.9 60.9L7.2 60.2L9.8 58.5L10.1 54.2L8.9 53.5L9.4 51.1L4.6 46.0L7.3 42.8L6.6 40.0L7.6 38.0L9.8 40.2L10.5 39.1L16.3 36.7L19.4 37.1L19.3 35.7L17.5 33.4L14.6 34.0L12.7 33.2L12.0 33.4L12.4 35.1L10.3 34.7L12.6 32.7L13.9 29.5L18.0 32.8L20.5 32.7L22.8 31.4L26.1 33.0L27.9 32.1L28.4 34.9L30.0 36.9L32.9 36.0L33.7 34.3L35.3 37.1L36.1 34.7L38.1 35.9L40.2 35.0L43.3 35.8L44.8 34.8L46.0 32.0L47.9 32.8L49.5 31.6L50.4 32.1L51.8 30.9L52.9 31.2L52.5 30.2L53.5 29.6L51.3 28.9L51.3 27.5L52.9 28.8L55.5 25.9L55.1 25.2L57.0 24.8L57.4 23.1L56.0 22.6L56.5 20.5L57.4 19.2L60.7 19.7L62.1 17.3L63.7 16.6L65.2 14.7L65.4 11.0L69.5 10.1L69.4 9.0L68.3 9.2L69.5 6.0L72.2 5.8L73.5 8.3L73.2 7.1L75.7 5.8L75.1 4.6L77.2 4.0ZM122.7 91.9L122.2 89.4L120.0 87.9L119.7 84.9L121.0 83.6L120.8 81.5L122.4 82.1L123.3 80.3L124.6 80.9L124.9 80.1L127.9 82.1L129.5 81.3L131.0 85.1L131.9 85.7L132.6 85.0L132.3 86.6L133.5 87.1L135.9 86.2L135.6 85.4L137.1 84.3L139.9 84.1L139.8 82.9L141.1 81.7L143.0 81.8L143.5 82.8L145.9 81.9L140.3 86.2L139.4 85.4L137.2 86.1L136.3 87.7L137.2 91.3L135.0 90.5L133.3 91.8L134.1 89.1L130.6 87.6L130.1 88.3L129.6 87.1L128.1 88.3L128.0 89.7L129.0 90.3L124.0 90.0L122.7 91.9Z"/><path class="m-red" d="M27.7 67.7L26.1 66.0L25.3 63.5L23.8 62.7L23.6 60.9L24.4 58.8L26.7 59.6L25.1 56.6L25.8 54.7L30.5 52.0L32.4 46.6L36.3 46.2L41.0 40.8L43.3 43.5L45.2 42.0L46.5 42.7L46.0 43.6L47.0 44.4L49.2 43.6L50.4 47.7L52.0 48.8L51.4 53.4L52.5 54.1L51.7 57.3L49.0 60.3L49.1 61.8L47.0 62.0L44.4 60.6L45.0 59.5L44.4 58.8L43.7 59.4L42.2 58.8L40.6 61.5L37.6 61.6L37.3 63.1L34.9 64.5L32.3 64.0L30.9 66.7L27.7 67.7Z"/></g></g>
         </svg>
+          <span class="lab lab--main lab--l" style="left:66.8%;top:40.8%"><ruby>秋吉台<rt>あきよしだい</rt></ruby></span>
+          <span class="lab lab--main lab--r lab--up" style="left:74.4%;top:37.0%"><ruby>長登銅山跡<rt>ながのぼりどうざんあと</rt></ruby></span>
+          <span class="lab lab--main lab--b" style="left:21.8%;top:57.2%"><ruby>大嶺炭田<rt>おおみねたんでん</rt></ruby></span>
+          <span class="lab lab--minor lab--t" style="left:49.7%;top:33.5%"><ruby>別府弁天池<rt>べっぷべんてんいけ</rt></ruby></span>
+          <span class="lab lab--minor lab--r" style="left:72.5%;top:21.2%"><ruby>景清洞<rt>かげきよどう</rt></ruby></span>
+          <span class="lab-inset" style="left:15.8%;top:22.4%">山口県</span>
+        </div>
+        <figcaption>地図：国土数値情報（行政区域データ）をもとに作成</figcaption>
       </figure>
       <div>
         <div class="head">
@@ -513,6 +560,7 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
         <li><a class="ecard" href="exp.html?id=mokkan"><img src="assets/img/exp-mokkan.webp" alt="木の札に文字を書く" loading="lazy"><div class="ename"><h3><ruby>木簡<rt>もっかん</rt></ruby>体験</h3><span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div><p class="where"><i>ところ</i>長登銅山文化交流館</p></a></li>
         <li><a class="ecard" href="exp.html?id=cave"><img src="assets/img/exp-cave.webp" alt="ヘルメットをかぶって洞窟を探検する子どもたち" loading="lazy"><div class="ename"><h3><ruby>洞窟<rt>どうくつ</rt></ruby>見学・探検</h3><span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div><p class="where"><i>ところ</i><span><span class="nw">秋芳洞・</span><span class="nw">景清洞・</span><span class="nw">大正洞</span></span></p></a></li>
         <li><a class="ecard" href="exp.html?id=trout"><img src="assets/img/exp-trout.webp" alt="別府弁天池の近くの釣り堀" loading="lazy"><div class="ename"><h3>ニジマス<ruby>釣<rt>つ</rt></ruby>り体験</h3><span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div><p class="where"><i>ところ</i>美祢市養鱒場 釣り堀</p></a></li>
+        <li><a class="ecard" href="exp.html?id=diorama"><img src="assets/img/exp-diorama-done.webp" alt="草原や石をかざって完成したジオラマ" loading="lazy"><div class="ename"><h3>ジオラマ体験</h3><span class="go" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M5 12h14M13 6l6 6-6 6"/></svg></span></div><p class="where"><i>ところ</i><span class="tbd">確認中</span></p></a></li>
       </ul>
     </div>
   </section>

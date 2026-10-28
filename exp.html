@@ -42,6 +42,7 @@ body {
   -webkit-tap-highlight-color: transparent;
 }
 img { max-width: 100%; display: block; }
+[hidden] { display: none !important; } /* hidden must win over .pill etc. */
 h1, h2, h3, p, ul, ol { margin: 0; }
 p { text-wrap: pretty; } /* no one-character last lines */
 ul { padding: 0; list-style: none; }
@@ -112,6 +113,7 @@ html { scroll-padding: var(--hdr) 0 96px; }
 .shots { position: relative; justify-self: end; width: min(100%, 620px); padding: 0 12% 48px 0; }
 .shots img { border: 8px solid var(--paper); border-radius: 16px; box-shadow: var(--shadow-soft); object-fit: cover; background: var(--cream); }
 .shots .main { width: 100%; aspect-ratio: 4 / 3; transform: rotate(1.5deg); }
+.shots .ph { border: 8px solid var(--paper); border-radius: 16px; box-shadow: var(--shadow-soft); background: var(--cream); } /* no photo yet */
 .shots .sub { position: absolute; right: 0; bottom: 0; width: 40%; aspect-ratio: 4 / 3; transform: rotate(-4deg); }
 .where { display: flex; align-items: center; gap: 10px; }
 .where i { flex: none; padding: 2px 12px; border-radius: 999px; background: var(--pink); color: var(--red); font: 700 14px/1.6 var(--f-display); font-style: normal; }
@@ -139,6 +141,7 @@ html { scroll-padding: var(--hdr) 0 96px; }
 .geo-in > img { flex: none; width: 120px; height: 120px; border-radius: 50%; object-fit: cover; }
 .geo .more { display: inline-flex; align-items: center; min-height: var(--tap); margin-top: 8px; font: 700 17px/1.4 var(--f-display); }
 .steps { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 0; list-style: none; counter-reset: step; }
+@media (min-width: 601px) { .steps:has(> li:nth-child(3):last-child) { grid-template-columns: repeat(3, minmax(0, 1fr)); } } /* 3 steps: one row */
 .steps li { position: relative; padding: 12px 12px 16px; background: var(--paper); border-radius: 20px; box-shadow: var(--shadow-soft); counter-increment: step; }
 .steps li::before { /* step number */
   content: counter(step); position: absolute; z-index: 1; left: 4px; top: 4px; width: 44px; height: 44px; border-radius: 50%;
@@ -455,7 +458,7 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
       q: '長登でつくられた銅は、どこへ運ばれたの？',
       a: '長登の銅は、奈良・' + R('東大寺', 'とうだいじ') + 'の大仏にも使われました。長登銅山跡からは、銅づくりや運び出しの記録を書いた木簡が見つかっています。',
       geoImg: 'p5-smelting',
-      gallery: [],
+      gallery: [['exp-mokkan-items', '文字を書いた木簡'], ['exp-mokkan', '筆と墨で木の板に書く']],
       rel: [['exp.html?id=medal', 'exp-medal', '体験', 'メダル鋳造体験'], ['exp.html?id=trout', 'exp-trout', '体験', 'ニジマス釣り体験'], ['spot.html?id=naganobori', 'p5-smelting', 'お出かけスポット', '長登銅山跡']],
     },
     cave: {
@@ -496,6 +499,21 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
       gallery: [],
       rel: [['exp.html?id=cave', 'exp-cave', '体験', '洞窟見学・探検'], ['exp.html?id=medal', 'exp-medal', '体験', 'メダル鋳造体験'], ['spot.html?id=benten', 'p2-benten', 'お出かけスポット', '別府弁天池']],
     },
+    // details still coming: empty fields show 確認中 / 準備中, and parts with no data (map, QR, ここがジオ) are left out
+    diorama: {
+      name: 'ジオラマ体験', kana: 'じおらま たいけん', en: 'Diorama', type: '', color: '',
+      img: 'exp-diorama-done', alt: '草原や石をかざって完成したジオラマ', img2: 'exp-diorama-kid', alt2: 'ジオラマをつくる子ども',
+      place: '', hours: '', tel: null, addr: '', ll: '', qr: '', qrText: '',
+      date: '', time: '', fee: '', target: '', booking: '', cap: '',
+      about: [R('粘土', 'ねんど') + 'で形をつくり、草原や石・木をかざって、自分だけのジオラマをつくる体験です。'], // summary of the steps – confirm
+      steps: [['exp-diorama-1', R('粘土', 'ねんど') + 'をこねる', 'こねたら箱に' + R('詰', 'つ') + 'めて形を作ろう'],
+        ['exp-diorama-2', '草原をつくる', R('接着剤', 'せっちゃくざい') + 'を' + R('筆', 'ふで') + 'でぬって' + R('粉', 'こな') + 'をかけよう'],
+        ['exp-diorama-3', 'かざりつけ', '仕上げに石や木をさしてみよう']],
+      before: [],
+      q: '', a: '', geoImg: '',
+      gallery: [['exp-diorama-done', '完成したジオラマ'], ['exp-diorama-kid', 'つくっているところ'], ['exp-diorama-cave', '作品例（洞窟の断面）'], ['exp-diorama-sample', '作品例']],
+      rel: [['exp.html?id=medal', 'exp-medal', '体験', 'メダル鋳造体験'], ['exp.html?id=cave', 'exp-cave', '体験', '洞窟見学・探検'], ['spot.html?id=akiyoshidai', 'p1-akiyoshidai', 'お出かけスポット', '秋吉台']],
+    },
   };
   const ICONS = {
     cal: '<rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/>',
@@ -526,26 +544,28 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
   document.title = 'Mine秋吉台ジオパーク｜' + s.name;
   document.getElementById('crumb-name').textContent = s.name;
   const qrImg = document.getElementById('qr-img');
-  qrImg.src = 'assets/img/qr-' + s.qr + '.svg';
-  qrImg.alt = s.name + 'の予約方法・場所を開くQRコード';
-  document.getElementById('qr-text').textContent = s.qrText;
+  if (s.qr) {
+    qrImg.src = 'assets/img/qr-' + s.qr + '.svg';
+    qrImg.alt = s.name + 'の予約方法・場所を開くQRコード';
+    document.getElementById('qr-text').textContent = s.qrText;
+  } else document.querySelector('[data-open="qr"]').hidden = true; // nothing to hand over yet
 
-  const where = `<p class="where"><i>ところ</i>${s.place}</p>`;
+  const where = `<p class="where"><i>ところ</i>${s.place || TBD}</p>`;
   const rows = [['cal', '開催日', s.date], ['clock', '所要時間', s.time], ['yen', '料金', s.fee], ['person', '対象', s.target], ['book', '予約', s.booking], ['group', '定員', s.cap]];
   const before = [...s.before, ['wheel', '車いすでの参加は ' + TBD]]; // ponytail: 車いす always 確認中 until the venues answer; move into each 体験's before[] then
   document.getElementById('main').innerHTML = `
     <section class="hero" aria-labelledby="exp-h">
       <div class="hero-in">
         <div class="title">
-          <ul class="tags"><li>体験</li><li>${s.type}</li><li>${COLOR[s.color]}</li></ul>
+          <ul class="tags">${['体験', s.type, COLOR[s.color]].filter(Boolean).map((x) => `<li>${x}</li>`).join('')}</ul>
           <div class="name"><small>${s.kana}</small><h1 id="exp-h">${s.name}</h1></div>
           <span class="en" lang="en">${s.en}</span>
           ${where}
           <img class="chara" src="assets/img/chara-loupe.webp" alt="">
         </div>
         <div class="shots">
-          <img class="main" src="assets/img/${s.img}.webp" alt="${s.alt}">
-          <img class="sub" src="assets/img/${s.img2}.webp" alt="${s.alt2}">
+          ${s.img ? `<img class="main" src="assets/img/${s.img}.webp" alt="${s.alt}">
+          <img class="sub" src="assets/img/${s.img2}.webp" alt="${s.alt2}">` : PH.replace('class="ph"', 'class="ph main"')}
         </div>
       </div>
     </section>
@@ -559,17 +579,17 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
       <section class="card access" aria-labelledby="access-h">
         <h2 id="access-h">体験の場所・予約</h2>
         ${where}
-        <iframe src="https://maps.google.com/maps?q=${s.ll}&z=14&hl=ja&output=embed" title="${s.place}の地図" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
-        <p class="addr"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS.pin}</svg>${s.addr}</p>
+        ${s.ll ? `<iframe src="https://maps.google.com/maps?q=${s.ll}&z=14&hl=ja&output=embed" title="${s.place}の地図" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>` : ''}
+        <p class="addr"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS.pin}</svg>${s.addr || TBD}</p>
         ${s.hours ? `<p class="addr"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS.clock}</svg>${s.hours}</p>` : ''}
-        <p class="addr"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS.tel}</svg><span>予約・問い合わせ：${s.tel[0]}<br>TEL: <span class="nw">${s.tel[1]}</span></span></p>
-        <div class="carry"><img src="${qrImg.src}" alt="${qrImg.alt}"><p><b>スマホで読みとって、予約方法や場所を見られます</b></p></div>
+        <p class="addr"><svg viewBox="0 0 24 24" aria-hidden="true">${ICONS.tel}</svg><span>予約・問い合わせ：${s.tel ? `${s.tel[0]}<br>TEL: <span class="nw">${s.tel[1]}</span>` : TBD}</span></p>
+        ${s.qr ? `<div class="carry"><img src="${qrImg.src}" alt="${qrImg.alt}"><p><b>スマホで読みとって、予約方法や場所を見られます</b></p></div>` : ''}
       </section>
       </div>
       <div class="body">
       <section aria-labelledby="about-h">
         <h2 class="h2bar" id="about-h">どんな体験？</h2>
-        ${s.about.map((t) => `<p>${t}</p>`).join('')}
+        ${s.about.length ? s.about.map((t) => `<p>${t}</p>`).join('') : '<p class="tbd">準備中</p>'}
       </section>
       <section aria-labelledby="steps-h">
         <h2 class="h2bar" id="steps-h">体験の流れ</h2>
@@ -577,7 +597,7 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
           ? s.steps.map(([img, t, d]) => `<li>${img ? `<img src="assets/img/${img}.webp" alt="" loading="lazy">` : PH}<b>${t}</b><p>${d}</p></li>`).join('')
           : `<li>${PH}<b>準備中</b></li>`.repeat(4)}</ol>
       </section>
-      <section class="geo" aria-labelledby="geo-h">
+      ${s.q ? `<section class="geo" aria-labelledby="geo-h">
         <span class="label">ここがジオ！</span>
         <div class="geo-in">
           <img src="assets/img/${s.geoImg}.webp" alt="" loading="lazy">
@@ -587,7 +607,7 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
             <a class="more" href="about.html#s1">白・黒・赤の大地について読む →</a>
           </div>
         </div>
-      </section>
+      </section>` : ''}
       <section class="card before" aria-labelledby="before-h">
         <h2 id="before-h">参加する前に</h2>
         <ul>${before.map(([i, t]) => `<li>${ico(i)}<span>${t}</span></li>`).join('')}</ul>
