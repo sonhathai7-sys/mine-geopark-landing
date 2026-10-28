@@ -22,6 +22,7 @@
   --grass: #BAD98A; --leaf: #E7F0E1; --leaf-menu: #DCEBD2;
   --line: #D9D4CA; --focus: #FFD84D;
   --tag: #F3E3A6; --pink: #F6DDE0;
+  --gold: #7D6431; --gold-leaf: #C2A867;
   --f-display: 'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', 'Noto Sans JP', sans-serif;
   --f-body: 'Noto Sans JP', 'Hiragino Sans', sans-serif;
   --f-latin: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
@@ -141,6 +142,15 @@ section { scroll-margin-top: var(--hdr); }
 .lab--t { transform: translate(-50%, calc(-100% - 12px)); }
 .lab-inset { position: absolute; transform: translate(-50%, 2px); font: 700 13px/1.4 var(--f-display); }
 .map figcaption { margin-top: 8px; font-size: 13px; line-height: 1.5; color: var(--ink-soft); text-align: right; }
+/* 認定 badge: gold laurel branches around the date and 認定 */
+.laurel { display: inline-flex; align-items: center; gap: 4px; color: var(--gold); text-align: center; }
+.laurel small { display: block; font: 700 15px/1.5 var(--f-display); letter-spacing: .06em; }
+.laurel b { display: block; margin-top: 2px; font: 700 40px/1.1 var(--f-display); letter-spacing: .12em; padding-left: .12em; }
+.laurel .leaf { flex: none; width: calc(var(--cert-h) * 34 / 102); height: var(--cert-h); fill: var(--gold-leaf); color: var(--gold-leaf); }
+.laurel .leaf--r { transform: scaleX(-1); }
+.cert { --cert-h: 104px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 28px; width: fit-content; max-width: 100%; margin-top: 18px; padding: 16px 28px; background: var(--paper); border: 3px solid var(--gold); border-radius: var(--r-card); box-shadow: var(--shadow-sticker); }
+.cert-logo { width: auto; height: var(--cert-h); } /* same height as the laurel */
+@media (max-width: 600px) { .laurel b { font-size: 32px; } .laurel small { font-size: 14px; } .cert { --cert-h: 84px; gap: 12px 16px; padding: 14px 16px; } }
 .chips { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 18px; }
 .chips li {
   display: inline-flex; align-items: center; gap: 10px; min-height: var(--tap); padding: 0 16px;
@@ -482,7 +492,8 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
           <span class="kicker">ABOUT</span>
           <h2 id="about-h">Mine秋吉台ってなに？</h2>
         </div>
-        <p>日本最大級のカルスト<ruby>台地<rt>だいち</rt></ruby>「秋吉台」を中心に、白・黒・赤の3つの色をテーマにしたジオパークです。2026年4月23日 ユネスコ世界ジオパークとして認定されました。</p>
+        <p>日本最大級のカルスト<ruby>台地<rt>だいち</rt></ruby>「秋吉台」を中心に、白・黒・赤の3つの色をテーマにした<span class="nw">ジオパーク</span>です。</p>
+        <div class="cert"><p class="laurel"><svg class="leaf" viewBox="0 -6 34 102" aria-hidden="true"><path d="M30 94Q2 60 20 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><ellipse cx="17.2" cy="83.5" rx="7.5" ry="2.8" transform="rotate(-164 17.2 83.5)"/><ellipse cx="25.2" cy="78.6" rx="7.5" ry="2.8" transform="rotate(-80 25.2 78.6)"/><ellipse cx="12.5" cy="72.3" rx="7.5" ry="2.8" transform="rotate(-154 12.5 72.3)"/><ellipse cx="21.1" cy="68.8" rx="7.5" ry="2.8" transform="rotate(-70 21.1 68.8)"/><ellipse cx="9.5" cy="60.5" rx="7.5" ry="2.8" transform="rotate(-146 9.5 60.5)"/><ellipse cx="18.6" cy="58.3" rx="7.5" ry="2.8" transform="rotate(-62 18.6 58.3)"/><ellipse cx="8.2" cy="47.9" rx="7.5" ry="2.8" transform="rotate(-137 8.2 47.9)"/><ellipse cx="17.5" cy="47.1" rx="7.5" ry="2.8" transform="rotate(-53 17.5 47.1)"/><ellipse cx="8.6" cy="34.8" rx="7.5" ry="2.8" transform="rotate(-130 8.6 34.8)"/><ellipse cx="17.9" cy="35.2" rx="7.5" ry="2.8" transform="rotate(-46 17.9 35.2)"/><ellipse cx="10.6" cy="21.0" rx="7.5" ry="2.8" transform="rotate(-123 10.6 21.0)"/><ellipse cx="19.9" cy="22.5" rx="7.5" ry="2.8" transform="rotate(-39 19.9 22.5)"/><ellipse cx="14.2" cy="6.6" rx="7.5" ry="2.8" transform="rotate(-117 14.2 6.6)"/><ellipse cx="23.3" cy="9.0" rx="7.5" ry="2.8" transform="rotate(-33 23.3 9.0)"/><ellipse cx="20.0" cy="1.0" rx="2.8" ry="6.5"/></svg><span><small>2026年4月23日</small><small>ユネスコ世界ジオパーク</small><b>認定</b></span><svg class="leaf leaf--r" viewBox="0 -6 34 102" aria-hidden="true"><path d="M30 94Q2 60 20 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><ellipse cx="17.2" cy="83.5" rx="7.5" ry="2.8" transform="rotate(-164 17.2 83.5)"/><ellipse cx="25.2" cy="78.6" rx="7.5" ry="2.8" transform="rotate(-80 25.2 78.6)"/><ellipse cx="12.5" cy="72.3" rx="7.5" ry="2.8" transform="rotate(-154 12.5 72.3)"/><ellipse cx="21.1" cy="68.8" rx="7.5" ry="2.8" transform="rotate(-70 21.1 68.8)"/><ellipse cx="9.5" cy="60.5" rx="7.5" ry="2.8" transform="rotate(-146 9.5 60.5)"/><ellipse cx="18.6" cy="58.3" rx="7.5" ry="2.8" transform="rotate(-62 18.6 58.3)"/><ellipse cx="8.2" cy="47.9" rx="7.5" ry="2.8" transform="rotate(-137 8.2 47.9)"/><ellipse cx="17.5" cy="47.1" rx="7.5" ry="2.8" transform="rotate(-53 17.5 47.1)"/><ellipse cx="8.6" cy="34.8" rx="7.5" ry="2.8" transform="rotate(-130 8.6 34.8)"/><ellipse cx="17.9" cy="35.2" rx="7.5" ry="2.8" transform="rotate(-46 17.9 35.2)"/><ellipse cx="10.6" cy="21.0" rx="7.5" ry="2.8" transform="rotate(-123 10.6 21.0)"/><ellipse cx="19.9" cy="22.5" rx="7.5" ry="2.8" transform="rotate(-39 19.9 22.5)"/><ellipse cx="14.2" cy="6.6" rx="7.5" ry="2.8" transform="rotate(-117 14.2 6.6)"/><ellipse cx="23.3" cy="9.0" rx="7.5" ry="2.8" transform="rotate(-33 23.3 9.0)"/><ellipse cx="20.0" cy="1.0" rx="2.8" ry="6.5"/></svg></p><img class="cert-logo" src="assets/img/logo-unesco.webp" alt="UNESCO Global Geopark" width="318" height="240"></div>
         <ul class="chips" aria-label="3つの色">
           <li><svg class="mark" viewBox="0 0 18 18" aria-hidden="true"><circle class="m-white" cx="9" cy="9" r="7" stroke-width="2.5"/></svg>白｜<ruby>石灰岩<rt>せっかいがん</rt></ruby></li>
           <li><svg class="mark" viewBox="0 0 18 18" aria-hidden="true"><rect class="m-black" x="2" y="2" width="14" height="14" rx="2"/></svg>黒｜<ruby>無煙炭<rt>むえんたん</rt></ruby></li>

@@ -10,10 +10,18 @@
   --cream: #F6F3EC;      /* page background */
   --cream-warm: #FBF7EE; /* Explore hub / about / partner band */
   --grass: #BAD98A;      /* hills decoration */
+  --grass-deep: #8CBF5E; /* illustration: darker grass, tree crowns */
+  --sky: #DDEEF3;        /* illustration: calm sky */
+  --water: #2B6FB0;      /* illustration: 別府弁天池 cobalt water */
+  --water-light: #9ED0EA;/* illustration: water highlight, cave stream */
+  --stone: #C9C0B0;      /* illustration: deeper limestone layer */
+  --copper: #C7743E;     /* illustration: copper ore (長登銅山) */
   --leaf: #E7F0E1;       /* 体験 section background */
   --leaf-menu: #DCEBD2;  /* menu 「テーマから選ぶ」 panel */
   --tag: #F3E3A6;        /* yellow tag / pop blob */
   --pink: #F6DDE0;       /* 「ところ」 tag / pop blob */
+  --gold: #7D6431;       /* 認定 badge text */
+  --gold-leaf: #C2A867;  /* 認定 badge laurel */
   --line: #D9D4CA;       /* dividers */
   --focus: #FFD84D;      /* keyboard focus ring */
 

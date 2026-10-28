@@ -20,8 +20,10 @@
   --ink: #2F2C28; --ink-soft: #5C5850;
   --paper: #FFFFFF; --cream: #F6F3EC; --cream-warm: #FBF7EE;
   --grass: #BAD98A; --leaf: #E7F0E1; --leaf-menu: #DCEBD2;
+  --grass-deep: #8CBF5E; --sky: #DDEEF3; --water: #2B6FB0; --water-light: #9ED0EA; --stone: #C9C0B0; --copper: #C7743E;
   --line: #D9D4CA; --focus: #FFD84D;
   --tag: #F3E3A6; --pink: #F6DDE0;
+  --gold: #7D6431; --gold-leaf: #C2A867;
   --f-display: 'Zen Maru Gothic', 'Hiragino Maru Gothic ProN', 'Noto Sans JP', sans-serif;
   --f-body: 'Noto Sans JP', 'Hiragino Sans', sans-serif;
   --f-latin: 'Barlow', 'Helvetica Neue', Arial, sans-serif;
@@ -138,38 +140,83 @@ html { scroll-padding: var(--hdr) 0 96px; } /* focused items never hide under th
 .vtags { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; padding: 0; list-style: none; }
 .vtags li { padding: 4px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--paper); font-size: 15px; }
 
-.cert { display: inline-block; margin: 28px 0 14px; padding: 4px 16px; border: 2px solid var(--ink); border-radius: 999px; background: var(--paper); font: 700 15px/1.6 var(--f-display); }
+/* 認定 badge: gold laurel branches around the date and 認定 */
+.laurel { display: inline-flex; align-items: center; gap: 4px; color: var(--gold); text-align: center; }
+.laurel small { display: block; font: 700 15px/1.5 var(--f-display); letter-spacing: .06em; }
+.laurel b { display: block; margin-top: 2px; font: 700 40px/1.1 var(--f-display); letter-spacing: .12em; padding-left: .12em; }
+.laurel .leaf { flex: none; width: calc(var(--cert-h) * 34 / 102); height: var(--cert-h); fill: var(--gold-leaf); color: var(--gold-leaf); }
+.laurel .leaf--r { transform: scaleX(-1); }
+.cert { --cert-h: 104px; display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 12px 28px; width: fit-content; max-width: 100%; margin: 28px 0 14px; padding: 16px 28px; background: var(--paper); border: 3px solid var(--gold); border-radius: var(--r-card); box-shadow: var(--shadow-sticker); }
+.cert-logo { width: auto; height: var(--cert-h); } /* same height as the laurel */
+@media (max-width: 600px) { .laurel b { font-size: 32px; } .laurel small { font-size: 14px; } .cert { --cert-h: 84px; gap: 12px 16px; padding: 14px 16px; } }
 .lead-b { font-weight: 700; }
-.colors { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin-top: 20px; padding: 0; list-style: none; }
+.colors { display: grid; gap: 14px; margin-top: 20px; padding: 0; list-style: none; }
 .colors li { background: var(--paper); border-radius: var(--r-card); overflow: hidden; box-shadow: var(--shadow-soft); }
-.colors .band { height: 14px; } /* own pattern per colour: never colour alone */
+.colors .band { display: block; height: 14px; } /* own pattern per colour: never colour alone */
 .c-white .band { background: radial-gradient(var(--ink) 1.5px, transparent 2px) 0 0 / 10px 10px, var(--paper); border-bottom: 1px solid var(--line); }
 .c-black .band { background: repeating-linear-gradient(90deg, var(--ink) 0 6px, var(--ink-soft) 6px 9px); }
 .c-red .band { background: repeating-linear-gradient(45deg, var(--red) 0 6px, var(--red-deep) 6px 10px); }
-.colors div { padding: 16px 18px 20px; }
-.colors h3 { display: flex; align-items: center; gap: 12px; margin: 0 0 8px; font: 700 15px/1.4 var(--f-display); }
+.colors div { display: grid; grid-template-columns: 200px 1fr; gap: 10px 24px; align-items: center; padding: 18px 24px 20px; } /* name left, text right */
+.colors h3 { display: flex; align-items: center; gap: 14px; margin: 0; font: 700 16px/1.5 var(--f-display); color: var(--ink-soft); }
 .colors h3 i { flex: none; width: 48px; height: 48px; border-radius: 50%; display: grid; place-items: center; font: 900 22px var(--f-display); font-style: normal; }
-.c-white h3 i { background: var(--paper); border: 3px solid var(--ink); }
+.c-white h3 i { background: var(--paper); border: 3px solid var(--ink); color: var(--ink); }
 .c-black h3 i { background: var(--ink); color: var(--paper); }
 .c-red h3 i { background: var(--red); color: var(--paper); }
-.colors h3 strong { display: block; font-size: 22px; }
-.colors p { font-size: 16px; line-height: 1.75; }
+.colors h3 strong { display: block; margin-top: 8px; font-size: 26px; line-height: 1.5; color: var(--ink); } /* margin: room for the ruby */
+.colors p { margin: 0; font-size: 18px; line-height: 1.8; text-wrap: pretty; }
+.nw { white-space: nowrap; } /* keep a short verb from breaking alone */
 
 .geo { display: grid; gap: 28px; }
-.layers { display: flex; flex-direction: column; align-items: center; gap: 6px; padding: 24px 16px; background: var(--paper); border-radius: var(--r-card); }
-.layers div { width: min(100%, 300px); padding: 10px 14px; border: 2px solid var(--ink); border-radius: 14px; text-align: center; font: 700 20px/1.4 var(--f-display); }
-.layers small { display: block; font: 400 14px/1.6 var(--f-body); color: var(--ink-soft); }
-.l-life { background: var(--tag); }
-.l-nature { background: var(--leaf-menu); }
-.l-earth { background: var(--line); }
-.layers .up { font: 700 18px/1 var(--f-latin); color: var(--ink-soft); }
-.layers p { margin-top: 8px; font-size: 15px; color: var(--ink-soft); }
-.can { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 16px; padding: 0; list-style: none; }
-.can li { background: var(--paper); border-radius: var(--r-card); overflow: hidden; box-shadow: var(--shadow-soft); }
-.can img { width: 100%; aspect-ratio: 16 / 10; object-fit: contain; background: var(--paper); }
-.can div { padding: 14px 18px 18px; }
-.can h4 { display: flex; align-items: center; gap: 10px; margin: 0 0 6px; font: 700 18px/1.4 var(--f-display); }
-.can p { font-size: 16px; line-height: 1.75; }
+.geo-fig { margin: 0; padding: 20px; background: var(--paper); border-radius: var(--r-card); box-shadow: var(--shadow-soft); }
+.fig-art { position: relative; max-width: 620px; margin: 0 auto; }
+.fig-art svg { display: block; width: 100%; height: auto; border-radius: 14px; }
+/* drawing colours (tokens only); text lives in the HTML stickers and the legend */
+.fig-art svg { stroke-linecap: round; stroke-linejoin: round; }
+.fig-art [class^="s-"] { fill: none; } /* stroke-only shapes; filled shapes put their f-* class first */
+.f-sky { fill: var(--sky); } .f-line { fill: var(--line); } .f-stone { fill: var(--stone); } .f-ink { fill: var(--ink); } .f-soft { fill: var(--ink-soft); }
+.f-paper { fill: var(--paper); } .f-cream { fill: var(--cream); } .f-leaf { fill: var(--leaf-menu); } .f-grass { fill: var(--grass); } .f-deep { fill: var(--grass-deep); }
+.f-tag { fill: var(--tag); } .f-red { fill: var(--red); } .f-gold { fill: var(--gold); } .f-water { fill: var(--water); } .f-wlight { fill: var(--water-light); }
+.f-copper { fill: var(--copper); } .s-ore { stroke: var(--ink); stroke-width: 1.5; }
+.s-ink { stroke: var(--ink); stroke-width: 2; } .s-soft { stroke: var(--ink-soft); stroke-width: 1.5; } .s-rim { stroke: var(--paper); stroke-width: 1.5; } .s-eye { stroke: var(--paper); stroke-width: 2.5; }
+.s-hatch { stroke: var(--ink-soft); stroke-width: 1.5; opacity: .3; }
+.s-strata { stroke: var(--ink-soft); stroke-width: 1.5; stroke-dasharray: 8 6; opacity: .6; }
+.s-band { stroke: var(--grass-deep); stroke-width: 34; } .s-grass { stroke: var(--grass); stroke-width: 26; } .s-tuft { stroke: var(--grass-deep); stroke-width: 2; }
+.s-chan { stroke: var(--ink); stroke-width: 9; } .s-chan2 { stroke: var(--water-light); stroke-width: 5; } .s-flow { stroke: var(--water); stroke-width: 2.5; }
+.s-ripple { stroke: var(--paper); stroke-width: 2; } .s-ray { stroke: var(--gold-leaf); stroke-width: 3; } .s-wood { stroke: var(--gold); stroke-width: 3; }
+.lab { position: absolute; display: inline-flex; align-items: center; gap: 6px; padding: 2px 10px; background: var(--paper); border: 2px solid var(--ink); border-radius: 10px; font: 700 16px/1.6 var(--f-display); white-space: nowrap; box-shadow: var(--shadow-soft); }
+.lab--n { left: 1.5%; transform: translateY(-50%); font-size: 18px; }
+.lab--n b { display: grid; place-items: center; width: 24px; height: 24px; border-radius: 50%; background: var(--ink); color: var(--paper); font: 700 14px var(--f-latin); }
+.lab--nat { top: 46%; } .lab--earth { top: 70%; }
+.lab--m { transform: translate(-50%, -50%); }
+.lab rt { font-size: .6em; }
+.fig-key { display: flex; flex-direction: column-reverse; gap: 22px; margin: 18px 0 0; padding: 0; list-style: none; } /* read bottom-up like the drawing */
+.fig-key li { position: relative; display: flex; align-items: center; gap: 12px; padding: 12px 16px; background: var(--cream-warm); border-radius: 14px; }
+.fig-key li:not(:last-child)::before { content: ""; position: absolute; left: 31px; top: -17px; border: 9px solid transparent; border-top: 0; border-bottom: 11px solid var(--ink-soft); } /* up arrow into the next layer */
+.fig-key div { display: grid; grid-template-columns: 4.5em 1fr; gap: 0 8px; align-items: center; }
+.k-n { flex: none; display: grid; place-items: center; width: 32px; height: 32px; border-radius: 50%; background: var(--ink); color: var(--paper); font: 700 16px var(--f-latin); }
+.fig-key strong { font: 700 20px/1.5 var(--f-display); }
+.fig-key p { margin: 0; font-size: 18px; line-height: 1.8; }
+.geo-fig figcaption { margin-top: 16px; text-align: center; font: 700 18px/1.7 var(--f-display); }
+.fig-do { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: 8px 10px; margin: 10px 0 0; }
+.fig-do b { padding: 4px 18px; border-radius: 999px; background: var(--leaf-menu); font: 700 18px/1.6 var(--f-display); }
+/* できること: 知る→考える→行動する ring around the hub (探検隊) */
+.cyc { position: relative; max-width: 620px; aspect-ratio: 1; margin: 20px auto -6%; } /* trim the empty band under the lower pills */
+.cyc svg { position: absolute; inset: 0; width: 100%; height: 100%; }
+.cyc path { fill: none; stroke: var(--ink-soft); stroke-width: 1.1; stroke-linecap: round; stroke-dasharray: .1 3; }
+.cyc marker path { fill: var(--ink-soft); stroke: none; }
+.cyc-hub, .cyc-n { position: absolute; display: flex; flex-direction: column; align-items: center; gap: 6px; }
+.cyc-hub { left: 50%; top: 52%; width: 28%; aspect-ratio: 1; transform: translate(-50%, -50%); justify-content: center; border-radius: 50%; background: var(--sky); border: 3px solid var(--ink); }
+.cyc-hub img { width: 44%; height: auto; }
+.cyc-hub b { position: absolute; left: 50%; bottom: 0; transform: translate(-50%, 50%); padding: 2px 14px; background: var(--paper); border: 2px solid var(--ink); border-radius: 999px; font: 700 18px/1.5 var(--f-display); white-space: nowrap; }
+.cyc-n { width: 26%; margin-top: -13%; transform: translateX(-50%); } /* circle centre sits on the ring point */
+.cyc-pic { display: grid; place-items: center; width: 100%; aspect-ratio: 1; border-radius: 50%; border: 3px solid var(--ink); }
+.cyc-n1 .cyc-pic { background: var(--tag); } .cyc-n2 .cyc-pic { background: var(--leaf-menu); } .cyc-n3 .cyc-pic { background: var(--pink); }
+.cyc-pic img { width: 64%; height: auto; }
+.cyc-n b { display: inline-flex; align-items: center; gap: 8px; padding: 2px 14px 2px 6px; background: var(--paper); border: 2px solid var(--ink); border-radius: 999px; font: 700 20px/1.5 var(--f-display); white-space: nowrap; }
+.cyc-n b .k-n { width: 28px; height: 28px; font-size: 15px; }
+.cyc-key { flex-direction: column; gap: 12px; }
+.cyc-key li:not(:last-child)::before { display: none; }
+.cyc-key div { grid-template-columns: 5.5em 1fr; }
 .unesco { display: flex; gap: 20px; align-items: flex-start; margin-top: 24px; padding: 22px 24px; background: var(--paper); border: 2px solid var(--ink); border-radius: var(--r-card); }
 .unesco img { width: 84px; height: auto; flex: none; }
 .unesco h3 { margin: 0 0 8px; }
@@ -189,7 +236,7 @@ html { scroll-padding: var(--hdr) 0 96px; } /* focused items never hide under th
 .theme p { font: 700 22px/1.6 var(--f-display); }
 .stats { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; margin-top: 16px; padding: 0; list-style: none; }
 .stats li { padding: 16px 10px; background: var(--paper); border-radius: 16px; text-align: center; font-size: 14px; color: var(--ink-soft); }
-.stats b { display: block; font: 800 26px/1.3 var(--f-latin); color: var(--ink); }
+.stats b { display: block; font: 800 26px/1.3 'Barlow', var(--f-display); color: var(--ink); }
 .stats b span { font-family: var(--f-display); font-size: 18px; }
 .steps { position: relative; display: grid; gap: 14px; padding: 0; list-style: none; }
 .steps::before { content: ""; position: absolute; left: 21px; top: 20px; bottom: 20px; width: 3px; background: var(--line); }
@@ -232,13 +279,25 @@ html { scroll-padding: var(--hdr) 0 96px; } /* focused items never hide under th
   .toc { position: sticky; top: calc(var(--hdr) + 24px); align-self: start; }
   .toc ol { grid-template-columns: 1fr; }
   .totoc { display: none; }
-  .geo { grid-template-columns: 300px 1fr; align-items: start; }
 }
 @media (max-width: 600px) {
   .hero h1 { font-size: 32px; }
   .hero .chara { height: 84px; bottom: 44px; }
-  .toc ol, .can, .colors, .next ul { grid-template-columns: 1fr; }
+  .toc ol, .can, .colors, .next ul, .colors div { grid-template-columns: 1fr; }
   .stats { grid-template-columns: 1fr; }
+  .geo-fig { padding: 14px; }
+  .lab--m { display: none; } /* the legend below says the same */
+  .lab--n { font-size: 16px; padding: 0 6px; }
+  .lab--n b { width: 20px; height: 20px; font-size: 12px; }
+  .cyc-hub { top: 50%; width: 22%; }
+  .cyc-hub b { padding: 0 10px; font-size: 14px; } /* fits between the two lower circles */
+  .cyc-n { width: 24%; margin-top: -12%; }
+  .cyc-n b { font-size: 16px; padding: 1px 10px 1px 4px; gap: 4px; }
+  .cyc-n b .k-n { width: 22px; height: 22px; font-size: 12px; }
+  .lab--n rt { display: none; } /* the legend right below carries the ruby */
+  .lab--nat { left: 33%; top: 34%; } .lab--earth { left: auto; right: 1.5%; top: 58%; } /* keep the spring channel, pond and cave visible */
+  .fig-key li { align-items: flex-start; }
+  .fig-key div { display: block; }
   .unesco, .charter { flex-direction: column; }
   .bar { gap: 6px; }
   .bar .pill { min-height: 56px; padding: 0 12px; font-size: 14px; }
@@ -379,13 +438,13 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
         </div>
         <ul class="vtags"><li>紹介動画</li><li>字幕：オン</li><li>自動再生しません</li><li>音が出ます</li></ul>
 
-        <span class="cert">2026年4月23日 ユネスコ世界ジオパークとして認定</span>
+        <div class="cert"><p class="laurel"><svg class="leaf" viewBox="0 -6 34 102" aria-hidden="true"><path d="M30 94Q2 60 20 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><ellipse cx="17.2" cy="83.5" rx="7.5" ry="2.8" transform="rotate(-164 17.2 83.5)"/><ellipse cx="25.2" cy="78.6" rx="7.5" ry="2.8" transform="rotate(-80 25.2 78.6)"/><ellipse cx="12.5" cy="72.3" rx="7.5" ry="2.8" transform="rotate(-154 12.5 72.3)"/><ellipse cx="21.1" cy="68.8" rx="7.5" ry="2.8" transform="rotate(-70 21.1 68.8)"/><ellipse cx="9.5" cy="60.5" rx="7.5" ry="2.8" transform="rotate(-146 9.5 60.5)"/><ellipse cx="18.6" cy="58.3" rx="7.5" ry="2.8" transform="rotate(-62 18.6 58.3)"/><ellipse cx="8.2" cy="47.9" rx="7.5" ry="2.8" transform="rotate(-137 8.2 47.9)"/><ellipse cx="17.5" cy="47.1" rx="7.5" ry="2.8" transform="rotate(-53 17.5 47.1)"/><ellipse cx="8.6" cy="34.8" rx="7.5" ry="2.8" transform="rotate(-130 8.6 34.8)"/><ellipse cx="17.9" cy="35.2" rx="7.5" ry="2.8" transform="rotate(-46 17.9 35.2)"/><ellipse cx="10.6" cy="21.0" rx="7.5" ry="2.8" transform="rotate(-123 10.6 21.0)"/><ellipse cx="19.9" cy="22.5" rx="7.5" ry="2.8" transform="rotate(-39 19.9 22.5)"/><ellipse cx="14.2" cy="6.6" rx="7.5" ry="2.8" transform="rotate(-117 14.2 6.6)"/><ellipse cx="23.3" cy="9.0" rx="7.5" ry="2.8" transform="rotate(-33 23.3 9.0)"/><ellipse cx="20.0" cy="1.0" rx="2.8" ry="6.5"/></svg><span><small>2026年4月23日</small><small>ユネスコ世界ジオパーク</small><b>認定</b></span><svg class="leaf leaf--r" viewBox="0 -6 34 102" aria-hidden="true"><path d="M30 94Q2 60 20 4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><ellipse cx="17.2" cy="83.5" rx="7.5" ry="2.8" transform="rotate(-164 17.2 83.5)"/><ellipse cx="25.2" cy="78.6" rx="7.5" ry="2.8" transform="rotate(-80 25.2 78.6)"/><ellipse cx="12.5" cy="72.3" rx="7.5" ry="2.8" transform="rotate(-154 12.5 72.3)"/><ellipse cx="21.1" cy="68.8" rx="7.5" ry="2.8" transform="rotate(-70 21.1 68.8)"/><ellipse cx="9.5" cy="60.5" rx="7.5" ry="2.8" transform="rotate(-146 9.5 60.5)"/><ellipse cx="18.6" cy="58.3" rx="7.5" ry="2.8" transform="rotate(-62 18.6 58.3)"/><ellipse cx="8.2" cy="47.9" rx="7.5" ry="2.8" transform="rotate(-137 8.2 47.9)"/><ellipse cx="17.5" cy="47.1" rx="7.5" ry="2.8" transform="rotate(-53 17.5 47.1)"/><ellipse cx="8.6" cy="34.8" rx="7.5" ry="2.8" transform="rotate(-130 8.6 34.8)"/><ellipse cx="17.9" cy="35.2" rx="7.5" ry="2.8" transform="rotate(-46 17.9 35.2)"/><ellipse cx="10.6" cy="21.0" rx="7.5" ry="2.8" transform="rotate(-123 10.6 21.0)"/><ellipse cx="19.9" cy="22.5" rx="7.5" ry="2.8" transform="rotate(-39 19.9 22.5)"/><ellipse cx="14.2" cy="6.6" rx="7.5" ry="2.8" transform="rotate(-117 14.2 6.6)"/><ellipse cx="23.3" cy="9.0" rx="7.5" ry="2.8" transform="rotate(-33 23.3 9.0)"/><ellipse cx="20.0" cy="1.0" rx="2.8" ry="6.5"/></svg></p><img class="cert-logo" src="assets/img/logo-unesco.webp" alt="UNESCO Global Geopark" width="318" height="240"></div>
         <p class="lead-b">Mine秋吉台ジオパークは、日本最大級のカルスト<ruby>台地<rt>だいち</rt></ruby>「秋吉台」を中心とする、山口県美祢市のジオパークです。</p>
         <p>美祢の大地の成り立ちは、<b>白・黒・赤</b>の3つの色で知ることができます。</p>
         <ul class="colors">
-          <li class="c-white"><span class="band" aria-hidden="true"></span><div><h3><i aria-hidden="true">白</i><span>白い大地<strong><ruby>石灰岩<rt>せっかいがん</rt></ruby></strong></span></h3><p>サンゴ<ruby>礁<rt>しょう</rt></ruby>がもとになった白い石。秋吉台のカルスト<ruby>地形<rt>ちけい</rt></ruby>をつくりました。</p></div></li>
+          <li class="c-white"><span class="band" aria-hidden="true"></span><div><h3><i aria-hidden="true">白</i><span>白い大地<strong><ruby>石灰岩<rt>せっかいがん</rt></ruby></strong></span></h3><p>サンゴ<ruby>礁<rt>しょう</rt></ruby>がもとになった白い石。秋吉台のカルスト<ruby>地形<rt>ちけい</rt></ruby>を<span class="nw">つくりました。</span></p></div></li>
           <li class="c-black"><span class="band" aria-hidden="true"></span><div><h3><i aria-hidden="true">黒</i><span>黒い大地<strong><ruby>無煙炭<rt>むえんたん</rt></ruby></strong></span></h3><p>大昔の植物が積み重なってできた石炭。<ruby>大嶺<rt>おおみね</rt></ruby><ruby>炭田<rt>たんでん</rt></ruby>で<ruby>掘<rt>ほ</rt></ruby>られました。</p></div></li>
-          <li class="c-red"><span class="band" aria-hidden="true"></span><div><h3><i aria-hidden="true">赤</i><span>赤い大地<strong><ruby>銅<rt>どう</rt></ruby></strong></span></h3><p>火山の活動でできた銅。<ruby>長登<rt>ながのぼり</rt></ruby>銅山の銅は奈良の大仏にも使われました。</p></div></li>
+          <li class="c-red"><span class="band" aria-hidden="true"></span><div><h3><i aria-hidden="true">赤</i><span>赤い大地<strong><ruby>銅<rt>どう</rt></ruby></strong></span></h3><p>火山の活動でできた銅。<ruby>長登<rt>ながのぼり</rt></ruby>銅山の銅は奈良の大仏にも<span class="nw">使われました。</span></p></div></li>
         </ul>
         <a class="totoc" href="#toc">▲ 目次へもどる</a>
       </section>
@@ -394,14 +453,78 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
       <section class="part" id="s2" aria-labelledby="s2-h">
         <div class="head"><span class="kicker"><span class="num">2</span>WHAT IS A GEOPARK</span><h2 id="s2-h">ジオパークってなんだろう？</h2></div>
         <div class="geo">
-          <figure class="layers" role="img" aria-label="大地の上に自然があり、その上に人のくらしがある図">
-            <div class="l-life">くらし<small><ruby>湧水<rt>ゆうすい</rt></ruby>や<ruby>銅山<rt>どうざん</rt></ruby>の<ruby>歴史<rt>れきし</rt></ruby></small></div>
-            <span class="up" aria-hidden="true">↑</span>
-            <div class="l-nature"><ruby>自然<rt>しぜん</rt></ruby><small><ruby>洞窟<rt>どうくつ</rt></ruby>にすむ生き物</small></div>
-            <span class="up" aria-hidden="true">↑</span>
-            <div class="l-earth"><ruby>大地<rt>だいち</rt></ruby><small><ruby>石灰岩<rt>せっかいがん</rt></ruby>の<ruby>台地<rt>だいち</rt></ruby></small></div>
-            <p>大地・自然・くらしは つながっています</p>
-          </figure>
+          <figure class="geo-fig">
+          <div class="fig-art">
+            <svg viewBox="0 0 600 420" role="img" aria-label="秋吉台の地面を縦に切った図。地下に洞窟と川がある石灰岩の大地、その上の草原と白い岩や木や鳥、洞窟のコウモリ、地表の湧水の池と鳥居、家、銅山とトロッコ。">
+              <defs>
+                <path id="gf-cv" d="M104 334C118 300 170 288 214 294C250 284 280 300 320 298C370 290 430 292 470 312C492 322 506 334 504 344C490 368 430 380 380 378C330 380 270 380 220 376C170 380 120 366 104 334Z"/>
+                <clipPath id="gf-cave"><use href="#gf-cv"/></clipPath>
+                <clipPath id="gf-ground"><path d="M0 190C70 178 130 172 190 188C215 230 285 230 310 190C370 172 430 178 480 168C520 140 560 138 600 150V420H0Z"/></clipPath>
+              </defs>
+              <rect width="600" height="420" class="f-sky"/>
+              <path d="M54 26v-7M54 78v7M28 52h-7M80 52h7M36 34l-5-5M72 34l5-5M36 70l-5 5M72 70l5 5" class="s-ray"/>
+              <circle cx="54" cy="52" r="15" class="f-tag s-ink"/>
+              <path d="M240 64a10 10 0 0 1 8-17a14 14 0 0 1 26-6a12 12 0 0 1 22 9a8 8 0 0 1 0 14zM446 44a8 8 0 0 1 6-13a11 11 0 0 1 21-4a9 9 0 0 1 16 8a6 6 0 0 1 0 9z" class="f-paper s-ink"/>
+              <path d="M0 176C50 152 110 150 160 168C200 142 260 128 330 150C380 136 430 138 470 160L480 220H0Z" class="f-leaf"/>
+              <path d="M176 96q7-7 14 0q7-7 14 0M214 112q5-5 10 0q5-5 10 0" class="s-ink"/>
+              <path d="M102 160h3v22h-3zM113 160h3v22h-3zM100 166h18v3h-18zM95 157h28l-2 4h-24z" class="f-red s-ink"/>
+              <path d="M315 194l2-13 5-6 4 4 3 15zM330 192l2-17 4-7 5 1 3 9 3 12zM350 188l2-9 4-4 4 3 2 10zM282 216l3-11 5-4 4 5 2 8z" class="f-paper s-ink"/><path d="M337 176l3 6M320 183l2 4" class="s-soft"/>
+              <rect x="373" y="150" width="6" height="30" class="f-gold s-ink"/><circle cx="376" cy="146" r="16" class="f-deep s-ink"/><circle cx="371" cy="140" r="5" class="f-grass"/>
+              <rect x="398" y="160" width="4" height="20" class="f-gold s-ink"/><path d="M400 126l10 18h-5l8 16h-26l8-16h-5z" class="f-deep s-ink"/>
+              <rect x="414" y="154" width="28" height="26" class="f-paper s-ink"/><path d="M407 156l12-16h18l12 16z" class="f-red s-ink"/>
+              <rect x="456" y="150" width="26" height="26" class="f-paper s-ink"/><path d="M450 152l12-15h14l12 15z" class="f-soft s-ink"/>
+              <path d="M418 160h9v8h-9zM460 156h8v8h-8z" class="f-tag s-ink"/><path d="M431 163h7v14h-7zM472 160h7v14h-7z" class="f-gold s-ink"/>
+              <path d="M572 130a4 4 0 0 1 8-3a5 5 0 0 1 9 3z" class="f-copper s-ink"/>
+              <path d="M567 130h26l-3 13h-20z" class="f-soft s-ink"/><path d="M576 144a3 3 0 1 0 .1 0M587 144a3 3 0 1 0 .1 0" class="f-paper s-ink"/>
+              <g clip-path="url(#gf-ground)">
+                <rect width="600" height="420" class="f-line"/>
+                <path d="M0 262C150 250 450 274 600 258V420H0Z" class="f-stone"/>
+                <path d="M0 392C200 386 400 398 600 390V420H0Z" class="f-line"/>
+                <path d="M0 262C150 250 450 274 600 258M0 392C200 386 400 398 600 390" class="s-strata"/>
+                <path d="M30 224l12 4M64 244l10-5M410 228l14 3M470 250l-10 6M548 296l12 4M36 300l10 6M560 362l-12 4M70 402l14-3M480 404l12 3M250 246l10 3M356 240l-12 4M40 360l12-3" class="s-hatch"/>
+                <path d="M0 190C70 178 130 172 190 188C215 230 285 230 310 190C370 172 430 178 480 168C520 140 560 138 600 150" class="s-band"/>
+                <path d="M0 190C70 178 130 172 190 188C215 230 285 230 310 190C370 172 430 178 480 168C520 140 560 138 600 150" class="s-grass"/>
+                <path d="M537 142h20l43 30v16l-63-30z" class="f-ink"/><path d="M567 153v18M585 165v18" class="s-wood"/>
+                <path d="M556 184l6-4 5 3-1 6-7 1zM584 196l5-5 6 2v6l-6 2zM530 176l4-3 4 2-1 4-5 1zM572 210l4-3 5 3-2 4-5 0zM598 214l4-4 5 3-2 5z" class="f-copper s-ore"/>
+                <path d="M150 330C128 296 172 262 150 230C140 214 152 206 154 196" class="s-chan"/><path d="M150 330C128 296 172 262 150 230C140 214 152 206 154 196" class="s-chan2"/>
+                <path d="M164 284l5-6 5 6M168 240l5-6 5 6" class="s-flow"/>
+                <use href="#gf-cv" class="f-ink"/>
+                <g clip-path="url(#gf-cave)">
+                  <path d="M144 280h14l-7 34zM168 280h14l-7 42zM190 280h12l-6 30zM230 280h14l-7 34zM346 280h14l-7 38zM370 280h12l-6 28zM424 280h14l-7 38z" class="f-cream"/>
+                  <path d="M104 344C170 362 250 370 300 366C360 370 440 366 504 342V400H104Z" class="f-wlight"/>
+                  <path d="M180 368h14M256 373h18M408 370h14M330 376h10" class="s-ripple"/>
+                  <path d="M194 390l7-40 7 40zM354 390l7-36 7 36zM392 390l6-44 6 44zM458 280c4 20 6 30 6 38c-4 12-8 32-12 72h30c-4-40-8-60-12-72c0-8 2-18 6-38z" class="f-cream"/>
+                  <path d="M-4-1C-12-10-24-12-30-5C-26-4-24-1-24 3C-20 0-16 0-14 4C-12 1-8 1-6 5ZM4-1C12-10 24-12 30-5C26-4 24-1 24 3C20 0 16 0 14 4C12 1 8 1 6 5ZM-5-4L-6-12L-2-8H2L6-12L5-4C6 2 4 9 0 10C-4 9-6 2-5-4Z" transform="translate(212 326)" class="f-soft s-rim"/>
+                  <path d="M-4-1C-12-10-24-12-30-5C-26-4-24-1-24 3C-20 0-16 0-14 4C-12 1-8 1-6 5ZM4-1C12-10 24-12 30-5C26-4 24-1 24 3C20 0 16 0 14 4C12 1 8 1 6 5ZM-5-4L-6-12L-2-8H2L6-12L5-4C6 2 4 9 0 10C-4 9-6 2-5-4Z" transform="translate(420 340) scale(.8)" class="f-soft s-rim"/>
+                  <path d="M-7 4C-9 14-6 22 0 24C6 22 9 14 7 4C4 6-4 6-7 4ZM-5 22L-6 29L-2 24ZM5 22L6 29L2 24Z" transform="translate(404 292)" class="f-soft s-rim"/>
+                  <path d="M210 318h.1M214 318h.1M402 312h.1M406 312h.1" class="s-eye"/>
+                </g>
+              </g>
+              <path d="M0 190C70 178 130 172 190 188C215 230 285 230 310 190C370 172 430 178 480 168C520 140 560 138 600 150V420H0Z" class="s-ink"/>
+              <use href="#gf-cv" class="s-ink"/>
+              <path d="M537 129h20v20h-20z" class="f-ink"/><path d="M532 129h5v20h-5zM557 129h5v20h-5zM528 124h38v6h-38z" class="f-gold s-ink"/>
+              <path d="M122 181H188C186 195 172 203 155 203C138 203 125 195 122 181Z" class="f-water s-ink"/>
+              <path d="M126 183H184C183 187 181 189 179 190H130C128 188 127 186 126 183Z" class="f-wlight"/>
+              <path d="M140 196h10M160 198h12" class="s-ripple"/>
+              <path d="M183 189C183 181 188 178 194 181C198 184 197 190 192 191Z" class="f-stone s-ink"/>
+              <path d="M84 180l2-6 2 6 2-5M226 217l2-6 2 6 2-5M298 205l2-6 2 6 2-5M364 180l2-6 2 6 2-5M496 160l2-6 2 6 2-5M590 149l2-6 2 6 2-5" class="s-tuft"/>
+            </svg>
+            <span class="lab lab--n" style="top:22%;left:57%" aria-hidden="true"><b>3</b>くらし</span>
+            <span class="lab lab--n lab--nat" aria-hidden="true"><b>2</b><ruby>自然<rt>しぜん</rt></ruby></span>
+            <span class="lab lab--n lab--earth" aria-hidden="true"><b>1</b><ruby>大地<rt>だいち</rt></ruby></span>
+            <span class="lab lab--m" style="left:50%;top:80%" aria-hidden="true"><ruby>秋芳洞<rt>あきよしどう</rt></ruby></span>
+            <span class="lab lab--m" style="left:41.7%;top:40%" aria-hidden="true">ドリーネ</span>
+            <span class="lab lab--m" style="left:26%;top:35%" aria-hidden="true"><ruby>湧水<rt>ゆうすい</rt></ruby></span>
+            <span class="lab lab--m" style="left:91%;top:24%" aria-hidden="true"><ruby>銅山<rt>どうざん</rt></ruby></span>
+          </div>
+          <ol class="fig-key">
+            <li><b class="k-n">1</b><div><strong><ruby>大地<rt>だいち</rt></ruby></strong><p><ruby>石灰岩<rt>せっかいがん</rt></ruby>の<ruby>台地<rt>だいち</rt></ruby>です。地面の下には<ruby>秋芳洞<rt>あきよしどう</rt></ruby>の<ruby>洞窟<rt>どうくつ</rt></ruby>があります。</p></div></li>
+            <li><b class="k-n">2</b><div><strong><ruby>自然<rt>しぜん</rt></ruby></strong><p>大地の上に育つ<ruby>草原<rt>そうげん</rt></ruby>や、<ruby>洞窟<rt>どうくつ</rt></ruby>にすむコウモリなどの<span class="nw">生き物です。</span></p></div></li>
+            <li><b class="k-n">3</b><div><strong>くらし</strong><p><ruby>湧水<rt>ゆうすい</rt></ruby>や<ruby>銅山<rt>どうざん</rt></ruby>の<ruby>歴史<rt>れきし</rt></ruby>。<ruby>長登<rt>ながのぼり</rt></ruby>の銅は奈良の大仏にも<span class="nw">使われました。</span></p></div></li>
+          </ol>
+          <figcaption>大地があり、自然が育ち、人のくらしが生まれました。</figcaption>
+          <p class="fig-do"><span>地域の人が中心になって</span><b><ruby>守<rt>まも</rt></ruby>る</b><b><ruby>学<rt>まな</rt></ruby>ぶ</b><b><ruby>生<rt>い</rt></ruby>かす</b></p>
+        </figure>
           <div>
             <p class="lead-b">足もとの<ruby>大地<rt>だいち</rt></ruby>から、地球の昔と未来を知る場所です。</p>
             <p>ジオパークは、<ruby>大地<rt>だいち</rt></ruby>の成り立ちを知り、未来を考えて行動する場所です。「ジオ」は地球、「パーク」は公園という意味です。</p>
@@ -411,13 +534,19 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
         </div>
 
         <h3>ジオパークでできること</h3>
-        <!-- illustrations: 日本ジオパークネットワーク – usage rights to be confirmed -->
-        <ul class="can">
-          <li><img src="assets/img/geopark-01.webp" alt="" loading="lazy"><div><h4><span class="num">1</span>大地の歴史を学ぶ</h4><p><ruby>岩<rt>いわ</rt></ruby>や<ruby>地形<rt>ちけい</rt></ruby>を見て、地球の長い歴史を知ることができます。</p></div></li>
-          <li><img src="assets/img/geopark-02.webp" alt="" loading="lazy"><div><h4><span class="num">2</span>ジオガイドと歩く</h4><p>「地球の<ruby>語<rt>かた</rt></ruby>り<ruby>部<rt>べ</rt></ruby>」であるジオガイドが、土地の物語を案内します。</p></div></li>
-          <li><img src="assets/img/geopark-03.webp" alt="" loading="lazy"><div><h4><span class="num">3</span>見方を変えて旅をする</h4><p>石や土に目を向けると、いつもの<ruby>景色<rt>けしき</rt></ruby>が「ここにしかない風景」に変わります。</p></div></li>
-          <li><img src="assets/img/geopark-04.webp" alt="" loading="lazy"><div><h4><span class="num">4</span>未来のために行動する</h4><p>大地や自然を守り、<ruby>災害<rt>さいがい</rt></ruby>にそなえるために、今できることを考えます。</p></div></li>
-        </ul>
+        <p>ジオパークでは、<ruby>過去<rt>かこ</rt></ruby>を知り、<ruby>未来<rt>みらい</rt></ruby>を考え、今、行動します。この3つをくりかえしながら、<ruby>大地<rt>だいち</rt></ruby>とともに<span class="nw">くらしていきます。</span></p>
+        <div class="cyc" aria-hidden="true"><!-- picture only: the list below says the same in text -->
+          <svg viewBox="0 0 100 100"><defs><marker id="cyc-ah" viewBox="0 0 10 10" refX="5" refY="5" markerWidth="3.2" markerHeight="3.2" orient="auto"><path d="M0 0L10 5L0 10z"/></marker></defs><path d="M14.0 53.9A36 36 0 0 1 33.7 19.9" marker-end="url(#cyc-ah)"/><path d="M66.3 19.9A36 36 0 0 1 86.0 53.9" marker-end="url(#cyc-ah)"/><path d="M69.6 82.2A36 36 0 0 1 30.4 82.2" marker-end="url(#cyc-ah)"/></svg>
+          <div class="cyc-hub"><img src="assets/img/chara-binoculars.webp" alt=""><b>カコ・イマ・ミライ</b></div>
+          <div class="cyc-n cyc-n1" style="left:18.8%;top:70.0%"><span class="cyc-pic"><img src="assets/img/chara-loupe.webp" alt=""></span><b><span class="k-n">1</span>知る</b></div>
+            <div class="cyc-n cyc-n2" style="left:50.0%;top:16.0%"><span class="cyc-pic"><img src="assets/img/chara-sit.webp" alt=""></span><b><span class="k-n">2</span>考える</b></div>
+            <div class="cyc-n cyc-n3" style="left:81.2%;top:70.0%"><span class="cyc-pic"><img src="assets/img/chara-point.webp" alt=""></span><b><span class="k-n">3</span>行動する</b></div>
+        </div>
+        <ol class="fig-key cyc-key">
+          <li><b class="k-n">1</b><div><strong>知る</strong><p>変わりつづける自然や地球のことを、<ruby>過去<rt>かこ</rt></ruby>の大地の<ruby>記録<rt>きろく</rt></ruby>から<span class="nw">知ります。</span></p></div></li>
+          <li><b class="k-n">2</b><div><strong>考える</strong><p>地球の<ruby>未来<rt>みらい</rt></ruby>を<ruby>想像<rt>そうぞう</rt></ruby>して、今できることは何かを考えます。</p></div></li>
+          <li><b class="k-n">3</b><div><strong>行動する</strong><p>大地を守る、学びや旅に生かす、地域の<ruby>産業<rt>さんぎょう</rt></ruby>を育てるなど、未来のために今できることを<span class="nw">行動にうつします。</span></p></div></li>
+        </ol>
 
         <div class="unesco">
           <img src="assets/img/logo-unesco.webp" alt="UNESCO Global Geopark">
@@ -456,9 +585,9 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
         <div class="theme"><span>ジオパークのテーマ</span><p>カルスト台地に<ruby>息<rt>いき</rt></ruby>づく地球と生命の歴史<br>〜地球に寄り添い、人と支え合う〜</p></div>
         <!-- stats from the wireframe – figures to be confirmed -->
         <ul class="stats">
-          <li><b>約100<span>km²</span></b>秋吉台の広さ</li>
-          <li><b>約3億5千万<span>年前</span></b>サンゴ礁が生まれた</li>
-          <li><b><span>東台・西台</span></b>川をはさんで2つに</li>
+          <li><b><span>約</span>100<span>km²</span></b>秋吉台の広さ</li>
+          <li><b><span>約</span>3億5千万<span>年前</span></b>サンゴ礁が生まれた</li>
+          <li><b>東台・西台</b>川をはさんで2つに</li>
         </ul>
         <h3>秋吉台ができるまで</h3>
         <ol class="steps">
