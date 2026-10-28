@@ -212,6 +212,7 @@ html { scroll-padding: var(--hdr) 0 96px; }
 .idle h2 { font: 700 22px/1.45 var(--f-display); }
 .idle b { font: 800 28px/1 var(--f-latin); }
 .idle .primary { min-height: 64px; background: var(--red); color: var(--paper); border-color: var(--red); box-shadow: 0 5px 0 var(--red-deep); }
+img, a { -webkit-touch-callout: none; } /* kiosk: no long-press 「画像を保存」/link menu */
 /* ---------- press feedback (identical block in every page except Welcome): buttons and cards dip while pressed ---------- */
 :is(.pill, .arrow, .menu-btn, .x, .lang button, .play, .totoc, .more, .themes a, .tile, .spot, .ecard, .pcard, .rel a, .next a, .toc a) { -webkit-tap-highlight-color: transparent; }
 @media (prefers-reduced-motion: no-preference) {
@@ -382,6 +383,7 @@ dialog::backdrop { background: rgba(47, 44, 40, .45); }
   'use strict';
 
   document.addEventListener('touchstart', () => {}, { passive: true }); // iOS Safari shows :active press styles only with a touch listener
+  document.addEventListener('dragstart', (e) => e.preventDefault()); // kiosk: a press-and-swipe must not pick up a photo or card (iPad drag & drop)
 
   // ---------- spot data (source: docs/content/mine-geo-content.md, mine-geo-places.md) ----------
   // Only fields with a real source are shown; 所要時間・バリアフリー・駐車場・トイレ are not published yet.

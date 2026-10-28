@@ -132,6 +132,7 @@ button, a { font: inherit; color: inherit; }
 }
 .pause svg { width: 18px; height: 18px; fill: var(--ink); }
 /* press feedback, same feel as the other pages */
+img, a { -webkit-touch-callout: none; } /* kiosk: no long-press 「画像を保存」/link menu */
 .lang button, .pause { transition: transform .12s ease; }
 .lang button:active, .pause:active { transform: scale(.95); }
 

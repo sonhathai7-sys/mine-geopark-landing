@@ -3,6 +3,7 @@
   'use strict';
 
   document.addEventListener('touchstart', () => {}, { passive: true }); // iOS Safari shows :active press styles only with a touch listener
+  document.addEventListener('dragstart', (e) => e.preventDefault()); // kiosk: a press-and-swipe must not pick up a photo or card (iPad drag & drop)
 
   const DELAY = 5000; // ms per photo
 
